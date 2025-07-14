@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { AspectRatio } from '../ui/aspect-ratio';
 import { getFallbackStyle } from '@/utils/styleUtils';
-import { convertCloudinaryToImageKit } from '@/utils/imageKitUtils';
-import { ImageKitImage } from '../ui/ImageKitImage';
+import { isImagePreloaded, getOptimizedImage, getImageMetadata } from '@/utils/imageManager';
+import OptimizedImage from '../ui/OptimizedImage';
 
 interface QuizOptionImageProps {
   imageUrl: string;
@@ -28,11 +28,28 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   
-  // Convert Cloudinary URL to ImageKit path
-  const imageKitPath = useMemo(() => 
-    convertCloudinaryToImageKit(imageUrl),
+  // Get image metadata from our bank if available
+  const imageMetadata = useMemo(() => 
+    getImageMetadata(imageUrl),
     [imageUrl]
   );
+  
+  // Use memoization to avoid recalculating the URL on each render
+  const optimizedImageUrl = useMemo(() => 
+    getOptimizedImage(imageUrl, {
+      quality: 95,
+      format: 'auto',
+      width: imageUrl.includes('sapatos') ? 400 : 500
+    }),
+    [imageUrl]
+  );
+  
+  // Check if image is already preloaded on mount
+  useEffect(() => {
+    if (isImagePreloaded(imageUrl)) {
+      setImageLoaded(true);
+    }
+  }, [imageUrl]);
 
   if (imageError) {
     return (
@@ -59,13 +76,10 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
           // Efeito de zoom para opções com imagem ao fazer hover
           !isSelected && "hover:scale-110"
         )}>
-          {/* Use ImageKit component */}
-          <ImageKitImage 
-            path={imageKitPath}
-            alt={altText}
-            width={imageUrl.includes('sapatos') ? 400 : 500}
-            quality={95}
-            format="auto"
+          {/* Use OptimizedImage component instead of img tag */}
+          <OptimizedImage 
+            src={optimizedImageUrl}
+            alt={imageMetadata?.alt || altText}
             className={cn(
               "object-cover w-full h-full transition-all duration-300",
               isSelected 
@@ -75,6 +89,7 @@ export const QuizOptionImage: React.FC<QuizOptionImageProps> = ({
               isSelected && is3DQuestion && "transform-3d rotate-y-12"
             )}
             onLoad={() => setImageLoaded(true)}
+            priority={true}
           />
         </div>
       </AspectRatio>

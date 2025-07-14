@@ -1,7 +1,5 @@
 
 import React from 'react';
-import { ImageKitImage } from '@/components/ui/ImageKitImage';
-import { convertCloudinaryToImageKit } from '@/utils/imageKitUtils';
 
 interface ImageBlockPreviewProps {
   content: {
@@ -25,12 +23,11 @@ const ImageBlockPreview: React.FC<ImageBlockPreviewProps> = ({ content }) => {
   return (
     <div className="text-center">
       {content.imageUrl ? (
-        <ImageKitImage
-          path={convertCloudinaryToImageKit(content.imageUrl)}
+        <img
+          src={content.imageUrl}
           alt={content.imageAlt || 'Imagem'}
+          style={imageStyle}
           className="mx-auto"
-          quality={85}
-          format="auto"
         />
       ) : (
         <div className="bg-gray-100 h-48 flex items-center justify-center rounded-lg">

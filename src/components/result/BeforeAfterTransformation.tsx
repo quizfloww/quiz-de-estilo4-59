@@ -25,17 +25,19 @@ interface TransformationItem {
   height?: number;
 }
 
-// Transformações reais de clientes - URLs atualizadas
+// Transformações reais de clientes
 const transformations: TransformationItem[] = [
   {
-    image: "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
+    image:
+      "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_90,w_1200/v1745519979/Captura_de_tela_2025-03-31_034324_pmdn8y.webp",
     name: "Adriana",
     id: "transformation-adriana",
     width: 1200,
     height: 1500,
   },
   {
-    image: "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
+    image:
+      "https://res.cloudinary.com/dqljyf76t/image/upload/f_auto,q_90,w_1200/v1745522326/Captura_de_tela_2025-03-31_034324_cpugfj.webp",
     name: "Mariangela",
     id: "transformation-mariangela",
     width: 1200,
