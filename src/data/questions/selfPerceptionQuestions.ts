@@ -1,3 +1,4 @@
+
 import { QuizQuestion } from '../../types/quiz';
 
 export const selfPerceptionQuestions: QuizQuestion[] = [
@@ -6,7 +7,7 @@ export const selfPerceptionQuestions: QuizQuestion[] = [
     title: 'Como você se sente em relação ao seu estilo pessoal hoje?',
     type: 'text',
     multiSelect: 1,
-    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746334754/ChatGPT_Image_4_de_mai._de_2025_00_30_44_naqom0.webp',
+    imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430327/MULHER_FRUSTRADA_NA_FRENTE_DO_GUARDA-ROUPA_jnrwcr.png',
     options: [
       {
         id: 'strategic-1-1',
@@ -35,7 +36,7 @@ export const selfPerceptionQuestions: QuizQuestion[] = [
     title: 'Qual é o maior desafio que você enfrenta ao se vestir?',
     type: 'text',
     multiSelect: 1,
-    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746334753/ChatGPT_Image_4_de_mai._de_2025_01_30_01_vbiysd.webp',
+    imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430303/COMPRAS_COMPULSIVAS_X_DIRE??O_COM_O_GUIA_DE_ESTILO_xy0hb3.png',
     options: [
       {
         id: 'strategic-2-1',

@@ -1,60 +1,59 @@
+
 import { QuizQuestion } from '../../types/quiz';
 
 export const styleExperienceQuestions: QuizQuestion[] = [
   {
     id: 'strategic-3',
-    title: 'Como você aprende melhor sobre estilo e moda?',
+    title: 'Você já teve alguma experiência com consultoria de estilo?',
     type: 'text',
     multiSelect: 1,
-    // A questão 13 (strategic-3) não deve ter imagem
     options: [
       {
         id: 'strategic-3-1',
-        text: 'Vendo exemplos visuais e imagens de referência',
+        text: 'Nunca tive, mas tenho muito interesse',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-3-2',
-        text: 'Lendo guias detalhados com explicações passo-a-passo',
+        text: 'Já pesquisei sobre o assunto, mas nunca contratei',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-3-3',
-        text: 'Com exemplos práticos que posso aplicar no meu dia a dia',
+        text: 'Já fiz consultorias presenciais',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-3-4',
-        text: 'Com orientação personalizada para o meu caso específico',
+        text: 'Já comprei cursos online sobre estilo',
         styleCategory: 'Strategic'
       }
     ]
   },
   {
     id: 'strategic-4',
-    title: 'O que você mais valoriza em um guia de estilo?',
+    title: 'O que mais te motiva a descobrir seu estilo pessoal?',
     type: 'text',
     multiSelect: 1,
-    // A questão 14 (strategic-4) não deve ter imagem
     options: [
       {
         id: 'strategic-4-1',
-        text: 'Praticidade e facilidade de aplicação',
+        text: 'Quero me sentir mais confiante e bonita',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-4-2',
-        text: 'Exemplos de looks montados para diferentes ocasiões',
+        text: 'Preciso otimizar meu guarda-roupa e economizar',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-4-3',
-        text: 'Explicações detalhadas sobre o porquê das recomendações',
+        text: 'Quero causar uma boa impressão profissionalmente',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-4-4',
-        text: 'Dicas para economizar e aproveitar melhor o que já tenho',
+        text: 'Busco uma transformação pessoal completa',
         styleCategory: 'Strategic'
       }
     ]
