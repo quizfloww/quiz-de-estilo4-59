@@ -19,7 +19,7 @@ const styleMessages: Record<string, {
 }> = {
   'Natural': {
     congratsMessage: "você é uma mulher autêntica e espontânea!",
-    powerMessage: "Mulheres com seu estilo conquistam admiração pela naturalidade e charme genuíno. Sua beleza está na simplicidade elegante.",
+    powerMessage: "Mulheres com seu seu estilo conquistam admiração pela naturalidade e charme genuíno. Sua beleza está na simplicidade elegante.",
     ctaText: "ACESSE SEU GUIA NATURAL AGORA",
     exclusive: "Oferta Especial"
   },
@@ -94,7 +94,7 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
               <img
                 src={`${image}?q=auto:best&f=auto&w=200`} // Otimiza a imagem para largura de 200px
                 alt={`Estilo ${styleCategory}`}
-                className="w-full h-auto rounded-lg shadow-lg border-2 border-[#B89B7A]/50" // Sombra maior e borda mais visível
+                className="w-full h-auto rounded-lg shadow-xl border-2 border-[#B89B7A] transform transition-all duration-300 hover:scale-105 hover:rotate-1" // Sombra mais pronunciada, borda sólida e efeito hover
                 loading="lazy"
               />
             </div>
