@@ -97,7 +97,7 @@ const ResultPage: React.FC = () => {
     });
 
     const { category } = primaryStyle;
-    const { image, guideImage } = styleConfig[category];
+    const { guideImage } = styleConfig[category];
     const styleImg = new Image();
     styleImg.src = `${image}?q=auto:best&f=auto&w=238`;
     styleImg.onload = () => setImagesLoaded(prev => ({ ...prev, style: true }));
