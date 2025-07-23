@@ -16,7 +16,7 @@ const PrimaryStyleCard: React.FC<PrimaryStyleCardProps> = ({
   customDescription,
   customImage
 }) => {
-  const imageUrl = customImage || (styleConfig[primaryStyle.category]?.guideImage || '');
+  const imageUrl = customImage || (styleConfig[primaryStyle.category]?.image || '');
   const description = customDescription || (styleConfig[primaryStyle.category]?.description || 'Descrição do estilo não disponível');
   
   return (
@@ -85,8 +85,8 @@ const PrimaryStyleCard: React.FC<PrimaryStyleCardProps> = ({
               <div className="relative overflow-hidden rounded-xl shadow-md">
                 <img 
                   src={imageUrl} 
-                  alt={`Guia de Estilo ${primaryStyle.category}`} 
-                  className="w-full h-auto max-w-sm md:max-w-md object-contain z-10 relative"
+                  alt={`Estilo ${primaryStyle.category}`} 
+                  className="w-full h-auto max-h-80 object-contain z-10 relative"
                 />
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-b from-amber-100/30 to-transparent z-0"
