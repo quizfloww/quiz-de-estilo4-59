@@ -98,6 +98,9 @@ const ResultPage: React.FC = () => {
 
     const { category } = primaryStyle;
     const { guideImage } = styleConfig[category];
+    const styleImg = new Image();
+    styleImg.src = `${image}?q=auto:best&f=auto&w=238`;
+    styleImg.onload = () => setImagesLoaded(prev => ({ ...prev, style: true }));
     const guideImg = new Image();
     guideImg.src = `${guideImage}?q=auto:best&f=auto&w=540`;
     guideImg.onload = () => setImagesLoaded(prev => ({ ...prev, guide: true }));
@@ -111,7 +114,7 @@ const ResultPage: React.FC = () => {
   if (isLoading) return <ResultSkeleton />;
 
   const { category } = primaryStyle;
-  const { guideImage, description } = styleConfig[category];
+  const { image, guideImage, description } = styleConfig[category];
 
   const handleCTAClick = () => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -222,7 +225,7 @@ const ResultPage: React.FC = () => {
         </AnimatedWrapper>
         */}
 
-        {/* ATTENTION: Primary Style Card - Seção principal de descrição do estilo */}
+           {/* ATTENTION: Primary Style Card - Seção principal de descrição do estilo */}
         <Card className="p-6 mb-12 md:mb-16 bg-white shadow-md border border-[#B89B7A]/20 card-elegant">
           <AnimatedWrapper animation="fade" show={true} duration={600} delay={300}>
             <div className="text-center mb-8">
@@ -237,27 +240,15 @@ const ResultPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={400}>
-                  <p className="text-[#432818] leading-relaxed">{description}</p>
-                </AnimatedWrapper>
-                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={600}>
-                  <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
-                    <h3 className="text-lg font-medium text-[#432818] mb-2">Estilos que Também Influenciam Você</h3>
-                    <SecondaryStylesSection secondaryStyles={secondaryStyles} />
-                  </div>
-                </AnimatedWrapper>
-              </div>
-              <AnimatedWrapper animation={isLowPerformance ? 'none' : 'scale'} show={true} duration={500} delay={500}>
-                {/* AQUI ESTÁ A IMAGEM DO ESTILO PREDOMINANTE. Ela deve ser menor no mobile */}
-                <div className="max-w-[238px] mx-auto relative">
-                  <img src={`${image}?q=auto:best&f=auto&w=238`} alt={`Estilo ${category}`} 
-                       className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-xs sm:max-w-[238px]" /* max-w-xs para mobile, sm:max-w-[238px] para sm+ */
-                       loading="eager" fetchPriority="high" width="238" height="auto" />
-                  {/* Elegant decorative corner */}
-                  <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
-                  <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
+            {/* AQUI ESTÁ O CONTEÚDO QUE ANTES ESTAVA EM DUAS COLUNAS. AGORA É UMA SÓ. */}
+            <div className="space-y-4"> {/* Removido 'grid md:grid-cols-2 gap-8 items-center' e 'AnimatedWrapper' da imagem */}
+              <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={400}>
+                <p className="text-[#432818] leading-relaxed">{description}</p>
+              </AnimatedWrapper>
+              <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={600}>
+                <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
+                  <h3 className="text-lg font-medium text-[#432818] mb-2">Estilos que Também Influenciam Você</h3>
+                  <SecondaryStylesSection secondaryStyles={secondaryStyles} />
                 </div>
               </AnimatedWrapper>
             </div>
