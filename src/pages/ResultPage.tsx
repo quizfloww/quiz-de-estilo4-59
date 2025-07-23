@@ -16,7 +16,7 @@ import React, { useEffect, useState, useRef } from 'react';
 // import Testimonials from '@/components/quiz-result/sales/Testimonials';
 // import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
 // import BonusSection from '@/components/result/BonusSection';
-// import { Button } from '@/components/ui/button';
+// import { Button } => '@/components/ui/button';
 // import { useLoadingState } from '@/hooks/useLoadingState';
 // import { useIsLowPerformanceDevice } from '@/hooks/use-mobile';
 // import ResultSkeleton from '@/components/result/ResultSkeleton';
@@ -30,7 +30,7 @@ import React, { useEffect, useState, useRef } from 'react';
 
 // Ícones do lucide-react (simulados para este exemplo, em um projeto real viriam de 'lucide-react')
 const ShoppingCart = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>;
-const CheckCircle = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 1 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>;
+const CheckCircle = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>;
 const ArrowDown = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-down"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>;
 const Lock = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
 
@@ -147,8 +147,7 @@ const UrgencyCountdown = ({ styleCategory }: any) => (
   <div className="text-center bg-[#fef2f2] p-4 rounded-lg border border-[#ff6b6b]/20">
     <p className="text-sm text-[#ff6b6b] font-medium">
       ⏳ Oferta especial para {styleCategory} expira em breve!
-    </p>
-  </div>
+    </p>  </div>
 );
 
 const ResultPage: React.FC = () => {
@@ -156,8 +155,9 @@ const ResultPage: React.FC = () => {
     primaryStyle,
     secondaryStyles
   } = useQuiz();
+  // Correção: Fornecer um objeto vazio como valor padrão para globalStyles
   const {
-    globalStyles
+    globalStyles = {}
   } = useGlobalStyles();
   const {
     user
@@ -210,7 +210,8 @@ const ResultPage: React.FC = () => {
     if (!primaryStyle) return;
     window.scrollTo(0, 0);
 
-    const criticalImages = [globalStyles.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp'];
+    // Acessa globalStyles.logo de forma segura, usando um fallback se globalStyles for undefined
+    const criticalImages = [(globalStyles?.logo || 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp')];
     criticalImages.forEach(src => {
       const img = new Image();
       img.src = src;
@@ -224,7 +225,7 @@ const ResultPage: React.FC = () => {
     const guideImg = new Image();
     guideImg.src = `${guideImage}?q=auto:best&f=auto&w=540`;
     guideImg.onload = () => setImagesLoaded(prev => ({ ...prev, guide: true }));
-  }, [primaryStyle, globalStyles.logo]);
+  }, [primaryStyle, globalStyles.logo]); // Mantém globalStyles.logo na dependência para re-executar se mudar
 
   useEffect(() => {
     if (imagesLoaded.style && imagesLoaded.guide) completeLoading();
@@ -315,7 +316,15 @@ const ResultPage: React.FC = () => {
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#B89B7A]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#aa6b5d]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
-      <Header primaryStyle={primaryStyle} logoHeight={globalStyles.logoHeight} logo={globalStyles.logo} logoAlt={globalStyles.logoAlt} userName={user?.userName} className="mb-0" />
+      {/* Acessa globalStyles.logoHeight, globalStyles.logo e globalStyles.logoAlt de forma segura */}
+      <Header
+        primaryStyle={primaryStyle}
+        logoHeight={globalStyles.logoHeight}
+        logo={globalStyles.logo}
+        logoAlt={globalStyles.logoAlt}
+        userName={user?.userName}
+        className="mb-0"
+      />
 
       <div className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
         <Card className="p-4 sm:p-6 md:p-8 mb-8 md:mb-12 bg-white border-[#B89B7A]/10 shadow-sm -mt-4 sm:-mt-6 md:-mt-8">
