@@ -94,10 +94,10 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
               <img
                 src={`${image}?q=auto:best&f=auto&w=200`} // Otimiza a imagem para largura de 200px
                 alt={`Estilo ${styleCategory}`}
-                // Efeitos de sombra, borda e transformação no hover
-                className="w-full h-auto rounded-lg shadow-lg border border-[#B89B7A]
+                // Efeitos de sombra e transformação no hover (borda fixa removida)
+                className="w-full h-auto rounded-lg shadow-lg
                            transform transition-all duration-300
-                           group-hover:scale-103 group-hover:-translate-y-1 group-hover:border-[#aa6b5d]" // Ajustes para efeito mais elegante e borda delicada
+                           group-hover:scale-103 group-hover:-translate-y-1 group-hover:rotate-1 group-hover:border group-hover:border-[#aa6b5d]" // Borda aparece apenas no hover
                 loading="lazy"
               />
               {/* Elementos decorativos de canto que aparecem no hover */}
