@@ -25,13 +25,14 @@ import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
 import { useAuth } from '@/context/AuthContext';
 import PersonalizedHook from '@/components/result/PersonalizedHook';
 import UrgencyCountdown from '@/components/result/UrgencyCountdown';
-// import StyleSpecificProof from '@/components/result/StyleSpecificProof'; 
+// import StyleSpecificProof from '@/components/result/StyleSpecificProof';
 
 // Importe StyleResult, pois será usado no StyleGuidesVisual aninhado
-import { StyleResult } from '@/types/quiz'; 
+import { StyleResult } from '@/types/quiz';
+import StylePercentageChart from './StylePercentageChart'; // Import the new component
 
 // Remover 'export' da declaração 'export const ResultPage'
-const ResultPage: React.FC = () => { 
+const ResultPage: React.FC = () => {
   const {
     primaryStyle,
     secondaryStyles
@@ -201,7 +202,7 @@ const ResultPage: React.FC = () => {
       <div className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
         <Card className="p-4 sm:p-6 md:p-8 mb-8 md:mb-12 bg-white border-[#B89B7A]/10 shadow-sm -mt-4 sm:-mt-6 md:-mt-8">
             <AnimatedWrapper animation="fade" show={true} duration={600} delay={100}>
-                <PersonalizedHook 
+                <PersonalizedHook
                     styleCategory={category}
                     userName={user?.userName}
                     onCTAClick={handleCTAClick}
@@ -218,7 +219,7 @@ const ResultPage: React.FC = () => {
         {/* PROVA SOCIAL: Style-Specific Social Proof (Mantenha comentado ou remova se não for usar) */}
         {/*
         <AnimatedWrapper animation="fade" show={true} duration={400} delay={300} className="mb-8 md:mb-12">
-          <StyleSpecificProof 
+          <StyleSpecificProof
             styleCategory={category}
             userName={user?.userName}
           />
@@ -238,24 +239,13 @@ const ResultPage: React.FC = () => {
                 </div>
                 <Progress value={primaryStyle.percentage} className="h-2 bg-[#F3E8E6]" indicatorClassName="bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d]" />
               </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div className="space-y-4">
-                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={400}>
-                  <p className="text-[#432818] leading-relaxed">{description}</p>
-                </AnimatedWrapper>
-                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={600}>
-                  <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
-                    <h3 className="text-lg font-medium text-[#432818] mb-2">Estilos que Também Influenciam Você</h3>
-                    <SecondaryStylesSection secondaryStyles={secondaryStyles} />
-                  </div>
-                </AnimatedWrapper>
-              </div>
+              <h2 className="text-3xl md:text-4xl font-playfair font-bold text-[#432818] mb-4">
+                {primaryStyle.category}
+              </h2>
+              {/* AQUI ESTÁ A IMAGEM DO ESTILO PREDOMINANTE. Ela deve ser menor no mobile */}
               <AnimatedWrapper animation={isLowPerformance ? 'none' : 'scale'} show={true} duration={500} delay={500}>
-                {/* AQUI ESTÁ A IMAGEM DO ESTILO PREDOMINANTE. Ela deve ser menor no mobile */}
                 <div className="max-w-[238px] mx-auto relative">
-                  <img src={`${image}?q=auto:best&f=auto&w=238`} alt={`Estilo ${category}`} 
+                  <img src={`${image}?q=auto:best&f=auto&w=238`} alt={`Estilo ${category}`}
                        className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-xs sm:max-w-[238px]" /* max-w-xs para mobile, sm:max-w-[238px] para sm+ */
                        loading="eager" fetchPriority="high" width="238" height="auto" />
                   {/* Elegant decorative corner */}
@@ -265,17 +255,38 @@ const ResultPage: React.FC = () => {
               </AnimatedWrapper>
             </div>
 
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div className="space-y-4">
+                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={400}>
+                  <p className="text-[#432818] leading-relaxed">{description}</p>
+                </AnimatedWrapper>
+                <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={600}>
+                  <div className="bg-white rounded-lg p-4 shadow-sm border border-[#B89B7A]/10 glass-panel">
+                    <h3 className="text-lg font-medium text-[#432818] mb-2">Seu Guia de Estilo Completo</h3> {/* Changed heading */}
+                    {/* SecondaryStylesSection is now part of StyleGuidesVisual or can be removed if not needed */}
+                  </div>
+                </AnimatedWrapper>
+              </div>
+            </div>
+
             {/* --- AJUSTADO AQUI: A SEÇÃO DA IMAGEM DO GUIA PRINCIPAL E AS MINIATURAS --- */}
             {/* Agora usando o componente StyleGuidesVisual aninhado */}
             <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={800}>
-              <StyleGuidesVisual 
-                primaryGuideImage={guideImage} 
-                category={category} 
-                secondaryStyles={secondaryStyles} 
-                isLowPerformance={isLowPerformance} 
+              <StyleGuidesVisual
+                primaryGuideImage={guideImage}
+                category={category}
+                secondaryStyles={secondaryStyles}
+                isLowPerformance={isLowPerformance}
               />
             </AnimatedWrapper>
             
+            {/* Add the new StylePercentageChart component here */}
+            <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={900}>
+              <div className="mt-8">
+                <StylePercentageChart primaryStyle={primaryStyle} secondaryStyles={secondaryStyles} />
+              </div>
+            </AnimatedWrapper>
+
             {/* CTA Section after Style Guide */}
             <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={850}>
               <div className="mt-8 text-center">
@@ -339,7 +350,6 @@ const ResultPage: React.FC = () => {
         </AnimatedWrapper>
 
         {/* --- INÍCIO: RENDERIZAÇÃO CONDICIONAL PARA O TESTE A/B (Variante B) --- */}
-        {/* UrgencyCountdown para a Variante B, mais abaixo na página */}
         {testVariant === 'B' && (
           <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={750} className="mb-8 md:mb-12">
             <UrgencyCountdown styleCategory={category} />
@@ -375,13 +385,25 @@ const ResultPage: React.FC = () => {
               </div>
             </div>
             
-            <Button onClick={handleCTAClick} className="text-white py-4 px-6 rounded-md btn-cta-green" onMouseEnter={() => setIsButtonHovered(true)} onMouseLeave={() => setIsButtonHovered(false)} style={{
-              background: "linear-gradient(to right, #4CAF50, #45a049)",
-              boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)"
-            }}>
-              <span className="flex items-center justify-center gap-2">
-                <ShoppingCart className={`w-5 h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-110' : ''}`} />
-                Quero meu Guia de Estilo Agora
+            <Button
+              onClick={handleCTAClick}
+              className="text-white py-4 px-6 rounded-lg shadow-lg transition-all duration-300 transform-none hover:scale-105 active:scale-95
+                          sm:transform hover:scale-105 sm:shadow-lg sm:hover:shadow-xl
+                          min-w-0"
+              style={{
+                background: "linear-gradient(to right, #4CAF50, #45a049)",
+                boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)"
+              }}
+              onMouseEnter={() => setIsButtonHovered(true)}
+              onMouseLeave={() => setIsButtonHovered(false)}
+            >
+              <span className="flex flex-col sm:flex-row items-center justify-center
+                                gap-1 sm:gap-3
+                                text-[0.65rem] xs:text-xs sm:text-base md:text-lg lg:text-xl
+                                leading-none text-center font-semibold">
+                {/* ICON HIDDEN ON SMALL SCREENS, VISIBLE ON SM AND UP */}
+                <ShoppingCart className={`hidden sm:block w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-120' : ''}`} />
+                <span>GARANTIR MEU GUIA {category.toUpperCase()} AGORA</span>
               </span>
             </Button>
             
@@ -392,6 +414,11 @@ const ResultPage: React.FC = () => {
             </div>
             
             <SecurePurchaseElement />
+
+            <p className="text-sm text-[#aa6b5d] mt-2 flex items-center justify-center gap-1">
+              <Lock className="w-3 h-3" />
+              <span>Oferta exclusiva para {category} - Apenas nesta página</span>
+            </p>
           </div>
         </AnimatedWrapper>
 
@@ -461,39 +488,37 @@ const ResultPage: React.FC = () => {
                 <p className="text-4xl font-bold text-[#4CAF50]">R$ 39,00</p>
                 <p className="text-xs text-[#3a3a3a]/60 mt-1">ou 5x de R$ 8,83</p>
                 <div className="mt-2 bg-[#ff6b6b]/10 rounded-full px-3 py-1 inline-block">
-                  <p className="text-xs text-[#ff6b6b] font-medium">💥 Preço volta para R$ 175 em breve</p>
+                  <p className="text-xs text-[#ff6b6b] font-medium animate-pulse">💥 Preço volta para R$ 175 em breve</p>
                 </div>
               </div>
             </div>
 
-            <Button 
-              onClick={handleCTAClick} 
+            <Button
+              onClick={handleCTAClick}
               className="text-white py-6 px-3 sm:px-8 md:px-10 rounded-lg shadow-lg transition-all duration-300 transform-none hover:scale-105 active:scale-95
                          sm:transform hover:scale-105 sm:shadow-lg sm:hover:shadow-xl
-                         min-w-0" 
+                         min-w-0"
               style={{
                 background: "linear-gradient(to right, #458B74, #3D7A65)", // Verde floresta mais elegante
                 boxShadow: "0 2px 8px rgba(61, 122, 101, 0.2)" // Sombra mais suave
-              }} 
-              onMouseEnter={() => setIsButtonHovered(true)} 
+              }}
+              onMouseEnter={() => setIsButtonHovered(true)}
               onMouseLeave={() => setIsButtonHovered(false)}
             >
-              <span className="flex flex-col sm:flex-row items-center justify-center 
-                                 gap-1 sm:gap-3 
-                                 text-[0.65rem] xs:text-xs sm:text-base md:text-lg lg:text-xl 
-                                 leading-none text-center font-semibold">
+              <span className="flex flex-col sm:flex-row items-center justify-center
+                                gap-1 sm:gap-3
+                                text-[0.65rem] xs:text-xs sm:text-base md:text-lg lg:text-xl
+                                leading-none text-center font-semibold">
                 {/* ICON HIDDEN ON SMALL SCREENS, VISIBLE ON SM AND UP */}
                 <ShoppingCart className={`hidden sm:block w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-120' : ''}`} />
                 <span>GARANTIR MEU GUIA {category.toUpperCase()} AGORA</span>
               </span>
             </Button>
             
-            <div className="text-center mb-4">
-              <div className="bg-[#ff6b6b]/10 rounded-full px-2 py-1 inline-block border border-[#ff6b6b]/20">
-                <p className="text-[0.65rem] xs:text-xs sm:text-sm text-[#ff6b6b] font-medium animate-pulse leading-tight tracking-tight px-1 py-0.5">
-                  ⚡ Esta oferta expira ao sair desta página
-                </p>
-              </div>
+            <div className="mt-2 inline-block bg-[#aa6b5d]/10 px-3 py-1 rounded-full">
+              <p className="text-sm text-[#aa6b5d] font-medium flex items-center justify-center gap-1">
+                {/* Content was empty, removed extra spaces */}
+              </p>
             </div>
             
             <SecurePurchaseElement />
