@@ -1,7 +1,9 @@
 import React from 'react';
-import { Card } from '@/components/ui/card'; // Card pode ser removido se não for usado para outros fins neste arquivo
+import { useAuth } from '@/context/AuthContext';
+import { styleConfig } from '@/config/styleConfig'; // Importa o styleConfig
+import { AnimatedWrapper } from '@/components/ui/animated-wrapper'; // Importa o AnimatedWrapper
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Star } from 'lucide-react'; // Ícone Star removido daqui
+import { ShoppingCart } from 'lucide-react'; // Ícone ShoppingCart é usado, Star não é.
 
 interface PersonalizedHookProps {
   styleCategory: string;
@@ -70,8 +72,10 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
   userName = "Querida",
   onCTAClick
 }) => {
+  // Garante que styleMessages[styleCategory] não seja undefined
   const messages = styleMessages[styleCategory] || styleMessages['Natural'];
-  
+  const { image } = styleConfig[styleCategory] || {}; // Obter a imagem do styleConfig
+
   return (
     <div className="text-center p-0">
       <div className="mb-6">
@@ -82,6 +86,20 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
           {messages.congratsMessage}
         </p>
         
+        {/* Adicionando a imagem do estilo predominante aqui */}
+        {image && (
+          <AnimatedWrapper animation="fade-in-up" show={true} duration={500} delay={250}>
+            <div className="my-6 mx-auto max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"> {/* Container responsivo para a imagem */}
+              <img
+                src={`${image}?q=auto:best&f=auto&w=400`} // Otimiza a imagem para largura de 400px
+                alt={`Estilo ${styleCategory}`}
+                className="w-full h-auto rounded-lg shadow-md border border-[#B89B7A]/10"
+                loading="lazy"
+              />
+            </div>
+          </AnimatedWrapper>
+        )}
+
         <div className="bg-white/80 rounded-lg p-4 sm:p-5 shadow-sm border border-[#B89B7A]/20 mt-6 mb-6 text-left">
           <div className="flex items-start gap-3">
             {/* Ícone Star REMOVIDO AQUI */}
