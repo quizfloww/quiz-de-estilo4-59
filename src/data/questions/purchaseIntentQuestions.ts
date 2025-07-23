@@ -15,7 +15,7 @@ export const purchaseIntentQuestions: QuizQuestion[] = [
       },
       {
         id: 'strategic-5-2',
-        text: 'Sim, já investi em algum curso/guia/consultoria',
+        text: 'Sim, já investi em algum curso, guia ou consultoria',
         styleCategory: 'Strategic'
       },
       {

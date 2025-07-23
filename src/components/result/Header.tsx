@@ -2,7 +2,8 @@ import React from 'react';
 import { Crown } from 'lucide-react'; 
 import { StyleResult } from '@/types/quiz'; 
 import { useAuth } from '@/context/AuthContext'; 
-import { Card } from '@/components/ui/card'; // Certifique-se de que Card está importado aqui
+import { Card } from '@/components/ui/card';
+import { styleConfig } from '@/data/styleConfig';
 
 interface HeaderProps {
   primaryStyle?: StyleResult; 
@@ -46,6 +47,23 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="text-xl md:text-2xl text-[#aa6b5d]"> Seu Estilo Predominante é:</span>
         </h1>
         
+        {/* Nova seção para o nome e imagem do estilo */}
+        {primaryStyle && (
+          <div className="flex flex-col items-center gap-4">
+            <h2 className="text-3xl md:text-4xl font-playfair font-bold text-[#432818] text-center">
+              {primaryStyle.category}
+            </h2>
+            
+            {/* Imagem do estilo predominante */}
+            <div className="w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden shadow-lg">
+              <img
+                src={styleConfig[primaryStyle.category]?.image || ''}
+                alt={`Estilo ${primaryStyle.category}`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   );

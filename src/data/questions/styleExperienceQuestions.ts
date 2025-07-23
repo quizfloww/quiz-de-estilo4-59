@@ -15,7 +15,7 @@ export const styleExperienceQuestions: QuizQuestion[] = [
       },
       {
         id: 'strategic-3-2',
-        text: 'Lendo guias detalhados com explicações passo-a-passo',
+        text: 'Lendo guias detalhados com explicações passo a passo',
         styleCategory: 'Strategic'
       },
       {
@@ -49,7 +49,7 @@ export const styleExperienceQuestions: QuizQuestion[] = [
       },
       {
         id: 'strategic-4-3',
-        text: 'Explicações detalhadas sobre o porquê das recomendações',
+        text: 'Explicações detalhadas sobre o por que das recomendações',
         styleCategory: 'Strategic'
       },
       {
