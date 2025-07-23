@@ -86,14 +86,15 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
           {messages.congratsMessage}
         </p>
         
-        {/* Adicionando a imagem do estilo predominante aqui */}
+        {/* Adicionando a imagem do estilo predominante aqui, 50% menor e com efeitos */}
         {image && (
           <AnimatedWrapper animation="fade-in-up" show={true} duration={500} delay={250}>
-            <div className="my-6 mx-auto max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"> {/* Container responsivo para a imagem */}
+            {/* Ajustado max-w para ser menor e o 'w' na URL para 200px (metade de 400px) */}
+            <div className="my-6 mx-auto max-w-[200px] sm:max-w-[200px] md:max-w-[200px] lg:max-w-[200px]"> {/* Container responsivo para a imagem */}
               <img
-                src={`${image}?q=auto:best&f=auto&w=400`} // Otimiza a imagem para largura de 400px
+                src={`${image}?q=auto:best&f=auto&w=200`} // Otimiza a imagem para largura de 200px
                 alt={`Estilo ${styleCategory}`}
-                className="w-full h-auto rounded-lg shadow-md border border-[#B89B7A]/10"
+                className="w-full h-auto rounded-lg shadow-lg border-2 border-[#B89B7A]/50" // Sombra maior e borda mais visível
                 loading="lazy"
               />
             </div>
