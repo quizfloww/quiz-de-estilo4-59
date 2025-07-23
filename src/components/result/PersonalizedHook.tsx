@@ -89,14 +89,22 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
         {/* Adicionando a imagem do estilo predominante aqui, 50% menor e com efeitos */}
         {image && (
           <AnimatedWrapper animation="fade-in-up" show={true} duration={500} delay={250}>
-            {/* Ajustado max-w para ser menor e o 'w' na URL para 200px (metade de 400px) */}
-            <div className="my-6 mx-auto max-w-[200px] sm:max-w-[200px] md:max-w-[200px] lg:max-w-[200px]"> {/* Container responsivo para a imagem */}
+            {/* Adicionado 'group' para permitir efeitos de hover no filho */}
+            <div className="group my-6 mx-auto max-w-[200px] sm:max-w-[200px] md:max-w-[200px] lg:max-w-[200px] relative">
               <img
                 src={`${image}?q=auto:best&f=auto&w=200`} // Otimiza a imagem para largura de 200px
                 alt={`Estilo ${styleCategory}`}
-                className="w-full h-auto rounded-lg shadow-xl border-2 border-[#B89B7A] transform transition-all duration-300 hover:scale-105 hover:rotate-1" // Sombra mais pronunciada, borda sólida e efeito hover
+                // Efeitos de sombra, borda e transformação no hover
+                className="w-full h-auto rounded-lg shadow-lg border border-[#B89B7A]
+                           transform transition-all duration-300
+                           group-hover:scale-103 group-hover:-translate-y-1 group-hover:border-[#aa6b5d]" // Ajustes para efeito mais elegante e borda delicada
                 loading="lazy"
               />
+              {/* Elementos decorativos de canto que aparecem no hover */}
+              <div className="absolute top-0 left-0 w-full h-full rounded-lg pointer-events-none">
+                <div className="absolute -top-2 -left-2 w-8 h-8 border-t border-l border-[#B89B7A] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute -bottom-2 -right-2 w-8 h-8 border-b border-r border-[#B89B7A] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
             </div>
           </AnimatedWrapper>
         )}
@@ -134,7 +142,7 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
       </div>
       
       {/* Mensagem de Urgência - Agora com um mt- para separá-la do bloco de selo/botão */}
-      <p className="text-[#ff6b6b] text-sm font-medium mt-4 sm:mt-6"> {/* Adicionado mt-4/6 */}
+      <p className="text-[#ff6b6b] text-xs font-medium mt-4 sm:mt-6"> {/* Alterado de text-sm para text-xs */}
         ⚡ Esta oferta expira quando você sair desta página
       </p>
     </div>
