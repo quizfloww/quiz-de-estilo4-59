@@ -98,6 +98,9 @@ const ResultPage: React.FC = () => {
 
     const { category } = primaryStyle;
     const { guideImage } = styleConfig[category];
+    const styleImg = new Image();
+    styleImg.src = `${image}?q=auto:best&f=auto&w=238`;
+    styleImg.onload = () => setImagesLoaded(prev => ({ ...prev, style: true }));
     const guideImg = new Image();
     guideImg.src = `${guideImage}?q=auto:best&f=auto&w=540`;
     guideImg.onload = () => setImagesLoaded(prev => ({ ...prev, guide: true }));
@@ -111,7 +114,7 @@ const ResultPage: React.FC = () => {
   if (isLoading) return <ResultSkeleton />;
 
   const { category } = primaryStyle;
-  const { guideImage, description } = styleConfig[category];
+  const { image, guideImage, description } = styleConfig[category];
 
   const handleCTAClick = () => {
     if (typeof window !== 'undefined' && (window as any).gtag) {
