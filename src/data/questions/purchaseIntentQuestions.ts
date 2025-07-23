@@ -1,60 +1,60 @@
+
 import { QuizQuestion } from '../../types/quiz';
 
 export const purchaseIntentQuestions: QuizQuestion[] = [
   {
     id: 'strategic-5',
-    title: 'Você já considerou investir em algum guia ou consultoria de estilo no passado?',
+    title: 'Quanto você costuma gastar com roupas por mês?',
     type: 'text',
     multiSelect: 1,
-    // A questão 15 (strategic-5) não deve ter imagem
     options: [
       {
         id: 'strategic-5-1',
-        text: 'Sim, já pesquisei mas não cheguei a comprar',
+        text: 'Até R$ 200',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-5-2',
-        text: 'Sim, já investi em algum curso, guia ou consultoria',
+        text: 'De R$ 200 a R$ 500',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-5-3',
-        text: 'Não, esta é a primeira vez que considero isso',
+        text: 'De R$ 500 a R$ 1.000',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-5-4',
-        text: 'Prefiro não responder',
+        text: 'Mais de R$ 1.000',
         styleCategory: 'Strategic'
       }
     ]
   },
   {
     id: 'strategic-6',
-    title: 'Quanto você estaria disposta a investir em um guia completo de estilo personalizado?',
+    title: 'Quanto você investiria em um guia completo de estilo?',
     type: 'text',
     multiSelect: 1,
-    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744920677/Espanhol_Portugu%C3%AAs_6_jxqlxx.webp',
+    imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430326/MOCKUPS_DE_TODOS_OS_PRODUTOS_-_GUIAS_DE_ESILOS_E_B?NUS_legwsb.png',
     options: [
       {
         id: 'strategic-6-1',
-        text: 'Menos de R$100',
+        text: 'Até R$ 50',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-6-2',
-        text: 'Entre R$100 e R$300',
+        text: 'De R$ 50 a R$ 150',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-6-3',
-        text: 'Entre R$300 e R$500',
+        text: 'De R$ 150 a R$ 300',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-6-4',
-        text: 'Mais de R$500',
+        text: 'Mais de R$ 300',
         styleCategory: 'Strategic'
       }
     ]

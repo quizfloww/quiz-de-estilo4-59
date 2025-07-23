@@ -1,36 +1,32 @@
+
 import { QuizQuestion } from '../../types/quiz';
 
 export const desiredOutcomesQuestions: QuizQuestion[] = [
   {
     id: 'strategic-7',
-    title: 'Qual desses resultados você mais gostaria de alcançar com os Guias de Estilo e Imagem?',
+    title: 'Qual resultado você mais deseja alcançar?',
     type: 'text',
     multiSelect: 1,
-    imageUrl: 'https://res.cloudinary.com/dqljyf76t/image/upload/t_Antes%20e%20Depois%20-%20de%20Descobrir%20seu%20Estilo/v1745459978/20250423_1704_Transforma%C3%A7%C3%A3o_no_Closet_Moderno_simple_compose_01jsj3xvy6fpfb6pyd5shg5eak_1_appany.webp',
+    imageUrl: 'https://res.cloudinary.com/der8kogzu/image/upload/v1752430331/ANTES_E_DEPOIS_MULHER_-_CEN?RIO_RUA_ratm8d.png',
     options: [
       {
         id: 'strategic-7-1',
-        text: 'Montar looks com mais facilidade e confiança',
+        text: 'Descobrir meu estilo predominante',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-7-2',
-        text: 'Usar o que já tenho e me sentir estilosa',
+        text: 'Aprender a combinar peças corretamente',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-7-3',
-        text: 'Comprar com mais consciência e sem culpa',
+        text: 'Organizar e otimizar meu guarda-roupa',
         styleCategory: 'Strategic'
       },
       {
         id: 'strategic-7-4',
-        text: 'Ser admirada pela imagem que transmito',
-        styleCategory: 'Strategic'
-      },
-      {
-        id: 'strategic-7-5',
-        text: 'Resgatar peças esquecidas e criar novos looks com estilo',
+        text: 'Ter um guia completo para compras futuras',
         styleCategory: 'Strategic'
       }
     ]

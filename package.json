@@ -60,6 +60,7 @@
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.12.1",
+    "imagekitio-react": "^4.3.0",
     "input-otp": "^1.2.4",
     "isomorphic-dompurify": "^2.25.0",
     "lodash": "^4.17.21",
