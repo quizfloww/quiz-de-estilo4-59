@@ -29,7 +29,7 @@ import UrgencyCountdown from '@/components/result/UrgencyCountdown';
 
 // Importe StyleResult, pois será usado no StyleGuidesVisual aninhado
 import { StyleResult } from '@/types/quiz';
-import StylePercentageChart from '../StylePercentageChart'; // Corrected import path for the new component
+import StylePercentageChart from '@/components/StylePercentageChart'; // Corrected import path
 
 // Remover 'export' da declaração 'export const ResultPage'
 const ResultPage: React.FC = () => {
