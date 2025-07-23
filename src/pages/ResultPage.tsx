@@ -1,37 +1,157 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useQuiz } from '@/hooks/useQuiz';
-import { useGlobalStyles } from '@/hooks/useGlobalStyles';
-import { Header } from '@/components/result/Header';
-import { styleConfig } from '@/config/styleConfig';
-import { Progress } from '@/components/ui/progress';
-import { Card } from '@/components/ui/card';
-import { ShoppingCart, CheckCircle, ArrowDown, Lock } from 'lucide-react';
-import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
-import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
-import ErrorState from '@/components/result/ErrorState';
-import MotivationSection from '@/components/result/MotivationSection';
-import MentorSection from '@/components/result/MentorSection';
-import GuaranteeSection from '@/components/result/GuaranteeSection';
-import Testimonials from '@/components/quiz-result/sales/Testimonials';
-import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
-import BonusSection from '@/components/result/BonusSection';
-import { Button } from '@/components/ui/button';
-import { useLoadingState } from '@/hooks/useLoadingState';
-import { useIsLowPerformanceDevice } from '@/hooks/use-mobile';
-import ResultSkeleton from '@/components/result/ResultSkeleton';
-import { trackButtonClick } from '@/utils/analytics';
-import BuildInfo from '@/components/BuildInfo';
-import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
-import { useAuth } from '@/context/AuthContext';
-import PersonalizedHook from '@/components/result/PersonalizedHook';
-import UrgencyCountdown from '@/components/result/UrgencyCountdown';
-// import StyleSpecificProof from '@/components/result/StyleSpecificProof'; 
+// Importações de hooks e componentes externos (simulados para este exemplo)
+// Em um projeto real, estes viriam de seus respectivos caminhos.
+// Exemplo de hooks e componentes que seriam importados:
+// import { useQuiz } from '@/hooks/useQuiz';
+// import { useGlobalStyles } from '@/hooks/useGlobalStyles';
+// import { Header } from '@/components/result/Header';
+// import { Progress } from '@/components/ui/progress';
+// import { Card } from '@/components/ui/card';
+// import { AnimatedWrapper } from '@/components/ui/animated-wrapper';
+// import SecondaryStylesSection from '@/components/quiz-result/SecondaryStylesSection';
+// import ErrorState from '@/components/result/ErrorState';
+// import MotivationSection from '@/components/result/MotivationSection';
+// import MentorSection from '@/components/result/MentorSection';
+// import GuaranteeSection from '@/components/result/GuaranteeSection';
+// import Testimonials from '@/components/quiz-result/sales/Testimonials';
+// import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
+// import BonusSection from '@/components/result/BonusSection';
+// import { Button } from '@/components/ui/button';
+// import { useLoadingState } from '@/hooks/useLoadingState';
+// import { useIsLowPerformanceDevice } from '@/hooks/use-mobile';
+// import ResultSkeleton from '@/components/result/ResultSkeleton';
+// import { trackButtonClick } from '@/utils/analytics';
+// import BuildInfo from '@/components/BuildInfo';
+// import SecurePurchaseElement from '@/components/result/SecurePurchaseElement';
+// import { useAuth } from '@/context/AuthContext';
+// import PersonalizedHook from '@/components/result/PersonalizedHook';
+// import UrgencyCountdown from '@/components/result/UrgencyCountdown';
 
-// Importe StyleResult, pois será usado no StyleGuidesVisual aninhado
-import { StyleResult } from '@/types/quiz'; 
 
-// Remover 'export' da declaração 'export const ResultPage'
-const ResultPage: React.FC = () => { 
+// Ícones do lucide-react (simulados para este exemplo, em um projeto real viriam de 'lucide-react')
+const ShoppingCart = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>;
+const CheckCircle = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 1 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>;
+const ArrowDown = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-down"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>;
+const Lock = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
+
+// Definições simplificadas para fins de demonstração (em um projeto real, viriam de seus respectivos arquivos)
+interface StyleResult {
+  category: string;
+  percentage: number;
+}
+
+const styleConfig: { [key: string]: { image: string; guideImage: string; description: string } } = {
+  "Elegante": {
+    image: "https://placehold.co/238x300/B89B7A/FFFFFF?text=Estilo+Elegante",
+    guideImage: "https://placehold.co/540x350/B89B7A/FFFFFF?text=Guia+Elegante",
+    description: "Seu estilo Elegante reflete sofisticação e atemporalidade. Você valoriza peças clássicas, caimento impecável e tecidos de alta qualidade. Sua imagem transmite confiança e refinamento, sempre com um toque de discrição e bom gosto. Você busca harmonia e equilíbrio em suas escolhas, preferindo cores neutras e cortes estruturados que realçam sua silhueta de forma elegante."
+  },
+  "Criativo": {
+    image: "https://placehold.co/238x300/aa6b5d/FFFFFF?text=Estilo+Criativo",
+    guideImage: "https://placehold.co/540x350/aa6b5d/FFFFFF?text=Guia+Criativo",
+    description: "O estilo Criativo é a sua forma de expressar originalidade e personalidade através da moda. Você adora misturar estampas, texturas e cores de maneiras inesperadas, criando looks únicos e cheios de vida. Sua criatividade se manifesta na escolha de acessórios diferenciados e na capacidade de transformar peças comuns em algo extraordinário. Você não tem medo de ousar e de usar a moda como uma tela para sua arte."
+  },
+  "Moderno": {
+    image: "https://placehold.co/238x300/432818/FFFFFF?text=Estilo+Moderno",
+    guideImage: "https://placehold.co/540x350/432818/FFFFFF?text=Guia+Moderno",
+    description: "Seu estilo Moderno é caracterizado por linhas limpas, design minimalista e uma preferência por inovações e tendências. Você aprecia a funcionalidade e a simplicidade, optando por peças com cortes retos e cores sólidas. A tecnologia e a vanguarda te atraem, e você busca uma imagem contemporânea e sofisticada, sem excessos. Seu guarda-roupa é prático e versátil, ideal para a mulher dinâmica e atual."
+  },
+  "Romântico": {
+    image: "https://placehold.co/238x300/F3E8E6/432818?text=Estilo+Romântico",
+    guideImage: "https://placehold.co/540x350/F3E8E6/432818?text=Guia+Romântico",
+    description: "O estilo Romântico em você se manifesta através da delicadeza, feminilidade e um toque de sonho. Você adora tecidos fluidos, rendas, babados e estampas florais. Cores suaves e tons pastel são suas escolhas preferidas, criando uma imagem gentil e acolhedora. Seu guarda-roupa é repleto de peças que evocam ternura e graça, refletindo sua essência doce e sonhadora."
+  }
+};
+
+// Mock de hooks e componentes para que o código seja executável
+const useQuiz = () => ({
+  primaryStyle: { category: "Elegante", percentage: 70 },
+  secondaryStyles: [{ category: "Criativo", percentage: 30 }, { category: "Moderno", percentage: 20 }, { category: "Romântico", percentage: 10 }]
+});
+const useGlobalStyles = () => ({
+  backgroundColor: '#fffaf7',
+  textColor: '#432818',
+  fontFamily: 'Inter, sans-serif',
+  logoHeight: '40px',
+  logo: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp',
+  logoAlt: 'Logo da Marca Gisele'
+});
+const useAuth = () => ({ user: { userName: "Maria" } });
+const useLoadingState = ({ minDuration, disableTransitions }: { minDuration: number; disableTransitions: boolean }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), minDuration);
+    return () => clearTimeout(timer);
+  }, [minDuration]);
+  return { isLoading, completeLoading: () => setIsLoading(false) };
+};
+const useIsLowPerformanceDevice = () => false; // Simula um dispositivo de alto desempenho
+const trackButtonClick = (id: string, label: string, category: string) => console.log(`Analytics: ${id}, ${label}, ${category}`);
+
+// Mock de componentes
+const Header = ({ primaryStyle, logoHeight, logo, logoAlt, userName, className }: any) => (
+  <header className={`text-center py-4 ${className}`} style={{ backgroundColor: '#fdf8f5' }}>
+    <img src={logo} alt={logoAlt} style={{ height: logoHeight }} className="mx-auto mb-2" />
+    <h1 className="text-xl font-semibold text-[#432818]">Seu Resultado de Estilo</h1>
+    {userName && <p className="text-sm text-[#8F7A6A]">Olá, {userName}!</p>}
+  </header>
+);
+const Progress = ({ value, className, indicatorClassName }: any) => (
+  <div className={`w-full bg-gray-200 rounded-full ${className}`}>
+    <div className={`h-full rounded-full ${indicatorClassName}`} style={{ width: `${value}%` }}></div>
+  </div>
+);
+const Card = ({ children, className }: any) => (
+  <div className={`bg-white rounded-lg shadow-md ${className}`}>
+    {children}
+  </div>
+);
+const AnimatedWrapper = ({ children, animation, show, duration, delay, className }: any) => (
+  <div className={className} style={{ opacity: show ? 1 : 0, transition: `opacity ${duration}ms ease ${delay}ms` }}>
+    {children}
+  </div>
+);
+const SecondaryStylesSection = ({ secondaryStyles }: any) => (
+  <div className="flex flex-wrap gap-2 justify-center">
+    {secondaryStyles.map((style: any, index: number) => (
+      <span key={index} className="bg-[#F3E8E6] text-[#8F7A6A] text-xs px-2 py-1 rounded-full">{style.category} ({style.percentage}%)</span>
+    ))}
+  </div>
+);
+const ErrorState = () => <div className="text-center p-8 text-red-500">Ocorreu um erro ao carregar seu estilo.</div>;
+const MotivationSection = () => <Card className="p-6 text-center"><h2>Seção de Motivação</h2><p>Conteúdo inspirador aqui.</p></Card>;
+const MentorSection = () => <Card className="p-6 text-center"><h2>Seção da Mentora</h2><p>Informações sobre a Gisele Galvão.</p></Card>;
+const GuaranteeSection = () => <Card className="p-6 text-center"><h2>Seção de Garantia</h2><p>Informações sobre a garantia do produto.</p></Card>;
+const Testimonials = () => <Card className="p-6 text-center"><h2>Depoimentos</h2><p>Carrossel de depoimentos de clientes.</p></Card>;
+const BeforeAfterTransformation = () => <Card className="p-6 text-center"><h2>Antes e Depois</h2><p>Imagens de transformação.</p></Card>;
+const BonusSection = () => <Card className="p-6 text-center"><h2>Seção de Bônus</h2><p>Detalhes dos bônus exclusivos.</p></Card>;
+const Button = ({ children, onClick, className, style, onMouseEnter, onMouseLeave }: any) => (
+  <button onClick={onClick} className={`block w-full ${className}`} style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    {children}
+  </button>
+);
+const ResultSkeleton = () => <div className="text-center p-8">Carregando resultados...</div>;
+const BuildInfo = () => <footer className="text-center text-xs text-gray-400 py-4 mt-8">Build Info (simulado)</footer>;
+const SecurePurchaseElement = () => <div className="text-center text-sm text-gray-500 mt-4 flex items-center justify-center gap-1"><Lock className="w-3 h-3" /> Compra Segura</div>;
+const PersonalizedHook = ({ styleCategory, userName, onCTAClick }: any) => (
+  <div className="text-center mb-4">
+    <h2 className="text-2xl md:text-3xl font-playfair text-[#432818] mb-2">
+      {userName ? `Olá, ${userName}!` : 'Descubra seu estilo!'}
+    </h2>
+    <p className="text-lg text-[#aa6b5d] font-semibold">
+      Seu estilo predominante é: <span className="font-bold">{styleCategory}</span>
+    </p>
+  </div>
+);
+const UrgencyCountdown = ({ styleCategory }: any) => (
+  <div className="text-center bg-[#fef2f2] p-4 rounded-lg border border-[#ff6b6b]/20">
+    <p className="text-sm text-[#ff6b6b] font-medium">
+      ⏳ Oferta especial para {styleCategory} expira em breve!
+    </p>
+  </div>
+);
+
+const ResultPage: React.FC = () => {
   const {
     primaryStyle,
     secondaryStyles
@@ -127,7 +247,6 @@ const ResultPage: React.FC = () => {
   };
 
   // --- INÍCIO: COMPONENTE StyleGuidesVisual ANINHADO ---
-  // Remova o StyleGuidesVisual.tsx se você não precisar mais dele como arquivo separado
   interface StyleGuidesVisualProps {
     primaryGuideImage: string;
     category: string;
@@ -195,13 +314,13 @@ const ResultPage: React.FC = () => {
       {/* Decorative background elements - Mantidos, pois são sutis e adicionam profundidade */}
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-[#B89B7A]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-[#aa6b5d]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
-      
+
       <Header primaryStyle={primaryStyle} logoHeight={globalStyles.logoHeight} logo={globalStyles.logo} logoAlt={globalStyles.logoAlt} userName={user?.userName} className="mb-0" />
 
       <div className="container mx-auto px-4 py-6 max-w-4xl relative z-10">
         <Card className="p-4 sm:p-6 md:p-8 mb-8 md:mb-12 bg-white border-[#B89B7A]/10 shadow-sm -mt-4 sm:-mt-6 md:-mt-8">
             <AnimatedWrapper animation="fade" show={true} duration={600} delay={100}>
-                <PersonalizedHook 
+                <PersonalizedHook
                     styleCategory={category}
                     userName={user?.userName}
                     onCTAClick={handleCTAClick}
@@ -218,7 +337,7 @@ const ResultPage: React.FC = () => {
         {/* PROVA SOCIAL: Style-Specific Social Proof (Mantenha comentado ou remova se não for usar) */}
         {/*
         <AnimatedWrapper animation="fade" show={true} duration={400} delay={300} className="mb-8 md:mb-12">
-          <StyleSpecificProof 
+          <StyleSpecificProof
             styleCategory={category}
             userName={user?.userName}
           />
@@ -255,9 +374,9 @@ const ResultPage: React.FC = () => {
               <AnimatedWrapper animation={isLowPerformance ? 'none' : 'scale'} show={true} duration={500} delay={500}>
                 {/* AQUI ESTÁ A IMAGEM DO ESTILO PREDOMINANTE. Ela deve ser menor no mobile */}
                 <div className="max-w-[238px] mx-auto relative">
-                  <img src={`${image}?q=auto:best&f=auto&w=238`} alt={`Estilo ${category}`} 
-                       className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-xs sm:max-w-[238px]" /* max-w-xs para mobile, sm:max-w-[238px] para sm+ */
-                       loading="eager" fetchPriority="high" width="238" height="auto" />
+                  <img src={`${image}?q=auto:best&f=auto&w=238`} alt={`Estilo ${category}`}
+                         className="w-full h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300 max-w-xs sm:max-w-[238px]" /* max-w-xs para mobile, sm:max-w-[238px] para sm+ */
+                         loading="eager" fetchPriority="high" width="238" height="auto" />
                   {/* Elegant decorative corner */}
                   <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
                   <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
@@ -268,14 +387,14 @@ const ResultPage: React.FC = () => {
             {/* --- AJUSTADO AQUI: A SEÇÃO DA IMAGEM DO GUIA PRINCIPAL E AS MINIATURAS --- */}
             {/* Agora usando o componente StyleGuidesVisual aninhado */}
             <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={800}>
-              <StyleGuidesVisual 
-                primaryGuideImage={guideImage} 
-                category={category} 
-                secondaryStyles={secondaryStyles} 
-                isLowPerformance={isLowPerformance} 
+              <StyleGuidesVisual
+                primaryGuideImage={guideImage}
+                category={category}
+                secondaryStyles={secondaryStyles}
+                isLowPerformance={isLowPerformance}
               />
             </AnimatedWrapper>
-            
+
             {/* CTA Section after Style Guide */}
             <AnimatedWrapper animation={isLowPerformance ? 'none' : 'fade'} show={true} duration={400} delay={850}>
               <div className="mt-8 text-center">
@@ -374,7 +493,7 @@ const ResultPage: React.FC = () => {
                 <ArrowDown className="w-8 h-8 text-[#B89B7A] animate-bounce" />
               </div>
             </div>
-            
+
             <Button onClick={handleCTAClick} className="text-white py-4 px-6 rounded-md btn-cta-green" onMouseEnter={() => setIsButtonHovered(true)} onMouseLeave={() => setIsButtonHovered(false)} style={{
               background: "linear-gradient(to right, #4CAF50, #45a049)",
               boxShadow: "0 4px 14px rgba(76, 175, 80, 0.4)"
@@ -384,13 +503,13 @@ const ResultPage: React.FC = () => {
                 Quero meu Guia de Estilo Agora
               </span>
             </Button>
-            
+
             <div className="mt-2 inline-block bg-[#aa6b5d]/10 px-3 py-1 rounded-full">
               <p className="text-sm text-[#aa6b5d] font-medium flex items-center justify-center gap-1">
                 {/* Content was empty, removed extra spaces */}
               </p>
             </div>
-            
+
             <SecurePurchaseElement />
           </div>
         </AnimatedWrapper>
@@ -413,8 +532,8 @@ const ResultPage: React.FC = () => {
             </h2>
             <div className="elegant-divider"></div>
             <p className="text-[#432818] mb-6 max-w-xl mx-auto">
-              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção. 
-              O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir 
+              Agora que você conhece seu estilo, é hora de aplicá-lo com clareza e intenção.
+              O Guia da Gisele Galvão foi criado para mulheres como você — que querem se vestir
               com autenticidade e transformar sua imagem em ferramenta de poder.
             </p>
 
@@ -433,7 +552,7 @@ const ResultPage: React.FC = () => {
             {/* ANCORAGEM DE PREÇO: Strategic Price Anchoring */}
             <div className="bg-white p-6 rounded-lg shadow-md border border-[#B89B7A]/20 card-elegant mb-8 max-w-md mx-auto">
               <h3 className="text-xl font-medium text-center text-[#aa6b5d] mb-4">O Que Você Recebe Hoje</h3>
-              
+
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between items-center p-2 border-b border-[#B89B7A]/10">
                   <span>Guia Principal</span>
@@ -455,7 +574,7 @@ const ResultPage: React.FC = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-center p-4 bg-gradient-to-r from-[#4CAF50]/10 to-[#45a049]/10 rounded-lg border border-[#4CAF50]/30">
                 <p className="text-sm text-[#4CAF50] uppercase font-medium">Especial para {category}: -78% HOJE</p>
                 <p className="text-4xl font-bold text-[#4CAF50]">R$ 39,00</p>
@@ -466,28 +585,28 @@ const ResultPage: React.FC = () => {
               </div>
             </div>
 
-            <Button 
-              onClick={handleCTAClick} 
+            <Button
+              onClick={handleCTAClick}
               className="text-white py-6 px-3 sm:px-8 md:px-10 rounded-lg shadow-lg transition-all duration-300 transform-none hover:scale-105 active:scale-95
-                         sm:transform hover:scale-105 sm:shadow-lg sm:hover:shadow-xl
-                         min-w-0" 
+                          sm:transform hover:scale-105 sm:shadow-lg sm:hover:shadow-xl
+                          min-w-0"
               style={{
                 background: "linear-gradient(to right, #458B74, #3D7A65)", // Verde floresta mais elegante
                 boxShadow: "0 2px 8px rgba(61, 122, 101, 0.2)" // Sombra mais suave
-              }} 
-              onMouseEnter={() => setIsButtonHovered(true)} 
+              }}
+              onMouseEnter={() => setIsButtonHovered(true)}
               onMouseLeave={() => setIsButtonHovered(false)}
             >
-              <span className="flex flex-col sm:flex-row items-center justify-center 
-                                 gap-1 sm:gap-3 
-                                 text-[0.65rem] xs:text-xs sm:text-base md:text-lg lg:text-xl 
-                                 leading-none text-center font-semibold">
+              <span className="flex flex-col sm:flex-row items-center justify-center
+                                gap-1 sm:gap-3
+                                text-[0.65rem] xs:text-xs sm:text-base md:text-lg lg:text-xl
+                                leading-none text-center font-semibold">
                 {/* ICON HIDDEN ON SMALL SCREENS, VISIBLE ON SM AND UP */}
                 <ShoppingCart className={`hidden sm:block w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${isButtonHovered ? 'scale-120' : ''}`} />
                 <span>GARANTIR MEU GUIA {category.toUpperCase()} AGORA</span>
               </span>
             </Button>
-            
+
             <div className="text-center mb-4">
               <div className="bg-[#ff6b6b]/10 rounded-full px-2 py-1 inline-block border border-[#ff6b6b]/20">
                 <p className="text-[0.65rem] xs:text-xs sm:text-sm text-[#ff6b6b] font-medium animate-pulse leading-tight tracking-tight px-1 py-0.5">
@@ -495,7 +614,7 @@ const ResultPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            
+
             <SecurePurchaseElement />
 
             <p className="text-sm text-[#aa6b5d] mt-2 flex items-center justify-center gap-1">
