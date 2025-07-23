@@ -16,7 +16,7 @@ import React, { useEffect, useState, useRef } from 'react';
 // import Testimonials from '@/components/quiz-result/sales/Testimonials';
 // import BeforeAfterTransformation from '@/components/result/BeforeAfterTransformation';
 // import BonusSection from '@/components/result/BonusSection';
-// import { Button } from '@/components/ui/button';
+// import { Button } => '@/components/ui/button';
 // import { useLoadingState } from '@/hooks/useLoadingState';
 // import { useIsLowPerformanceDevice } from '@/hooks/use-mobile';
 // import ResultSkeleton from '@/components/result/ResultSkeleton';
