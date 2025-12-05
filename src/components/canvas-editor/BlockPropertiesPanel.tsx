@@ -11,11 +11,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 interface BlockPropertiesPanelProps {
   block: CanvasBlock | null;
   onUpdateBlock: (block: CanvasBlock) => void;
+  compact?: boolean;
 }
 
 export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   block,
   onUpdateBlock,
+  compact = false,
 }) => {
   if (!block) {
     return (
@@ -392,6 +394,15 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         return <p className="text-sm text-muted-foreground">Bloco desconhecido</p>;
     }
   };
+
+  // Compact mode renders just the properties without wrapper
+  if (compact) {
+    return (
+      <div className="space-y-4">
+        {renderProperties()}
+      </div>
+    );
+  }
 
   return (
     <ScrollArea className="h-full">
