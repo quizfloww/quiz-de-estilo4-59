@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useQuizLogic } from '../hooks/useQuizLogic';
 import { UserResponse } from '@/types/quiz';
 import { toast } from './ui/use-toast';
@@ -9,7 +9,7 @@ import { QuizContent } from './quiz/QuizContent';
 import { QuizTransitionManager } from './quiz/QuizTransitionManager';
 import QuizNavigation from './quiz/QuizNavigation';
 import QuizIntro from './QuizIntro'; 
-import { strategicQuestions } from '@/data/strategicQuestions';
+import { getStrategicQuestions } from '@/data/strategicQuestions';
 import { useAuth } from '../context/AuthContext';
 import { trackQuizStart, trackQuizAnswer, trackQuizComplete, trackResultView } from '../utils/analytics';
 import { preloadImages } from '@/utils/imageManager';
@@ -23,6 +23,9 @@ import '../styles/enchanted-effects.css';
 const QuizPage: React.FC = () => {
   const { user, login } = useAuth();
   const navigate = useNavigate();
+  
+  // Load strategic questions dynamically from editor config
+  const strategicQuestions = useMemo(() => getStrategicQuestions(), []);
   
   // Modificado: Sempre exibir o QuizIntro primeiro, independente do histórico
   const [showIntro, setShowIntro] = useState(true);

@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { quizQuestions } from "../data/quizQuestions";
+import { useState, useCallback, useEffect, useMemo } from "react";
+import { getQuizQuestions } from "../data/quizQuestions";
 import { QuizResult, StyleResult } from "../types/quiz";
 import {
   preloadImagesByUrls,
@@ -8,6 +8,9 @@ import {
 
 export const useQuizLogic = () => {
   console.log("useQuizLogic: Hook inicializado");
+
+  // Load quiz questions dynamically from editor config
+  const quizQuestions = useMemo(() => getQuizQuestions(), []);
 
   // 1. State declarations (all at the top)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
