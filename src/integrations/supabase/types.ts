@@ -14,6 +14,124 @@ export type Database = {
   }
   public: {
     Tables: {
+      funnel_responses: {
+        Row: {
+          answers: Json | null
+          completed_at: string | null
+          funnel_id: string | null
+          id: string
+          participant_email: string | null
+          participant_name: string | null
+          results: Json | null
+          started_at: string | null
+        }
+        Insert: {
+          answers?: Json | null
+          completed_at?: string | null
+          funnel_id?: string | null
+          id?: string
+          participant_email?: string | null
+          participant_name?: string | null
+          results?: Json | null
+          started_at?: string | null
+        }
+        Update: {
+          answers?: Json | null
+          completed_at?: string | null
+          funnel_id?: string | null
+          id?: string
+          participant_email?: string | null
+          participant_name?: string | null
+          results?: Json | null
+          started_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funnel_responses_funnel_id_fkey"
+            columns: ["funnel_id"]
+            isOneToOne: false
+            referencedRelation: "funnels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      funnel_stages: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          funnel_id: string
+          id: string
+          is_enabled: boolean | null
+          order_index: number
+          title: string
+          type: Database["public"]["Enums"]["stage_type"]
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          funnel_id: string
+          id?: string
+          is_enabled?: boolean | null
+          order_index: number
+          title: string
+          type: Database["public"]["Enums"]["stage_type"]
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          funnel_id?: string
+          id?: string
+          is_enabled?: boolean | null
+          order_index?: number
+          title?: string
+          type?: Database["public"]["Enums"]["stage_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "funnel_stages_funnel_id_fkey"
+            columns: ["funnel_id"]
+            isOneToOne: false
+            referencedRelation: "funnels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      funnels: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          global_config: Json | null
+          id: string
+          name: string
+          slug: string
+          status: Database["public"]["Enums"]["funnel_status"] | null
+          style_categories: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          global_config?: Json | null
+          id?: string
+          name: string
+          slug: string
+          status?: Database["public"]["Enums"]["funnel_status"] | null
+          style_categories?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          global_config?: Json | null
+          id?: string
+          name?: string
+          slug?: string
+          status?: Database["public"]["Enums"]["funnel_status"] | null
+          style_categories?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       participant_answers: {
         Row: {
           created_at: string | null
@@ -91,6 +209,44 @@ export type Database = {
         }
         Relationships: []
       }
+      stage_options: {
+        Row: {
+          id: string
+          image_url: string | null
+          order_index: number
+          points: number | null
+          stage_id: string
+          style_category: string | null
+          text: string
+        }
+        Insert: {
+          id?: string
+          image_url?: string | null
+          order_index: number
+          points?: number | null
+          stage_id: string
+          style_category?: string | null
+          text: string
+        }
+        Update: {
+          id?: string
+          image_url?: string | null
+          order_index?: number
+          points?: number | null
+          stage_id?: string
+          style_category?: string | null
+          text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stage_options_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "funnel_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       style_results: {
         Row: {
           created_at: string | null
@@ -164,7 +320,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      funnel_status: "draft" | "published" | "archived"
+      stage_type: "intro" | "question" | "strategic" | "transition" | "result"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -291,6 +448,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      funnel_status: ["draft", "published", "archived"],
+      stage_type: ["intro", "question", "strategic", "transition", "result"],
+    },
   },
 } as const
