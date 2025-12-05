@@ -16,11 +16,15 @@ const TEXT_SIZE_CLASSES = {
   xl: 'text-xl',
 };
 
-const IMAGE_SIZE_CLASSES = {
-  sm: 'w-16 h-16',
-  md: 'w-24 h-24',
-  lg: 'w-32 h-32',
-  xl: 'w-40 h-40',
+const IMAGE_SIZE_CLASSES: Record<string, string> = {
+  xs: 'w-16 h-16',       // 64px
+  sm: 'w-20 h-20',       // 80px
+  md: 'w-28 h-28',       // 112px
+  lg: 'w-40 h-40',       // 160px
+  xl: 'w-52 h-52',       // 208px
+  '2xl': 'w-72 h-72',    // 288px
+  '3xl': 'w-96 h-96',    // 384px
+  full: 'w-[30rem] h-[30rem]', // 480px
 };
 
 export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }) => {
@@ -29,9 +33,13 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
   const options = content.options || [];
   const displayType = content.displayType || 'text';
   const hasImages = displayType === 'both' || displayType === 'image';
-  const columns = content.columns || (hasImages ? 2 : 1);
+  const imageSize = content.optionImageSize || 'md';
+  const isLargeImage = ['2xl', '3xl', 'full'].includes(imageSize);
+  const baseColumns = content.columns || (hasImages ? 2 : 1);
+  const columns = isLargeImage && baseColumns > 2 ? 2 : baseColumns;
   const showCheckIcon = content.showCheckIcon !== false;
   const textSizeClass = TEXT_SIZE_CLASSES[content.optionTextSize || 'base'];
+  const scale = content.scale || 1;
   const imageSizeClass = IMAGE_SIZE_CLASSES[content.optionImageSize || 'md'];
 
   const handleSelect = (optionId: string) => {
@@ -62,10 +70,15 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
       <div 
         className={cn(
           'grid gap-3 w-full',
+          columns === 1 && 'grid-cols-1',
           columns === 2 && 'grid-cols-2',
           columns === 3 && 'grid-cols-3',
           columns === 4 && 'grid-cols-4',
         )}
+        style={{
+          transform: `scale(${scale})`,
+          transformOrigin: 'top center',
+        }}
       >
         {options.map((option, index) => {
           const isSelected = selectedIds.includes(option.id);
@@ -116,6 +129,12 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
 
   // Layout em lista para opções só com texto
   return (
+    <div
+      style={{
+        transform: `scale(${scale})`,
+        transformOrigin: 'top center',
+      }}
+    >
     <div className="flex flex-col items-start justify-start gap-2 w-full">
       {options.map((option, index) => {
         const isSelected = selectedIds.includes(option.id);
@@ -150,6 +169,7 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
           </button>
         );
       })}
+      </div>
     </div>
   );
 };

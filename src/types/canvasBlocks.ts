@@ -38,7 +38,7 @@ export interface CanvasBlockContent {
   borderRadius?: string;
   imagePosition?: 'top' | 'center' | 'bottom';
   imageAlignment?: 'left' | 'center' | 'right';
-  imageSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  imageSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
   
   // Input
   label?: string;
@@ -53,7 +53,7 @@ export interface CanvasBlockContent {
   options?: CanvasOption[];
   columns?: 1 | 2 | 3 | 4;
   optionTextSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
-  optionImageSize?: 'sm' | 'md' | 'lg' | 'xl';
+  optionImageSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
   showCheckIcon?: boolean;
   
   // Button
