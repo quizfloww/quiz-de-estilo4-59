@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Save, Palette, Type, ArrowLeft, Workflow } from "lucide-react";
+import {
+  Edit,
+  Eye,
+  Save,
+  Palette,
+  Type,
+  ArrowLeft,
+  Workflow,
+} from "lucide-react";
 import { QuizFlowEditor } from "@/components/quiz-flow-editor/QuizFlowEditor";
 
 // Lazy loading do editor para evitar problemas de importação
@@ -68,9 +76,9 @@ const EditorPage: React.FC = () => {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-[#432818]">Editor Visual</h1>
+          <h1 className="text-3xl font-bold text-[#432818]">Editores</h1>
           <p className="text-[#8F7A6A] mt-2">
-            Edite e personalize seus quizzes e páginas
+            Selecione um editor para personalizar seu quiz
           </p>
         </div>
         <Button className="bg-[#B89B7A] hover:bg-[#A0895B] text-white">
@@ -79,8 +87,8 @@ const EditorPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-        {/* Novo: Editor de Fluxo do Quiz */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Editor de Fluxo do Quiz */}
         <Card
           className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary/20 bg-primary/5"
           onClick={() => setActiveEditor("quiz-flow")}
@@ -93,7 +101,8 @@ const EditorPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-[#8F7A6A]">
-              Editor visual com drag-and-drop para criar e editar o fluxo completo do quiz
+              Editor visual com drag-and-drop para criar e editar o fluxo
+              completo do quiz com todas as etapas, opções e configurações
             </p>
             <Button
               variant="outline"
@@ -105,6 +114,7 @@ const EditorPage: React.FC = () => {
           </CardContent>
         </Card>
 
+        {/* Editor Visual Completo */}
         <Card
           className="hover:shadow-lg transition-shadow cursor-pointer"
           onClick={() => setActiveEditor("quiz-offer")}
@@ -117,7 +127,8 @@ const EditorPage: React.FC = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-[#8F7A6A]">
-              Editor completo da página de quiz e oferta com design ao vivo
+              Editor completo da página de quiz e oferta com design ao vivo,
+              cores, textos e layouts personalizáveis
             </p>
             <Button
               variant="outline"
@@ -128,42 +139,14 @@ const EditorPage: React.FC = () => {
             </Button>
           </CardContent>
         </Card>
+      </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Type className="h-5 w-5" />
-              Página de Resultado
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-[#8F7A6A]">
-              Personalize a página de resultados
-            </p>
-            <Button variant="outline" className="w-full">
-              <Eye className="w-4 h-4 mr-2" />
-              Abrir Editor
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
-              Temas & Cores
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-[#8F7A6A]">
-              Ajuste cores e temas globais
-            </p>
-            <Button variant="outline" className="w-full">
-              <Palette className="w-4 h-4 mr-2" />
-              Personalizar
-            </Button>
-          </CardContent>
-        </Card>
+      <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm text-blue-900">
+          <span className="font-semibold">Nota:</span> Para editar funis
+          específicos, visite a seção de Funis no menu principal. Para edição
+          completa com canvas avançado, acesse o editor de funnil individual.
+        </p>
       </div>
     </div>
   );
