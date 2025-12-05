@@ -227,10 +227,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="xs">Muito Pequeno (100px)</SelectItem>
             <SelectItem value="sm">Pequeno (200px)</SelectItem>
             <SelectItem value="md">Médio (384px)</SelectItem>
             <SelectItem value="lg">Grande (512px)</SelectItem>
             <SelectItem value="xl">Extra Grande (640px)</SelectItem>
+            <SelectItem value="2xl">2x Grande (800px)</SelectItem>
+            <SelectItem value="3xl">3x Grande (960px)</SelectItem>
             <SelectItem value="full">Largura Total</SelectItem>
           </SelectContent>
         </Select>
@@ -383,10 +386,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="sm">Pequeno</SelectItem>
-              <SelectItem value="md">Médio</SelectItem>
-              <SelectItem value="lg">Grande</SelectItem>
-              <SelectItem value="xl">Extra Grande</SelectItem>
+              <SelectItem value="xs">Muito Pequeno (64px)</SelectItem>
+              <SelectItem value="sm">Pequeno (80px)</SelectItem>
+              <SelectItem value="md">Médio (112px)</SelectItem>
+              <SelectItem value="lg">Grande (160px)</SelectItem>
+              <SelectItem value="xl">Extra Grande (208px)</SelectItem>
+              <SelectItem value="2xl">2x Grande (288px)</SelectItem>
+              <SelectItem value="3xl">3x Grande (384px)</SelectItem>
+              <SelectItem value="full">Máximo (480px)</SelectItem>
             </SelectContent>
           </Select>
         </div>

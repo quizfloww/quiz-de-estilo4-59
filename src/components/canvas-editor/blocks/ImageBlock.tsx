@@ -8,11 +8,14 @@ interface ImageBlockProps {
   isPreview?: boolean;
 }
 
-const IMAGE_SIZE_MAP = {
+const IMAGE_SIZE_MAP: Record<string, string> = {
+  xs: '100px',
   sm: '200px',
   md: '384px',
   lg: '512px',
   xl: '640px',
+  '2xl': '800px',
+  '3xl': '960px',
   full: '100%',
 };
 
