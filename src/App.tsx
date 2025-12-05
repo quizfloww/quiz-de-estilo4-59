@@ -25,6 +25,7 @@ const LoadingFallback = () => (
 // Lazy loading das páginas essenciais
 const LandingPage = lazy(() => import("./pages/LandingPage"));
 const QuizPage = lazy(() => import("./components/QuizPage"));
+const DynamicQuizPage = lazy(() => import("./pages/DynamicQuizPage"));
 const ResultPage = lazy(() => import("./pages/ResultPage"));
 const QuizDescubraSeuEstilo = lazy(
   () => import("./pages/quiz-descubra-seu-estilo")
@@ -69,6 +70,8 @@ const App = () => {
                 <Route path="/" element={<LandingPage />} />
                 {/* Rota do quiz específica */}
                 <Route path="/quiz" element={<QuizPage />} />
+                {/* Quiz dinâmico por slug */}
+                <Route path="/quiz/:slug" element={<DynamicQuizPage />} />
                 {/* Rotas do teste A/B */}
                 <Route path="/resultado" element={<ResultPage />} />
                 <Route
