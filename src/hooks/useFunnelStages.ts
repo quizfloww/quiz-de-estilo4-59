@@ -44,6 +44,60 @@ export const useFunnelStages = (funnelId: string | undefined) => {
   });
 };
 
+// Hook que carrega stages COM suas opções para exibição no editor
+export const useFunnelStagesWithOptions = (funnelId: string | undefined) => {
+  return useQuery({
+    queryKey: ['funnel-stages-with-options', funnelId],
+    queryFn: async () => {
+      if (!funnelId) return [];
+      
+      // 1. Buscar stages
+      const { data: stages, error: stagesError } = await supabase
+        .from('funnel_stages')
+        .select('*')
+        .eq('funnel_id', funnelId)
+        .order('order_index', { ascending: true });
+
+      if (stagesError) throw stagesError;
+      if (!stages || stages.length === 0) return [];
+
+      // 2. Buscar todas as opções para essas stages
+      const stageIds = stages.map(s => s.id);
+      const { data: options, error: optionsError } = await supabase
+        .from('stage_options')
+        .select('*')
+        .in('stage_id', stageIds)
+        .order('order_index', { ascending: true });
+
+      if (optionsError) throw optionsError;
+
+      // 3. Mapear opções para cada stage (no formato esperado pelo preview)
+      return stages.map(stage => {
+        const stageOptions = (options || [])
+          .filter(opt => opt.stage_id === stage.id)
+          .map(opt => ({
+            id: opt.id,
+            text: opt.text,
+            imageUrl: opt.image_url,
+            styleCategory: opt.style_category,
+            points: opt.points,
+          }));
+
+        const existingConfig = (stage.config as Record<string, any>) || {};
+        
+        return {
+          ...stage,
+          config: {
+            ...existingConfig,
+            options: stageOptions.length > 0 ? stageOptions : existingConfig.options,
+          },
+        } as FunnelStage;
+      });
+    },
+    enabled: !!funnelId,
+  });
+};
+
 export const useStageOptions = (stageId: string | undefined) => {
   return useQuery({
     queryKey: ['stage-options', stageId],
