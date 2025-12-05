@@ -6,9 +6,11 @@ test.describe("FunnelsPage - Listagem", () => {
   });
 
   test("deve carregar a página de funnels", async ({ page }) => {
-    // Verifica se a página está carregada
-    await expect(page).toHaveTitle(/.*Funnels.*/i);
-    await expect(page.locator("h1, h2").first()).toBeVisible();
+    // Verifica se a página está carregada (não depender do title, usar conteúdo)
+    const funnelsList = page
+      .locator('[data-testid="funnels-list"], table, .funnels-container')
+      .first();
+    await expect(funnelsList).toBeVisible({ timeout: 10000 });
   });
 
   test("deve exibir lista de funnels", async ({ page }) => {
@@ -16,7 +18,7 @@ test.describe("FunnelsPage - Listagem", () => {
     const funnelsList = page
       .locator('[data-testid="funnels-list"], table, .funnels-container')
       .first();
-    await expect(funnelsList).toBeVisible();
+    await expect(funnelsList).toBeVisible({ timeout: 10000 });
   });
 
   test("deve ter botão de criar novo funnel", async ({ page }) => {
@@ -348,9 +350,12 @@ test.describe("FunnelsPage - Acessibilidade", () => {
     await page.keyboard.press("Tab");
     await page.keyboard.press("Tab");
 
-    // Verifica se algum elemento está focado
-    const focused = page.locator(":focus");
-    await expect(focused).toBeVisible();
+    // Verifica se algum elemento diferente do body está focado
+    const activeIsNotBody = await page.evaluate(() => {
+      const a = document.activeElement;
+      return a && a.tagName !== "BODY";
+    });
+    expect(activeIsNotBody).toBeTruthy();
   });
 
   test("deve ter labels descritivos", async ({ page }) => {

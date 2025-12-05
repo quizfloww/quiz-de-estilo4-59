@@ -113,51 +113,18 @@
           - generic [ref=e138]:
             - img [ref=e139]
             - heading "Meus Funis" [level=2] [ref=e141]
-            - generic [ref=e142]: (4)
-          - generic [ref=e143]:
-            - generic [ref=e144]:
-              - generic [ref=e145]:
-                - img "Quiz de Estilo Pessoal - Cópia" [ref=e146]
-                - generic [ref=e147]: Rascunho
-                - button [ref=e149] [cursor=pointer]:
-                  - img [ref=e150]
-              - generic [ref=e154]:
-                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e155]
-                - paragraph [ref=e156]: /quiz-1764967927111
-                - paragraph [ref=e157]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
-                - paragraph [ref=e158]: 05/12/2025
-            - generic [ref=e159]:
-              - generic [ref=e160]:
-                - img [ref=e162]
-                - generic [ref=e165]: Rascunho
-                - button [ref=e167] [cursor=pointer]:
-                  - img [ref=e168]
-              - generic [ref=e172]:
-                - heading "Novo Funil" [level=3] [ref=e173]
-                - paragraph [ref=e174]: /funil-1764964107672
-                - paragraph [ref=e175]: 05/12/2025
-            - generic [ref=e176]:
-              - generic [ref=e177]:
-                - img "Quiz de Estilo Pessoal - Cópia" [ref=e178]
-                - generic [ref=e179]: Rascunho
-                - button [ref=e181] [cursor=pointer]:
-                  - img [ref=e182]
-              - generic [ref=e186]:
-                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e187]
-                - paragraph [ref=e188]: /quiz-1764963977016
-                - paragraph [ref=e189]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
-                - paragraph [ref=e190]: 05/12/2025
-            - generic [ref=e191]:
-              - generic [ref=e192]:
-                - img "Quiz de Estilo Pessoal - Cópia" [ref=e193]
-                - generic [ref=e194]: Rascunho
-                - button [ref=e196] [cursor=pointer]:
-                  - img [ref=e197]
-              - generic [ref=e201]:
-                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e202]
-                - paragraph [ref=e203]: /quiz-1764962296017
-                - paragraph [ref=e204]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
-                - paragraph [ref=e205]: 05/12/2025
+            - generic [ref=e142]: (1)
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - img [ref=e147]
+              - generic [ref=e150]: Rascunho
+              - button [ref=e152] [cursor=pointer]:
+                - img [ref=e153]
+            - generic [ref=e157]:
+              - heading "Funnel Teste (mock)" [level=3] [ref=e158]
+              - paragraph [ref=e159]: /funnel-teste-mock
+              - paragraph [ref=e160]: Funil mock para testes
+              - paragraph [ref=e161]: 05/12/2025
   - region "Notifications (F8)":
     - list
 ```

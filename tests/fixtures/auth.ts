@@ -52,20 +52,13 @@ export const test = base.extend({
     const mockOptions: any[] = [];
 
     // Intercept generic supabase REST requests for funnels, funnel_stages, stage_options
+    // Sempre retornar lista de funis com nosso mock para evitar dependência do Supabase real
     await page.route("**/rest/v1/funnels*", (route) => {
-      const url = route.request().url();
-      if (
-        url.includes("id=eq.1") ||
-        url.includes("id=eq.%271%27") ||
-        url.includes('id=eq."1"')
-      ) {
-        return route.fulfill({
-          status: 200,
-          contentType: "application/json",
-          body: JSON.stringify([mockFunnel]),
-        });
-      }
-      return route.continue();
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([mockFunnel]),
+      });
     });
 
     await page.route("**/rest/v1/funnel_stages*", (route) => {
