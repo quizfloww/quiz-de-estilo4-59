@@ -98,6 +98,7 @@ export type Database = {
       }
       funnels: {
         Row: {
+          cover_image: string | null
           created_at: string | null
           description: string | null
           global_config: Json | null
@@ -109,6 +110,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          cover_image?: string | null
           created_at?: string | null
           description?: string | null
           global_config?: Json | null
@@ -120,6 +122,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          cover_image?: string | null
           created_at?: string | null
           description?: string | null
           global_config?: Json | null

@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, Copy, Eye, MoreHorizontal, ArrowLeft } from 'lucide-react';
+import { Plus, ArrowLeft, LayoutTemplate, FolderOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,21 +13,31 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Separator } from '@/components/ui/separator';
 import { useFunnels, useCreateFunnel, useDeleteFunnel } from '@/hooks/useFunnels';
+import { FunnelTemplateCard } from '@/components/admin/FunnelTemplateCard';
+import { FunnelCard } from '@/components/admin/FunnelCard';
+import { toast } from 'sonner';
 
-const statusColors = {
-  draft: 'bg-yellow-100 text-yellow-800',
-  published: 'bg-green-100 text-green-800',
-  archived: 'bg-gray-100 text-gray-800',
-};
-
-const statusLabels = {
-  draft: 'Rascunho',
-  published: 'Publicado',
-  archived: 'Arquivado',
-};
+const TEMPLATES = [
+  {
+    id: 'quiz-principal',
+    title: 'Quiz de Estilo Pessoal',
+    description: 'O modelo principal do quiz com 10 questões de estilo + 7 estratégicas',
+    slug: 'quiz',
+    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
+    isPrimary: true,
+  },
+  {
+    id: 'quiz-descubra',
+    title: 'Quiz Descubra seu Estilo',
+    description: 'Variante A/B com página de oferta diferenciada',
+    slug: 'quiz-descubra-seu-estilo',
+    image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up',
+    isPrimary: false,
+  },
+];
 
 export default function FunnelsPage() {
   const navigate = useNavigate();
@@ -50,6 +54,25 @@ export default function FunnelsPage() {
     navigate(`/admin/funnels/${result.id}/edit`);
   };
 
+  const handleUseTemplate = async (template: typeof TEMPLATES[0]) => {
+    try {
+      const result = await createFunnel.mutateAsync({
+        name: `${template.title} - Cópia`,
+        slug: `${template.slug}-${Date.now()}`,
+        description: template.description,
+        cover_image: template.image,
+      });
+      toast.success('Funil criado com sucesso!');
+      navigate(`/admin/funnels/${result.id}/edit`);
+    } catch {
+      toast.error('Erro ao criar funil');
+    }
+  };
+
+  const handleViewTemplate = (slug: string) => {
+    window.open(`/${slug}`, '_blank');
+  };
+
   const handleDelete = async () => {
     if (deleteId) {
       await deleteFunnel.mutateAsync(deleteId);
@@ -58,8 +81,9 @@ export default function FunnelsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon" asChild>
@@ -78,93 +102,90 @@ export default function FunnelsPage() {
           </Button>
         </div>
 
-        {isLoading ? (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <Skeleton className="h-6 w-32" />
-                  <Skeleton className="h-4 w-48" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-4 w-full" />
-                </CardContent>
-              </Card>
-            ))}
+        {/* Templates Section */}
+        <section className="mb-10">
+          <div className="flex items-center gap-2 mb-4">
+            <LayoutTemplate className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">Modelos Disponíveis</h2>
           </div>
-        ) : funnels?.length === 0 ? (
-          <Card className="text-center py-12">
-            <CardContent>
-              <p className="text-muted-foreground mb-4">Nenhum funil criado ainda</p>
-              <Button onClick={handleCreateFunnel}>
-                <Plus className="h-4 w-4 mr-2" />
-                Criar seu primeiro funil
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {funnels?.map((funnel) => (
-              <Card key={funnel.id} className="group hover:shadow-lg transition-shadow">
-                <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">{funnel.name}</CardTitle>
-                    <CardDescription className="mt-1">
-                      /{funnel.slug}
-                    </CardDescription>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem asChild>
-                        <Link to={`/admin/funnels/${funnel.id}/edit`}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Editar
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link to={`/quiz/${funnel.slug}`} target="_blank">
-                          <Eye className="h-4 w-4 mr-2" />
-                          Visualizar
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Copy className="h-4 w-4 mr-2" />
-                        Duplicar
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        className="text-destructive"
-                        onClick={() => setDeleteId(funnel.id)}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Excluir
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <Badge className={statusColors[funnel.status]}>
-                      {statusLabels[funnel.status]}
-                    </Badge>
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(funnel.created_at).toLocaleDateString('pt-BR')}
-                    </span>
-                  </div>
-                  {funnel.description && (
-                    <p className="text-sm text-muted-foreground mt-2 line-clamp-2">
-                      {funnel.description}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
+          
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {TEMPLATES.map((template) => (
+              <FunnelTemplateCard
+                key={template.id}
+                title={template.title}
+                description={template.description}
+                image={template.image}
+                slug={template.slug}
+                isPrimary={template.isPrimary}
+                onView={() => handleViewTemplate(template.slug)}
+                onUse={() => handleUseTemplate(template)}
+              />
             ))}
+            
+            <FunnelTemplateCard
+              title="Modelo em Branco"
+              description="Comece do zero e crie seu próprio funil personalizado"
+              isBlank
+              onCreate={handleCreateFunnel}
+            />
           </div>
-        )}
+        </section>
+
+        <Separator className="my-8" />
+
+        {/* My Funnels Section */}
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <FolderOpen className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold">Meus Funis</h2>
+            {funnels && funnels.length > 0 && (
+              <span className="text-sm text-muted-foreground">({funnels.length})</span>
+            )}
+          </div>
+
+          {isLoading ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[1, 2, 3, 4].map((i) => (
+                <Card key={i} className="overflow-hidden">
+                  <Skeleton className="aspect-[16/10]" />
+                  <CardContent className="p-4">
+                    <Skeleton className="h-5 w-32 mb-2" />
+                    <Skeleton className="h-4 w-24 mb-2" />
+                    <Skeleton className="h-4 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : funnels?.length === 0 ? (
+            <Card className="text-center py-12 border-dashed">
+              <CardContent>
+                <FolderOpen className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground mb-4">Nenhum funil criado ainda</p>
+                <Button onClick={handleCreateFunnel} variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Criar seu primeiro funil
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {funnels?.map((funnel) => (
+                <FunnelCard
+                  key={funnel.id}
+                  id={funnel.id}
+                  name={funnel.name}
+                  slug={funnel.slug}
+                  status={funnel.status}
+                  description={funnel.description}
+                  coverImage={funnel.cover_image}
+                  createdAt={funnel.created_at}
+                  onDelete={() => setDeleteId(funnel.id)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
       </div>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
