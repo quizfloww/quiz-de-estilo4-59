@@ -14,7 +14,8 @@ export interface Funnel {
     name: string;
     description: string;
     imageUrl: string;
-  }>;
+  }> | null;
+  cover_image: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -66,6 +67,7 @@ export const useCreateFunnel = () => {
           status: 'draft',
           global_config: funnel.global_config || {},
           style_categories: funnel.style_categories || [],
+          cover_image: funnel.cover_image || null,
         })
         .select()
         .single();
