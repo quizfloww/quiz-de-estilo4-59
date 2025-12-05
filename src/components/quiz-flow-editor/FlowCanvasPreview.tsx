@@ -177,6 +177,8 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
     const options = stage.config.options || [];
     const displayType = stage.config.displayType || 'text';
     const multiSelect = stage.config.multiSelect || 1;
+    const isStrategic = stage.type === 'strategic';
+    const hasImageOptions = displayType === 'both' || displayType === 'image';
 
     return (
       <div className="flex flex-col gap-4 h-full p-3">
@@ -210,47 +212,90 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
         </div>
 
         {/* Question Content */}
-        <div className="w-full max-w-sm mx-auto">
-          <h1 className="text-xl md:text-2xl font-bold text-center mb-4">
+        <div className={cn(
+          "w-full mx-auto pb-5",
+          isStrategic ? "max-w-3xl" : "max-w-6xl"
+        )}>
+          {/* Question Title */}
+          <h2
+            className={cn(
+              "font-semibold text-center mb-5 px-3 pt-3 tracking-normal",
+              isStrategic 
+                ? "text-lg md:text-xl font-bold" 
+                : "text-base md:text-lg"
+            )}
+            style={{ 
+              color: secondaryColor,
+              fontFamily: '"Playfair Display", serif'
+            }}
+          >
             {question}
-          </h1>
+          </h2>
 
-          {/* Spacer */}
-          <div className="py-2" />
+          {/* Strategic Question Image */}
+          {isStrategic && stage.config.imageUrl && (
+            <div className="w-full mb-6">
+              <img 
+                src={stage.config.imageUrl} 
+                alt="Question visual" 
+                className="w-full max-w-md mx-auto rounded-lg shadow-sm" 
+              />
+            </div>
+          )}
 
-          {/* Options */}
-          <div className="flex flex-col items-start justify-start gap-2">
-            {options.map((option, index) => (
-              <button
+          {/* Options Grid - MATCHING QUIZ PUBLIC */}
+          <div className={cn(
+            "grid h-full",
+            hasImageOptions 
+              ? "grid-cols-2 gap-2 px-1" // 2 colunas para opções com imagem
+              : "grid-cols-1 gap-3 px-2", // 1 coluna para opções só texto
+            isStrategic && "gap-4"
+          )}>
+            {options.map((option) => (
+              <div
                 key={option.id}
                 className={cn(
-                  'w-full rounded-md text-sm font-medium transition-colors',
-                  'border border-zinc-200 bg-white hover:shadow-xl',
-                  'overflow-hidden flex items-center justify-between',
-                  displayType === 'both' && option.imageUrl ? 'flex-row gap-4 p-2' : 'py-4 px-4'
+                  "relative h-full flex flex-col rounded-lg overflow-hidden cursor-pointer",
+                  "bg-white shadow-sm hover:shadow-md transition-all duration-300",
+                  !hasImageOptions && "p-4 border hover:bg-[#B89B7A]/5"
                 )}
                 style={{
-                  minHeight: displayType === 'both' && option.imageUrl ? 'auto' : '60px',
+                  borderColor: !hasImageOptions ? primaryColor : 'transparent',
                 }}
               >
-                {displayType === 'both' && option.imageUrl && (
-                  <img
-                    src={option.imageUrl}
-                    alt={option.text}
-                    className="w-20 h-20 rounded-md object-cover flex-shrink-0"
-                  />
+                {/* Option Image */}
+                {hasImageOptions && option.imageUrl && (
+                  <div className="relative w-full aspect-square overflow-hidden">
+                    <img
+                      src={option.imageUrl}
+                      alt={option.text}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 )}
-                <div className="flex-1 text-left">
-                  <p className="text-sm">{option.text}</p>
-                </div>
-              </button>
+                
+                {/* Option Text */}
+                <p className={cn(
+                  "leading-relaxed",
+                  hasImageOptions 
+                    ? "text-xs py-1 px-2 mt-auto font-medium" 
+                    : cn(
+                        "text-sm",
+                        isStrategic && "text-base"
+                      )
+                )}
+                style={{ color: secondaryColor }}
+                >
+                  {option.text}
+                </p>
+              </div>
             ))}
           </div>
 
           {/* Continue Button (if not auto-advance) */}
           {!stage.config.autoAdvance && (
             <Button
-              className="w-full h-14 mt-4"
+              className="w-full h-14 mt-4 text-white"
               style={{ backgroundColor: primaryColor }}
             >
               Continuar
