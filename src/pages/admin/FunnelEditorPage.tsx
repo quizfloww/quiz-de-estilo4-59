@@ -6,12 +6,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
 import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
-import { FunnelStagePreview } from '@/components/funnel-editor/FunnelStagePreview';
 import { StagePropertiesPanel } from '@/components/funnel-editor/StagePropertiesPanel';
 import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
+import { StageCanvasEditor, BlockPropertiesPanel, BlocksSidebar } from '@/components/canvas-editor';
+import { CanvasBlock, CanvasBlockType } from '@/types/canvasBlocks';
+import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
 import type { Database } from '@/integrations/supabase/types';
 import { FunnelConfig } from '@/types/funnelConfig';
 import {
@@ -111,6 +114,11 @@ export default function FunnelEditorPage() {
   const [activeStageId, setActiveStageId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [localStages, setLocalStages] = useState<FunnelStage[]>([]);
+  
+  // Canvas blocks state
+  const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>({});
+  const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [rightPanelTab, setRightPanelTab] = useState<'block' | 'stage'>('block');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -135,7 +143,29 @@ export default function FunnelEditorPage() {
     }
   }, [localStages, activeStageId]);
 
+  // Convert active stage to blocks when it changes
+  useEffect(() => {
+    if (activeStageId && localStages.length > 0) {
+      const stageIndex = localStages.findIndex(s => s.id === activeStageId);
+      const stage = localStages[stageIndex];
+      
+      if (stage && !stageBlocks[activeStageId]) {
+        const blocks = convertStageToBlocks(stage, localStages.length, stageIndex);
+        setStageBlocks(prev => ({
+          ...prev,
+          [activeStageId]: blocks,
+        }));
+      }
+      
+      // Reset selected block when changing stages
+      setSelectedBlockId(null);
+    }
+  }, [activeStageId, localStages]);
+
   const activeStage = localStages.find(s => s.id === activeStageId);
+  const activeStageIndex = localStages.findIndex(s => s.id === activeStageId);
+  const currentBlocks = activeStageId ? stageBlocks[activeStageId] || [] : [];
+  const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId) || null;
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -147,7 +177,6 @@ export default function FunnelEditorPage() {
       const newStages = arrayMove(localStages, oldIndex, newIndex);
       setLocalStages(newStages);
 
-      // Update order_index in database
       const updates = newStages.map((stage, index) => ({
         id: stage.id,
         order_index: index,
@@ -170,7 +199,49 @@ export default function FunnelEditorPage() {
     });
   };
 
+  const handleBlocksChange = (newBlocks: CanvasBlock[]) => {
+    if (!activeStageId) return;
+    
+    setStageBlocks(prev => ({
+      ...prev,
+      [activeStageId]: newBlocks,
+    }));
+  };
+
+  const handleAddBlock = (type: CanvasBlockType) => {
+    if (!activeStageId) return;
+    
+    const newBlock = createEmptyBlock(type);
+    newBlock.order = currentBlocks.length;
+    
+    const newBlocks = [...currentBlocks, newBlock];
+    handleBlocksChange(newBlocks);
+    setSelectedBlockId(newBlock.id);
+    setRightPanelTab('block');
+  };
+
+  const handleUpdateBlock = (updatedBlock: CanvasBlock) => {
+    if (!activeStageId) return;
+    
+    const newBlocks = currentBlocks.map(block =>
+      block.id === updatedBlock.id ? updatedBlock : block
+    );
+    handleBlocksChange(newBlocks);
+  };
+
+  const handleSelectBlock = (blockId: string | null) => {
+    setSelectedBlockId(blockId);
+    if (blockId) {
+      setRightPanelTab('block');
+    }
+  };
+
   const handleSave = async () => {
+    // Save all stages with their blocks converted back to config
+    for (const [stageId, blocks] of Object.entries(stageBlocks)) {
+      const config = blocksToStageConfig(blocks);
+      await updateStage.mutateAsync({ id: stageId, config });
+    }
     toast.success('Funil salvo com sucesso!');
   };
 
@@ -253,7 +324,7 @@ export default function FunnelEditorPage() {
       {/* Main Content */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         {/* Stages Sidebar */}
-        <ResizablePanel defaultSize={20} minSize={15} maxSize={30}>
+        <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
           <div className="h-full flex flex-col border-r">
             <div className="p-3 border-b flex items-center justify-between">
               <span className="font-medium text-sm">Etapas</span>
@@ -304,39 +375,68 @@ export default function FunnelEditorPage() {
 
         <ResizableHandle />
 
-        {/* Preview Area */}
-        <ResizablePanel defaultSize={50}>
-          <div className="h-full flex items-center justify-center bg-muted/30 p-4">
-            <div className={`
-              bg-background rounded-lg shadow-lg overflow-hidden transition-all
-              ${previewMode === 'mobile' ? 'w-[375px] h-[667px]' : 'w-full max-w-3xl h-full'}
-            `}>
-              {activeStage ? (
-                <FunnelStagePreview stage={activeStage} funnel={funnel} />
-              ) : (
-                <div className="h-full flex items-center justify-center text-muted-foreground">
-                  Selecione uma etapa para visualizar
-                </div>
-              )}
-            </div>
+        {/* Canvas Editor Area */}
+        <ResizablePanel defaultSize={52}>
+          <div className="h-full flex flex-col">
+            {activeStage ? (
+              <StageCanvasEditor
+                stage={activeStage}
+                totalStages={localStages.length}
+                currentIndex={activeStageIndex}
+                previewMode={previewMode}
+                isPreview={false}
+                selectedBlockId={selectedBlockId}
+                onSelectBlock={handleSelectBlock}
+                onBlocksChange={handleBlocksChange}
+                blocks={currentBlocks}
+              />
+            ) : (
+              <div className="h-full flex items-center justify-center text-muted-foreground bg-muted/30">
+                Selecione uma etapa para editar
+              </div>
+            )}
           </div>
         </ResizablePanel>
 
         <ResizableHandle />
 
-        {/* Properties Panel */}
+        {/* Right Panel - Properties / Add Blocks */}
         <ResizablePanel defaultSize={30} minSize={20} maxSize={40}>
-          <div className="h-full border-l">
-            {activeStage ? (
-              <StagePropertiesPanel 
-                stage={activeStage} 
-                onUpdate={(updates) => updateStage.mutate({ id: activeStage.id, ...updates })}
-              />
-            ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">
-                Selecione uma etapa para editar
-              </div>
-            )}
+          <div className="h-full border-l flex flex-col">
+            <Tabs value={rightPanelTab} onValueChange={(v) => setRightPanelTab(v as 'block' | 'stage')} className="flex flex-col h-full">
+              <TabsList className="w-full rounded-none border-b h-auto p-0">
+                <TabsTrigger value="block" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+                  Bloco
+                </TabsTrigger>
+                <TabsTrigger value="stage" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
+                  Etapa
+                </TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="block" className="flex-1 m-0 overflow-hidden">
+                {selectedBlock ? (
+                  <BlockPropertiesPanel
+                    block={selectedBlock}
+                    onUpdateBlock={handleUpdateBlock}
+                  />
+                ) : (
+                  <BlocksSidebar onAddBlock={handleAddBlock} />
+                )}
+              </TabsContent>
+              
+              <TabsContent value="stage" className="flex-1 m-0 overflow-hidden">
+                {activeStage ? (
+                  <StagePropertiesPanel 
+                    stage={activeStage} 
+                    onUpdate={(updates) => updateStage.mutate({ id: activeStage.id, ...updates })}
+                  />
+                ) : (
+                  <div className="h-full flex items-center justify-center text-muted-foreground p-4">
+                    Selecione uma etapa para editar
+                  </div>
+                )}
+              </TabsContent>
+            </Tabs>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
