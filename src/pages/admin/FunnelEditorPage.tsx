@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Settings, Plus, GripVertical, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
-import { useFunnelStages, useCreateStage, useUpdateStage, useDeleteStage } from '@/hooks/useFunnelStages';
+import { useFunnelStages, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
 import { FunnelStagePreview } from '@/components/funnel-editor/FunnelStagePreview';
 import { StagePropertiesPanel } from '@/components/funnel-editor/StagePropertiesPanel';
 import type { Database } from '@/integrations/supabase/types';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 type StageType = Database['public']['Enums']['stage_type'];
 
@@ -27,6 +40,62 @@ const stageTypeLabels: Record<StageType, string> = {
   result: 'Resultado',
 };
 
+interface SortableStageItemProps {
+  stage: FunnelStage;
+  isActive: boolean;
+  onClick: () => void;
+  onDelete: () => void;
+}
+
+const SortableStageItem: React.FC<SortableStageItemProps> = ({ stage, isActive, onClick, onDelete }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: stage.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`
+        flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors group
+        ${isActive ? 'bg-primary/10 border border-primary/20' : 'hover:bg-muted'}
+        ${isDragging ? 'shadow-lg' : ''}
+      `}
+      onClick={onClick}
+    >
+      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+        <GripVertical className="h-4 w-4 text-muted-foreground" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium truncate">{stage.title}</p>
+        <p className="text-xs text-muted-foreground">{stageTypeLabels[stage.type]}</p>
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-6 w-6 opacity-0 group-hover:opacity-100"
+        onClick={(e) => {
+          e.stopPropagation();
+          onDelete();
+        }}
+      >
+        <Trash2 className="h-3 w-3" />
+      </Button>
+    </div>
+  );
+};
+
 export default function FunnelEditorPage() {
   const { id } = useParams<{ id: string }>();
   const { data: funnel, isLoading: loadingFunnel } = useFunnel(id);
@@ -35,21 +104,60 @@ export default function FunnelEditorPage() {
   const createStage = useCreateStage();
   const updateStage = useUpdateStage();
   const deleteStage = useDeleteStage();
+  const reorderStages = useReorderStages();
   
   const [activeStageId, setActiveStageId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [localStages, setLocalStages] = useState<FunnelStage[]>([]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
-    if (stages && stages.length > 0 && !activeStageId) {
-      setActiveStageId(stages[0].id);
+    if (stages) {
+      setLocalStages(stages);
     }
-  }, [stages, activeStageId]);
+  }, [stages]);
 
-  const activeStage = stages?.find(s => s.id === activeStageId);
+  useEffect(() => {
+    if (localStages.length > 0 && !activeStageId) {
+      setActiveStageId(localStages[0].id);
+    }
+  }, [localStages, activeStageId]);
+
+  const activeStage = localStages.find(s => s.id === activeStageId);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      const oldIndex = localStages.findIndex(s => s.id === active.id);
+      const newIndex = localStages.findIndex(s => s.id === over.id);
+
+      const newStages = arrayMove(localStages, oldIndex, newIndex);
+      setLocalStages(newStages);
+
+      // Update order_index in database
+      const updates = newStages.map((stage, index) => ({
+        id: stage.id,
+        order_index: index,
+      }));
+
+      reorderStages.mutate({ funnelId: id!, stages: updates });
+    }
+  };
 
   const handleAddStage = async (type: StageType) => {
     if (!id) return;
-    const nextOrder = (stages?.length || 0);
+    const nextOrder = localStages.length;
     await createStage.mutateAsync({
       funnel_id: id,
       type,
@@ -155,34 +263,27 @@ export default function FunnelEditorPage() {
             </div>
             <ScrollArea className="flex-1">
               <div className="p-2 space-y-1">
-                {stages?.map((stage, index) => (
-                  <div
-                    key={stage.id}
-                    className={`
-                      flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors
-                      ${activeStageId === stage.id ? 'bg-primary/10 border border-primary/20' : 'hover:bg-muted'}
-                    `}
-                    onClick={() => setActiveStageId(stage.id)}
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
+                >
+                  <SortableContext
+                    items={localStages.map(s => s.id)}
+                    strategy={verticalListSortingStrategy}
                   >
-                    <GripVertical className="h-4 w-4 text-muted-foreground cursor-grab" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{stage.title}</p>
-                      <p className="text-xs text-muted-foreground">{stageTypeLabels[stage.type]}</p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-6 w-6 opacity-0 group-hover:opacity-100"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteStage.mutate({ id: stage.id, funnelId: id! });
-                      }}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-                {stages?.length === 0 && (
+                    {localStages.map((stage) => (
+                      <SortableStageItem
+                        key={stage.id}
+                        stage={stage}
+                        isActive={activeStageId === stage.id}
+                        onClick={() => setActiveStageId(stage.id)}
+                        onDelete={() => deleteStage.mutate({ id: stage.id, funnelId: id! })}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
+                {localStages.length === 0 && (
                   <p className="text-sm text-muted-foreground text-center py-4">
                     Adicione uma etapa para começar
                   </p>

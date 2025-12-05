@@ -116,6 +116,34 @@ export const useUpdateStage = () => {
   });
 };
 
+export const useReorderStages = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ funnelId, stages }: { funnelId: string; stages: { id: string; order_index: number }[] }) => {
+      // Update all stages in parallel
+      const updates = stages.map(stage => 
+        supabase
+          .from('funnel_stages')
+          .update({ order_index: stage.order_index })
+          .eq('id', stage.id)
+      );
+      
+      const results = await Promise.all(updates);
+      const errors = results.filter(r => r.error);
+      if (errors.length > 0) throw errors[0].error;
+      
+      return { funnelId };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnelId] });
+    },
+    onError: (error) => {
+      toast.error('Erro ao reordenar etapas: ' + error.message);
+    },
+  });
+};
+
 export const useDeleteStage = () => {
   const queryClient = useQueryClient();
 
@@ -182,6 +210,33 @@ export const useUpdateOption = () => {
     },
     onError: (error) => {
       toast.error('Erro ao atualizar opção: ' + error.message);
+    },
+  });
+};
+
+export const useReorderOptions = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ stageId, options }: { stageId: string; options: { id: string; order_index: number }[] }) => {
+      const updates = options.map(option => 
+        supabase
+          .from('stage_options')
+          .update({ order_index: option.order_index })
+          .eq('id', option.id)
+      );
+      
+      const results = await Promise.all(updates);
+      const errors = results.filter(r => r.error);
+      if (errors.length > 0) throw errors[0].error;
+      
+      return { stageId };
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['stage-options', data.stageId] });
+    },
+    onError: (error) => {
+      toast.error('Erro ao reordenar opções: ' + error.message);
     },
   });
 };
