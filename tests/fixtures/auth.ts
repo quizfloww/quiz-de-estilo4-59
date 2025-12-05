@@ -22,31 +22,70 @@ export const test = base.extend({
       localStorage.setItem("userRole", role);
     }, ADMIN_CREDENTIALS);
 
+    // Interceptar chamadas Supabase REST para fornecer fixtures locais
+    const mockFunnel = {
+      id: "1",
+      name: "Funnel Teste (mock)",
+      slug: "funnel-teste-mock",
+      description: "Funil mock para testes",
+      status: "draft",
+      global_config: {},
+      style_categories: [],
+      cover_image: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    const mockStages = [
+      {
+        id: "stage-1",
+        funnel_id: "1",
+        type: "intro",
+        title: "Introdução 1",
+        order_index: 0,
+        is_enabled: true,
+        config: {},
+        created_at: new Date().toISOString(),
+      },
+    ];
+
+    const mockOptions: any[] = [];
+
+    // Intercept generic supabase REST requests for funnels, funnel_stages, stage_options
+    await page.route("**/rest/v1/funnels*", (route) => {
+      const url = route.request().url();
+      if (
+        url.includes("id=eq.1") ||
+        url.includes("id=eq.%271%27") ||
+        url.includes('id=eq."1"')
+      ) {
+        return route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify([mockFunnel]),
+        });
+      }
+      return route.continue();
+    });
+
+    await page.route("**/rest/v1/funnel_stages*", (route) => {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockStages),
+      });
+    });
+
+    await page.route("**/rest/v1/stage_options*", (route) => {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(mockOptions),
+      });
+    });
+
+    // Navigate to admin root to initialize app state. The routes above will provide funnel data.
     await page.goto("/admin");
-
-    const emailInput = page
-      .locator(
-        'input[type="email"], input[name="email"], input[placeholder*="email"]'
-      )
-      .first();
-
-    if (await emailInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await emailInput.fill(ADMIN_CREDENTIALS.email);
-
-      const passwordInput = page
-        .locator('input[type="password"], input[name="password"]')
-        .first();
-      await passwordInput.fill(ADMIN_CREDENTIALS.password);
-
-      const loginButton = page
-        .locator(
-          'button[type="submit"], button:has-text("Login"), button:has-text("Entrar")'
-        )
-        .first();
-      await loginButton.click();
-
-      await page.waitForTimeout(2000);
-    }
 
     await use(page);
   },
