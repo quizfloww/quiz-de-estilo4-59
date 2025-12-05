@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
+import { getTransitionConfigFromEditor, getGlobalConfigFromEditor } from '@/utils/quizConfigAdapter';
 
 interface MainTransitionProps {
   onProceedToStrategicQuestions: () => void;
@@ -9,25 +10,58 @@ interface MainTransitionProps {
 export const MainTransition: React.FC<MainTransitionProps> = ({
   onProceedToStrategicQuestions,
 }) => {
+  // Load config from editor
+  const transitionConfig = useMemo(() => getTransitionConfigFromEditor(), []);
+  const globalConfig = useMemo(() => getGlobalConfigFromEditor(), []);
+  
+  // Get values from editor config or use defaults
+  const title = transitionConfig?.title || 'Enquanto calculamos o seu resultado...';
+  const subtitle = transitionConfig?.subtitle || 'Queremos te fazer algumas perguntas que vão tornar sua experiência ainda mais completa.';
+  const message = transitionConfig?.message || 'Responda com sinceridade. Isso é só entre você e a sua nova versão.';
+  const primaryColor = globalConfig?.primaryColor || '#B89B7A';
+  const secondaryColor = globalConfig?.secondaryColor || '#432818';
+
   return (
     <div className="min-h-screen bg-[#FAF9F7] px-4 py-10 flex items-start justify-center">
       <div className="max-w-3xl w-full mx-auto">
         <Card className="p-8 space-y-8 bg-white shadow-lg border-[#B89B7A]/20 mb-10">
-          <h2 className="text-2xl font-playfair text-[#432818] text-center tracking-normal font-bold mt-4">
-            Enquanto calculamos o seu resultado...
+          <h2 
+            className="text-2xl font-playfair text-center tracking-normal font-bold mt-4"
+            style={{ color: secondaryColor }}
+          >
+            {title}
           </h2>
           
           <p className="text-[#1A1818]/90 text-lg">
-            Queremos te fazer algumas perguntas que vão tornar sua <strong className="text-[#432818]">experiência</strong> ainda mais <strong className="text-[#432818]">completa</strong>.
+            {subtitle.split(/(experiência|completa)/gi).map((part, index) => {
+              if (part.toLowerCase() === 'experiência' || part.toLowerCase() === 'completa') {
+                return <strong key={index} style={{ color: secondaryColor }}>{part}</strong>;
+              }
+              return part;
+            })}
           </p>
           
           <p className="text-[#1A1818]/90 text-lg">
-            A ideia é simples: te ajudar a enxergar com mais <strong className="text-[#432818]">clareza</strong> onde você está agora — e para onde pode ir com mais <strong className="text-[#432818]">intenção</strong>, <strong className="text-[#432818]">leveza</strong> e <strong className="text-[#432818]">autenticidade</strong>.
+            A ideia é simples: te ajudar a enxergar com mais <strong style={{ color: secondaryColor }}>clareza</strong> onde você está agora — e para onde pode ir com mais <strong style={{ color: secondaryColor }}>intenção</strong>, <strong style={{ color: secondaryColor }}>leveza</strong> e <strong style={{ color: secondaryColor }}>autenticidade</strong>.
           </p>
           
-          <div className="bg-gradient-to-r from-[#B89B7A]/10 to-[#432818]/10 p-6 rounded-lg border border-[#B89B7A]/20">
-            <p className="text-[#432818] italic text-center font-medium text-lg">
-              Responda com <strong className="text-[#432818] not-italic">sinceridade</strong>. Isso é só entre você e a sua <strong className="text-[#432818] not-italic">nova versão</strong>.
+          <div 
+            className="p-6 rounded-lg border"
+            style={{ 
+              background: `linear-gradient(to right, ${primaryColor}10, ${secondaryColor}10)`,
+              borderColor: `${primaryColor}33`
+            }}
+          >
+            <p 
+              className="italic text-center font-medium text-lg"
+              style={{ color: secondaryColor }}
+            >
+              {message.split(/(sinceridade|nova versão)/gi).map((part, index) => {
+                if (part.toLowerCase() === 'sinceridade' || part.toLowerCase() === 'nova versão') {
+                  return <strong key={index} className="not-italic" style={{ color: secondaryColor }}>{part}</strong>;
+                }
+                return part;
+              })}
             </p>
           </div>
 
@@ -36,7 +70,11 @@ export const MainTransition: React.FC<MainTransitionProps> = ({
               variant="default" 
               size="lg"
               onClick={onProceedToStrategicQuestions}
-              className="bg-[#B89B7A] text-white hover:bg-[#a0845c] focus:ring-2 focus:ring-[#B89B7A]"
+              className="text-white hover:opacity-90 focus:ring-2"
+              style={{ 
+                backgroundColor: primaryColor,
+                '--tw-ring-color': primaryColor
+              } as React.CSSProperties}
             >
               Continuar
             </Button>
