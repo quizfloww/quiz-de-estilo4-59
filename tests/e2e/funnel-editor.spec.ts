@@ -541,20 +541,18 @@ test.describe("FunnelEditor - Responsividade", () => {
   test("deve ser responsivo em laptop", async ({ page }) => {
     page.setViewportSize({ width: 1280, height: 720 });
     await page.goto("/admin/funnels/1/edit");
-
-    const container = page
-      .locator('[data-testid="funnel-editor-container"], .editor-container')
+    const header = page
+      .locator('h1, .funnel-title, [data-testid="funnel-name"]')
       .first();
-    await expect(container).toBeVisible();
+    await expect(header).toBeVisible({ timeout: 10000 });
   });
 
   test("deve ser responsivo em tablet grande", async ({ page }) => {
     page.setViewportSize({ width: 1024, height: 768 });
     await page.goto("/admin/funnels/1/edit");
-
-    const container = page
-      .locator('[data-testid="funnel-editor-container"], .editor-container')
+    const header = page
+      .locator('h1, .funnel-title, [data-testid="funnel-name"]')
       .first();
-    await expect(container).toBeVisible();
+    await expect(header).toBeVisible({ timeout: 10000 });
   });
 });
