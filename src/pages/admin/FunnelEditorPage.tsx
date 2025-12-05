@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,7 +11,7 @@ import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
 import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
 import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
-import { StageCanvasEditor, BlocksSidebar, PropertiesColumn } from '@/components/canvas-editor';
+import { StageCanvasEditor, BlocksSidebar, PropertiesColumn, TestModeOverlay } from '@/components/canvas-editor';
 import { CanvasBlock, CanvasBlockType } from '@/types/canvasBlocks';
 import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
 import type { Database } from '@/integrations/supabase/types';
@@ -113,6 +113,7 @@ export default function FunnelEditorPage() {
   const [activeStageId, setActiveStageId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [localStages, setLocalStages] = useState<FunnelStage[]>([]);
+  const [isTestMode, setIsTestMode] = useState(false);
   
   // Canvas blocks state
   const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>({});
@@ -305,6 +306,15 @@ export default function FunnelEditorPage() {
             globalConfig={funnel.global_config as FunnelConfig | null}
             onSave={(updates) => updateFunnel.mutate({ id: funnel.id, ...updates })}
           />
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => setIsTestMode(true)}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Play className="h-4 w-4 mr-2" />
+            Testar
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <Link to={`/quiz/${funnel.slug}`} target="_blank">
               <Eye className="h-4 w-4 mr-2" />
@@ -421,6 +431,16 @@ export default function FunnelEditorPage() {
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
+
+      {/* Test Mode Overlay */}
+      {isTestMode && (
+        <TestModeOverlay
+          stages={localStages}
+          stageBlocks={stageBlocks}
+          globalConfig={funnel.global_config as FunnelConfig | null}
+          onExit={() => setIsTestMode(false)}
+        />
+      )}
     </div>
   );
 }

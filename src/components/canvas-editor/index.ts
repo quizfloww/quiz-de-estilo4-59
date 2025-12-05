@@ -4,3 +4,6 @@ export { BlocksSidebar } from './BlocksSidebar';
 export { PropertiesColumn } from './PropertiesColumn';
 export { SortableCanvasBlock } from './SortableCanvasBlock';
 export { BlockRenderer } from './BlockRenderer';
+export { TestModeOverlay } from './TestModeOverlay';
+export { InteractiveBlock } from './InteractiveBlock';
+export { TestResultView } from './TestResultView';
