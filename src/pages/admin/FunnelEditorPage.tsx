@@ -12,7 +12,7 @@ import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteSt
 import { toast } from 'sonner';
 import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
 import { StageCanvasEditor, BlocksSidebar, PropertiesColumn, TestModeOverlay } from '@/components/canvas-editor';
-import { CanvasBlock, CanvasBlockType } from '@/types/canvasBlocks';
+import { CanvasBlock, CanvasBlockType, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
 import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
 import type { Database } from '@/integrations/supabase/types';
 import { FunnelConfig } from '@/types/funnelConfig';
@@ -166,6 +166,15 @@ export default function FunnelEditorPage() {
   const currentBlocks = activeStageId ? stageBlocks[activeStageId] || [] : [];
   const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId) || null;
 
+  // Count similar blocks and stages
+  const similarBlocksCount = selectedBlock
+    ? Object.values(stageBlocks).flat().filter(b => b.type === selectedBlock.type && b.id !== selectedBlock.id).length
+    : 0;
+  
+  const similarStagesCount = activeStage
+    ? localStages.filter(s => s.type === activeStage.type && s.id !== activeStage.id).length
+    : 0;
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -241,6 +250,89 @@ export default function FunnelEditorPage() {
       await updateStage.mutateAsync({ id: stageId, config });
     }
     toast.success('Funil salvo com sucesso!');
+  };
+
+  // Apply block content to all similar blocks (same type) across all stages
+  const handleApplyBlockToAll = (sourceBlock: CanvasBlock, blockType: CanvasBlockType) => {
+    const newStageBlocks = { ...stageBlocks };
+    let count = 0;
+
+    for (const [stageId, blocks] of Object.entries(newStageBlocks)) {
+      const updatedBlocks = blocks.map(block => {
+        if (block.type === blockType && block.id !== sourceBlock.id) {
+          count++;
+          return {
+            ...block,
+            content: { ...sourceBlock.content },
+            style: sourceBlock.style ? { ...sourceBlock.style } : undefined,
+          };
+        }
+        return block;
+      });
+      newStageBlocks[stageId] = updatedBlocks;
+    }
+
+    setStageBlocks(newStageBlocks);
+    toast.success(`Configurações aplicadas a ${count} blocos "${BLOCK_TYPE_LABELS[blockType]}"`);
+  };
+
+  // Apply header config to all stages
+  const handleApplyHeaderToAll = (sourceHeader: CanvasBlock) => {
+    const newStageBlocks = { ...stageBlocks };
+    let count = 0;
+
+    for (const [stageId, blocks] of Object.entries(newStageBlocks)) {
+      if (stageId === activeStageId) continue;
+      
+      const updatedBlocks = blocks.map(block => {
+        if (block.type === 'header') {
+          count++;
+          return {
+            ...block,
+            content: { ...sourceHeader.content },
+          };
+        }
+        return block;
+      });
+      newStageBlocks[stageId] = updatedBlocks;
+    }
+
+    setStageBlocks(newStageBlocks);
+    toast.success(`Configurações de header aplicadas a ${count} etapas`);
+  };
+
+  // Apply all blocks config from current stage to all stages of same type
+  const handleApplyStageConfigToAll = (sourceStage: FunnelStage) => {
+    if (!activeStageId) return;
+    
+    const sourceBlocks = stageBlocks[activeStageId] || [];
+    const newStageBlocks = { ...stageBlocks };
+    let count = 0;
+
+    for (const stage of localStages) {
+      if (stage.type === sourceStage.type && stage.id !== sourceStage.id) {
+        // Copy all blocks from source to target, preserving IDs
+        const targetBlocks = stageBlocks[stage.id] || [];
+        
+        const updatedBlocks = targetBlocks.map((targetBlock, index) => {
+          const sourceBlock = sourceBlocks.find(sb => sb.type === targetBlock.type);
+          if (sourceBlock) {
+            return {
+              ...targetBlock,
+              content: { ...sourceBlock.content },
+              style: sourceBlock.style ? { ...sourceBlock.style } : undefined,
+            };
+          }
+          return targetBlock;
+        });
+        
+        newStageBlocks[stage.id] = updatedBlocks;
+        count++;
+      }
+    }
+
+    setStageBlocks(newStageBlocks);
+    toast.success(`Configurações aplicadas a ${count} etapas do tipo "${stageTypeLabels[sourceStage.type]}"`);
   };
 
   if (loadingFunnel || loadingStages) {
@@ -427,6 +519,11 @@ export default function FunnelEditorPage() {
                 }
               }}
               onUpdateBlock={handleUpdateBlock}
+              onApplyBlockToAll={handleApplyBlockToAll}
+              onApplyHeaderToAll={handleApplyHeaderToAll}
+              onApplyStageConfigToAll={handleApplyStageConfigToAll}
+              similarBlocksCount={similarBlocksCount}
+              similarStagesCount={similarStagesCount}
             />
           </div>
         </ResizablePanel>
