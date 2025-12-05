@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { StageOptionsEditor } from './StageOptionsEditor';
 import type { FunnelStage } from '@/hooks/useFunnelStages';
 
 interface StagePropertiesPanelProps {
@@ -166,15 +167,15 @@ export const StagePropertiesPanel: React.FC<StagePropertiesPanelProps> = ({ stag
             <Label htmlFor="question-text">Texto da Pergunta</Label>
             <Textarea
               id="question-text"
-              value={config.question || ''}
-              onChange={(e) => updateConfig('question', e.target.value)}
+              value={config.questionText || ''}
+              onChange={(e) => updateConfig('questionText', e.target.value)}
               placeholder="Qual sua preferência?"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="display-type">Tipo de Exibição</Label>
             <Select
-              value={config.displayType || 'both'}
+              value={config.displayType || 'text'}
               onValueChange={(value) => updateConfig('displayType', value)}
             >
               <SelectTrigger>
@@ -187,32 +188,45 @@ export const StagePropertiesPanel: React.FC<StagePropertiesPanelProps> = ({ stag
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="multi-select">Seleção Múltipla</Label>
-            <Select
-              value={String(config.multiSelect || 1)}
-              onValueChange={(value) => updateConfig('multiSelect', parseInt(value))}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">Única (1)</SelectItem>
-                <SelectItem value="2">Até 2</SelectItem>
-                <SelectItem value="3">Até 3</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
           <div className="flex items-center justify-between">
-            <Label htmlFor="auto-advance">Avançar Automaticamente</Label>
+            <Label htmlFor="multi-select">Seleção Múltipla</Label>
             <Switch
-              id="auto-advance"
-              checked={config.autoAdvance === true}
-              onCheckedChange={(checked) => updateConfig('autoAdvance', checked)}
+              id="multi-select"
+              checked={config.multiSelect === true}
+              onCheckedChange={(checked) => updateConfig('multiSelect', checked)}
             />
           </div>
+          {config.multiSelect && (
+            <div className="space-y-2">
+              <Label htmlFor="required-selections">Seleções Obrigatórias</Label>
+              <Select
+                value={String(config.requiredSelections || 3)}
+                onValueChange={(value) => updateConfig('requiredSelections', parseInt(value))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2">2 opções</SelectItem>
+                  <SelectItem value="3">3 opções</SelectItem>
+                  <SelectItem value="4">4 opções</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+          {!config.multiSelect && (
+            <div className="flex items-center justify-between">
+              <Label htmlFor="auto-advance">Avançar Automaticamente</Label>
+              <Switch
+                id="auto-advance"
+                checked={config.autoAdvance !== false}
+                onCheckedChange={(checked) => updateConfig('autoAdvance', checked)}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
+      <StageOptionsEditor stageId={stage.id} />
     </>
   );
 
