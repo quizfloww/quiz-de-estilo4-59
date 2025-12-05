@@ -16,10 +16,15 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
 import { useFunnels, useCreateFunnel, useDeleteFunnel } from '@/hooks/useFunnels';
+import { useBulkInsertFunnelData } from '@/hooks/useBulkFunnelData';
 import { FunnelTemplateCard } from '@/components/admin/FunnelTemplateCard';
 import { FunnelCard } from '@/components/admin/FunnelCard';
 import { toast } from 'sonner';
 import { FunnelConfig, DEFAULT_QUIZ_CONFIG, EMPTY_FUNNEL_CONFIG } from '@/types/funnelConfig';
+import { defaultQuizFlowConfig } from '@/data/quizFlowConfig';
+import type { Database } from '@/integrations/supabase/types';
+
+type StageType = Database['public']['Enums']['stage_type'];
 
 interface FunnelTemplate {
   id: string;
@@ -29,6 +34,7 @@ interface FunnelTemplate {
   image: string;
   isPrimary: boolean;
   config: FunnelConfig;
+  includeStages?: boolean; // Flag to include full quiz stages
 }
 
 const TEMPLATES: FunnelTemplate[] = [
@@ -40,6 +46,7 @@ const TEMPLATES: FunnelTemplate[] = [
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
     isPrimary: true,
     config: DEFAULT_QUIZ_CONFIG,
+    includeStages: true,
   },
   {
     id: 'quiz-descubra',
@@ -56,14 +63,65 @@ const TEMPLATES: FunnelTemplate[] = [
         description: 'Faça o teste gratuito e descubra qual estilo mais combina com você!',
       },
     },
+    includeStages: true,
   },
 ];
+
+// Convert QuizFlowStage to database stage format
+const convertQuizFlowToStages = (funnelId: string) => {
+  const stages = defaultQuizFlowConfig.stages.map((stage, index) => {
+    // Map stage type to database enum
+    let dbType: StageType = 'question';
+    if (stage.type === 'intro') dbType = 'intro';
+    else if (stage.type === 'transition') dbType = 'transition';
+    else if (stage.type === 'strategic') dbType = 'strategic';
+    else if (stage.type === 'result') dbType = 'result';
+    else if (stage.type === 'question') dbType = 'question';
+
+    // Extract options from config (to be stored in stage_options table)
+    const { options, ...configWithoutOptions } = stage.config as any;
+
+    return {
+      type: dbType,
+      title: stage.title,
+      order_index: index,
+      is_enabled: stage.isEnabled,
+      config: configWithoutOptions,
+    };
+  });
+
+  // Build options map keyed by order_index
+  const optionsMap = new Map<number, Array<{
+    text: string;
+    image_url: string | null;
+    style_category: string | null;
+    points: number;
+    order_index: number;
+  }>>();
+
+  defaultQuizFlowConfig.stages.forEach((stage, stageIndex) => {
+    const config = stage.config as any;
+    if (config.options && Array.isArray(config.options)) {
+      const stageOptions = config.options.map((opt: any, optIndex: number) => ({
+        text: opt.text,
+        image_url: opt.imageUrl || null,
+        style_category: opt.styleCategory || null,
+        points: opt.points || 1,
+        order_index: optIndex,
+      }));
+      optionsMap.set(stageIndex, stageOptions);
+    }
+  });
+
+  return { stages, optionsMap };
+};
 
 export default function FunnelsPage() {
   const navigate = useNavigate();
   const { data: funnels, isLoading } = useFunnels();
   const createFunnel = useCreateFunnel();
   const deleteFunnel = useDeleteFunnel();
+  const bulkInsert = useBulkInsertFunnelData();
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const handleCreateFunnel = async () => {
@@ -76,16 +134,30 @@ export default function FunnelsPage() {
 
   const handleUseTemplate = async (template: FunnelTemplate) => {
     try {
+      // 1. Create the funnel with config and style categories
       const result = await createFunnel.mutateAsync({
         name: `${template.title} - Cópia`,
         slug: `${template.slug}-${Date.now()}`,
         description: template.description,
         cover_image: template.image,
         global_config: template.config,
+        style_categories: defaultQuizFlowConfig.styleCategories,
       });
-      toast.success('Funil criado com sucesso!');
+
+      // 2. If template includes stages, create all stages and options
+      if (template.includeStages) {
+        const { stages, optionsMap } = convertQuizFlowToStages(result.id);
+        
+        await bulkInsert.mutateAsync({
+          funnelId: result.id,
+          stages,
+          optionsMap,
+        });
+      }
+
       navigate(`/admin/funnels/${result.id}/edit`);
-    } catch {
+    } catch (error) {
+      console.error('Error creating funnel from template:', error);
       toast.error('Erro ao criar funil');
     }
   };
