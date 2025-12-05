@@ -16,15 +16,16 @@ const TEXT_SIZE_CLASSES = {
   xl: 'text-xl',
 };
 
-const IMAGE_SIZE_CLASSES: Record<string, string> = {
-  xs: 'w-16 h-16',       // 64px
-  sm: 'w-20 h-20',       // 80px
-  md: 'w-28 h-28',       // 112px
-  lg: 'w-40 h-40',       // 160px
-  xl: 'w-52 h-52',       // 208px
-  '2xl': 'w-72 h-72',    // 288px
-  '3xl': 'w-96 h-96',    // 384px
-  full: 'w-[30rem] h-[30rem]', // 480px
+// Tamanhos em pixels para cálculo do grid
+const IMAGE_SIZES: Record<string, number> = {
+  xs: 64,
+  sm: 80,
+  md: 112,
+  lg: 160,
+  xl: 208,
+  '2xl': 288,
+  '3xl': 384,
+  full: 480,
 };
 
 export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }) => {
@@ -34,13 +35,13 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
   const displayType = content.displayType || 'text';
   const hasImages = displayType === 'both' || displayType === 'image';
   const imageSize = content.optionImageSize || 'md';
+  const imageSizePx = IMAGE_SIZES[imageSize] || 112;
   const isLargeImage = ['2xl', '3xl', 'full'].includes(imageSize);
   const baseColumns = content.columns || (hasImages ? 2 : 1);
   const columns = isLargeImage && baseColumns > 2 ? 2 : baseColumns;
   const showCheckIcon = content.showCheckIcon !== false;
   const textSizeClass = TEXT_SIZE_CLASSES[content.optionTextSize || 'base'];
   const scale = content.scale || 1;
-  const imageSizeClass = IMAGE_SIZE_CLASSES[content.optionImageSize || 'md'];
 
   const handleSelect = (optionId: string) => {
     const maxSelect = content.multiSelect || 1;
@@ -66,18 +67,16 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
 
   // Layout em grid para opções com imagens
   if (hasImages) {
+    // Calcular tamanho mínimo da célula baseado no tamanho da imagem + padding
+    const cellMinWidth = imageSizePx + 24; // 24px para padding
+    
     return (
       <div 
-        className={cn(
-          'grid gap-3 w-full',
-          columns === 1 && 'grid-cols-1',
-          columns === 2 && 'grid-cols-2',
-          columns === 3 && 'grid-cols-3',
-          columns === 4 && 'grid-cols-4',
-        )}
+        className="grid gap-3 w-full"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: 'top center',
+          gridTemplateColumns: `repeat(${columns}, minmax(${cellMinWidth}px, 1fr))`,
         }}
       >
         {options.map((option, index) => {
@@ -88,7 +87,7 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
               key={option.id || index}
               onClick={() => handleSelect(option.id)}
               className={cn(
-                'relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 bg-background transition-all duration-300 overflow-hidden',
+                'relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 bg-background transition-all duration-300',
                 isSelected 
                   ? 'border-[#b29670]' 
                   : 'border-input hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5',
@@ -107,7 +106,10 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({ content, isPreview }
               )}
               
               {option.imageUrl && (
-                <div className={cn('overflow-hidden rounded-md', imageSizeClass)}>
+                <div 
+                  className="overflow-hidden rounded-md flex-shrink-0"
+                  style={{ width: imageSizePx, height: imageSizePx }}
+                >
                   <img 
                     src={option.imageUrl} 
                     alt={option.text}
