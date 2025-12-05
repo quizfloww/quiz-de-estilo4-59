@@ -167,11 +167,29 @@ export const StagePropertiesPanel: React.FC<StagePropertiesPanelProps> = ({ stag
             <Label htmlFor="question-text">Texto da Pergunta</Label>
             <Textarea
               id="question-text"
-              value={config.questionText || ''}
-              onChange={(e) => updateConfig('questionText', e.target.value)}
+              value={config.question || ''}
+              onChange={(e) => updateConfig('question', e.target.value)}
               placeholder="Qual sua preferência?"
             />
           </div>
+          {stage.type === 'strategic' && (
+            <div className="space-y-2">
+              <Label htmlFor="question-image">Imagem da Pergunta</Label>
+              <Input
+                id="question-image"
+                value={config.imageUrl || ''}
+                onChange={(e) => updateConfig('imageUrl', e.target.value)}
+                placeholder="https://..."
+              />
+              {config.imageUrl && (
+                <img 
+                  src={config.imageUrl} 
+                  alt="Preview" 
+                  className="w-full h-32 object-cover rounded-md mt-2"
+                />
+              )}
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="display-type">Tipo de Exibição</Label>
             <Select
@@ -188,32 +206,23 @@ export const StagePropertiesPanel: React.FC<StagePropertiesPanelProps> = ({ stag
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-center justify-between">
-            <Label htmlFor="multi-select">Seleção Múltipla</Label>
-            <Switch
-              id="multi-select"
-              checked={config.multiSelect === true}
-              onCheckedChange={(checked) => updateConfig('multiSelect', checked)}
-            />
+          <div className="space-y-2">
+            <Label htmlFor="multi-select">Seleção</Label>
+            <Select
+              value={config.multiSelect ? String(config.multiSelect) : '1'}
+              onValueChange={(value) => updateConfig('multiSelect', parseInt(value) > 1 ? parseInt(value) : false)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Única (avança ao clicar)</SelectItem>
+                <SelectItem value="2">Múltipla (2 opções)</SelectItem>
+                <SelectItem value="3">Múltipla (3 opções)</SelectItem>
+                <SelectItem value="4">Múltipla (4 opções)</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          {config.multiSelect && (
-            <div className="space-y-2">
-              <Label htmlFor="required-selections">Seleções Obrigatórias</Label>
-              <Select
-                value={String(config.requiredSelections || 3)}
-                onValueChange={(value) => updateConfig('requiredSelections', parseInt(value))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="2">2 opções</SelectItem>
-                  <SelectItem value="3">3 opções</SelectItem>
-                  <SelectItem value="4">4 opções</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
           {!config.multiSelect && (
             <div className="flex items-center justify-between">
               <Label htmlFor="auto-advance">Avançar Automaticamente</Label>
