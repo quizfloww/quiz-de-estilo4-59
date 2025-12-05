@@ -11,7 +11,9 @@ import { useFunnelStages, useCreateStage, useUpdateStage, useDeleteStage, useReo
 import { toast } from 'sonner';
 import { FunnelStagePreview } from '@/components/funnel-editor/FunnelStagePreview';
 import { StagePropertiesPanel } from '@/components/funnel-editor/StagePropertiesPanel';
+import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
 import type { Database } from '@/integrations/supabase/types';
+import { FunnelConfig } from '@/types/funnelConfig';
 import {
   DndContext,
   closestCenter,
@@ -228,6 +230,13 @@ export default function FunnelEditorPage() {
               Mobile
             </Button>
           </div>
+          <FunnelSettingsPanel
+            funnelId={funnel.id}
+            funnelName={funnel.name}
+            funnelSlug={funnel.slug}
+            globalConfig={funnel.global_config as FunnelConfig | null}
+            onSave={(updates) => updateFunnel.mutate({ id: funnel.id, ...updates })}
+          />
           <Button variant="outline" size="sm" asChild>
             <Link to={`/quiz/${funnel.slug}`} target="_blank">
               <Eye className="h-4 w-4 mr-2" />

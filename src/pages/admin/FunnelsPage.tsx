@@ -19,8 +19,19 @@ import { useFunnels, useCreateFunnel, useDeleteFunnel } from '@/hooks/useFunnels
 import { FunnelTemplateCard } from '@/components/admin/FunnelTemplateCard';
 import { FunnelCard } from '@/components/admin/FunnelCard';
 import { toast } from 'sonner';
+import { FunnelConfig, DEFAULT_QUIZ_CONFIG, EMPTY_FUNNEL_CONFIG } from '@/types/funnelConfig';
 
-const TEMPLATES = [
+interface FunnelTemplate {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  image: string;
+  isPrimary: boolean;
+  config: FunnelConfig;
+}
+
+const TEMPLATES: FunnelTemplate[] = [
   {
     id: 'quiz-principal',
     title: 'Quiz de Estilo Pessoal',
@@ -28,6 +39,7 @@ const TEMPLATES = [
     slug: 'quiz',
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911666/C%C3%B3pia_de_Template_Dossi%C3%AA_Completo_2024_15_-_Copia_ssrhu3.webp',
     isPrimary: true,
+    config: DEFAULT_QUIZ_CONFIG,
   },
   {
     id: 'quiz-descubra',
@@ -36,6 +48,14 @@ const TEMPLATES = [
     slug: 'quiz-descubra-seu-estilo',
     image: 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up',
     isPrimary: false,
+    config: {
+      ...DEFAULT_QUIZ_CONFIG,
+      seo: {
+        ...DEFAULT_QUIZ_CONFIG.seo,
+        title: 'Descubra seu Estilo Pessoal | Gisele Galvão',
+        description: 'Faça o teste gratuito e descubra qual estilo mais combina com você!',
+      },
+    },
   },
 ];
 
@@ -54,13 +74,14 @@ export default function FunnelsPage() {
     navigate(`/admin/funnels/${result.id}/edit`);
   };
 
-  const handleUseTemplate = async (template: typeof TEMPLATES[0]) => {
+  const handleUseTemplate = async (template: FunnelTemplate) => {
     try {
       const result = await createFunnel.mutateAsync({
         name: `${template.title} - Cópia`,
         slug: `${template.slug}-${Date.now()}`,
         description: template.description,
         cover_image: template.image,
+        global_config: template.config,
       });
       toast.success('Funil criado com sucesso!');
       navigate(`/admin/funnels/${result.id}/edit`);
