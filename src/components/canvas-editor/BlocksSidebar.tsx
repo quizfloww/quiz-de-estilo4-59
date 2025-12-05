@@ -1,7 +1,5 @@
 import React from 'react';
 import { CanvasBlockType, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
-import { createEmptyBlock } from '@/utils/stageToBlocks';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
@@ -49,42 +47,38 @@ const BLOCK_CATEGORIES = [
 
 export const BlocksSidebar: React.FC<BlocksSidebarProps> = ({ onAddBlock }) => {
   return (
-    <ScrollArea className="h-full">
-      <div className="p-4 space-y-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Adicionar Componente
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {BLOCK_CATEGORIES.map((category) => (
-              <div key={category.name} className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                  {category.name}
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {category.blocks.map((blockType) => {
-                    const Icon = BLOCK_ICONS[blockType];
-                    return (
-                      <Button
-                        key={blockType}
-                        variant="outline"
-                        size="sm"
-                        className="h-auto py-3 px-3 flex flex-col items-center gap-1.5 hover:bg-primary hover:text-primary-foreground"
-                        onClick={() => onAddBlock(blockType)}
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span className="text-xs">{BLOCK_TYPE_LABELS[blockType]}</span>
-                      </Button>
-                    );
-                  })}
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+    <div className="h-full flex flex-col border-r">
+      <div className="p-3 border-b">
+        <span className="font-medium text-sm">Blocos</span>
       </div>
-    </ScrollArea>
+      <ScrollArea className="flex-1">
+        <div className="p-2 space-y-4">
+          {BLOCK_CATEGORIES.map((category) => (
+            <div key={category.name} className="space-y-1.5">
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide px-1">
+                {category.name}
+              </p>
+              <div className="grid grid-cols-1 gap-1">
+                {category.blocks.map((blockType) => {
+                  const Icon = BLOCK_ICONS[blockType];
+                  return (
+                    <Button
+                      key={blockType}
+                      variant="ghost"
+                      size="sm"
+                      className="h-auto py-2 px-2 justify-start gap-2 hover:bg-primary/10"
+                      onClick={() => onAddBlock(blockType)}
+                    >
+                      <Icon className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-xs">{BLOCK_TYPE_LABELS[blockType]}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+    </div>
   );
 };

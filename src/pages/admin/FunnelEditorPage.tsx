@@ -6,13 +6,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
 import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
-import { StagePropertiesPanel } from '@/components/funnel-editor/StagePropertiesPanel';
 import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
-import { StageCanvasEditor, BlockPropertiesPanel, BlocksSidebar } from '@/components/canvas-editor';
+import { StageCanvasEditor, BlocksSidebar, PropertiesColumn } from '@/components/canvas-editor';
 import { CanvasBlock, CanvasBlockType } from '@/types/canvasBlocks';
 import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
 import type { Database } from '@/integrations/supabase/types';
@@ -118,7 +117,6 @@ export default function FunnelEditorPage() {
   // Canvas blocks state
   const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>({});
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
-  const [rightPanelTab, setRightPanelTab] = useState<'block' | 'stage'>('block');
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -217,7 +215,6 @@ export default function FunnelEditorPage() {
     const newBlocks = [...currentBlocks, newBlock];
     handleBlocksChange(newBlocks);
     setSelectedBlockId(newBlock.id);
-    setRightPanelTab('block');
   };
 
   const handleUpdateBlock = (updatedBlock: CanvasBlock) => {
@@ -231,10 +228,10 @@ export default function FunnelEditorPage() {
 
   const handleSelectBlock = (blockId: string | null) => {
     setSelectedBlockId(blockId);
-    if (blockId) {
-      setRightPanelTab('block');
-    }
   };
+
+  // Find header block for properties column
+  const headerBlock = currentBlocks.find(b => b.type === 'header') || null;
 
   const handleSave = async () => {
     // Save all stages with their blocks converted back to config
@@ -324,7 +321,7 @@ export default function FunnelEditorPage() {
       {/* Main Content */}
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         {/* Stages Sidebar */}
-        <ResizablePanel defaultSize={18} minSize={15} maxSize={25}>
+        <ResizablePanel defaultSize={15} minSize={12} maxSize={20}>
           <div className="h-full flex flex-col border-r">
             <div className="p-3 border-b flex items-center justify-between">
               <span className="font-medium text-sm">Etapas</span>
@@ -375,8 +372,15 @@ export default function FunnelEditorPage() {
 
         <ResizableHandle />
 
+        {/* Blocks Sidebar */}
+        <ResizablePanel defaultSize={12} minSize={10} maxSize={18}>
+          <BlocksSidebar onAddBlock={handleAddBlock} />
+        </ResizablePanel>
+
+        <ResizableHandle />
+
         {/* Canvas Editor Area */}
-        <ResizablePanel defaultSize={52}>
+        <ResizablePanel defaultSize={51}>
           <div className="h-full flex flex-col">
             {activeStage ? (
               <StageCanvasEditor
@@ -400,43 +404,20 @@ export default function FunnelEditorPage() {
 
         <ResizableHandle />
 
-        {/* Right Panel - Properties / Add Blocks */}
-        <ResizablePanel defaultSize={30} minSize={20} maxSize={40}>
-          <div className="h-full border-l flex flex-col">
-            <Tabs value={rightPanelTab} onValueChange={(v) => setRightPanelTab(v as 'block' | 'stage')} className="flex flex-col h-full">
-              <TabsList className="w-full rounded-none border-b h-auto p-0">
-                <TabsTrigger value="block" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
-                  Bloco
-                </TabsTrigger>
-                <TabsTrigger value="stage" className="flex-1 rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary">
-                  Etapa
-                </TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="block" className="flex-1 m-0 overflow-hidden">
-                {selectedBlock ? (
-                  <BlockPropertiesPanel
-                    block={selectedBlock}
-                    onUpdateBlock={handleUpdateBlock}
-                  />
-                ) : (
-                  <BlocksSidebar onAddBlock={handleAddBlock} />
-                )}
-              </TabsContent>
-              
-              <TabsContent value="stage" className="flex-1 m-0 overflow-hidden">
-                {activeStage ? (
-                  <StagePropertiesPanel 
-                    stage={activeStage} 
-                    onUpdate={(updates) => updateStage.mutate({ id: activeStage.id, ...updates })}
-                  />
-                ) : (
-                  <div className="h-full flex items-center justify-center text-muted-foreground p-4">
-                    Selecione uma etapa para editar
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+        {/* Properties Column */}
+        <ResizablePanel defaultSize={22} minSize={18} maxSize={30}>
+          <div className="h-full border-l">
+            <PropertiesColumn
+              activeStage={activeStage || null}
+              selectedBlock={selectedBlock}
+              headerBlock={headerBlock}
+              onUpdateStage={(updates) => {
+                if (activeStage) {
+                  updateStage.mutate({ id: activeStage.id, ...updates });
+                }
+              }}
+              onUpdateBlock={handleUpdateBlock}
+            />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
