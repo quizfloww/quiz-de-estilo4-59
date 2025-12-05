@@ -54,7 +54,7 @@ Cypress.Commands.add(
 );
 
 Cypress.Commands.add("openBlockSettings", (blockId: string) => {
-  cy.get(`[data-testid="block-${blockId}"]`).rightClick();
+  cy.get(`[data-testid="block-${blockId}"]`).rightclick();
   cy.get('[data-testid="block-settings-menu"]').should("be.visible");
   cy.get(
     '[data-testid="block-settings-menu"] button:contains("Configurações")'
@@ -77,6 +77,7 @@ Cypress.Commands.add("testMode", () => {
 });
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
       loginAdmin(): Chainable<void>;

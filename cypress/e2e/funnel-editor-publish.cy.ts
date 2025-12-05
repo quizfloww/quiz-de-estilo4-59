@@ -247,12 +247,11 @@ describe("FunnelEditor - Validação na Publicação", () => {
   it("deve validar tamanho de imagens", () => {
     cy.addBlockToCanvas("image");
 
-    // Tenta adicionar imagem muito grande
+    // Simula adição de imagem grande via propriedade
     cy.get('[data-testid="block-image"]').click();
-    cy.get('[data-testid="property-image-upload"]').attachFile({
-      filePath: "large-image.jpg",
-      mimeType: "image/jpeg",
-    });
+    cy.get('[data-testid="property-image-url"]').type(
+      "https://example.com/large-image.jpg"
+    );
 
     cy.publishFunnel();
     cy.get('[data-testid="image-size-warning"]').should("be.visible");
