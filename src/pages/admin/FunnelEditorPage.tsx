@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2, Play } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2, Play, Globe, GlobeLock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,6 +11,9 @@ import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
 import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
 import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
+import { PublishDialog } from '@/components/funnel-editor/PublishDialog';
+import { StatusBadge } from '@/components/funnel-editor/StatusBadge';
+import { usePublishFunnel, PublishValidation } from '@/hooks/usePublishFunnel';
 import { StageCanvasEditor, BlocksSidebar, PropertiesColumn, TestModeOverlay } from '@/components/canvas-editor';
 import { CanvasBlock, CanvasBlockType, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
 import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
@@ -109,11 +112,14 @@ export default function FunnelEditorPage() {
   const updateStage = useUpdateStage();
   const deleteStage = useDeleteStage();
   const reorderStages = useReorderStages();
+  const { validateFunnel, publishFunnel, unpublishFunnel, isValidating, isPublishing, isUnpublishing } = usePublishFunnel(id);
   
   const [activeStageId, setActiveStageId] = useState<string | null>(null);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [localStages, setLocalStages] = useState<FunnelStage[]>([]);
   const [isTestMode, setIsTestMode] = useState(false);
+  const [showPublishDialog, setShowPublishDialog] = useState(false);
+  const [publishValidation, setPublishValidation] = useState<PublishValidation | null>(null);
   
   // Canvas blocks state
   const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>({});
@@ -252,6 +258,20 @@ export default function FunnelEditorPage() {
     toast.success('Funil salvo com sucesso!');
   };
 
+  const handleOpenPublishDialog = async () => {
+    setShowPublishDialog(true);
+    const validation = await validateFunnel(localStages, stageBlocks, funnel?.slug || '');
+    setPublishValidation(validation);
+  };
+
+  const handlePublish = async () => {
+    await publishFunnel({ stages: localStages, stageBlocks });
+  };
+
+  const handleUnpublish = async () => {
+    await unpublishFunnel();
+  };
+
   // Apply block content to all similar blocks (same type) across all stages
   const handleApplyBlockToAll = (sourceBlock: CanvasBlock, blockType: CanvasBlockType) => {
     const newStageBlocks = { ...stageBlocks };
@@ -370,7 +390,10 @@ export default function FunnelEditorPage() {
             </Link>
           </Button>
           <div>
-            <h1 className="font-semibold">{funnel.name}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="font-semibold">{funnel.name}</h1>
+              <StatusBadge status={(funnel.status as 'draft' | 'published' | 'archived') || 'draft'} />
+            </div>
             <span className="text-xs text-muted-foreground">/{funnel.slug}</span>
           </div>
         </div>
@@ -417,6 +440,26 @@ export default function FunnelEditorPage() {
             <Save className="h-4 w-4 mr-2" />
             Salvar
           </Button>
+          {funnel.status === 'published' ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleUnpublish}
+              disabled={isUnpublishing}
+            >
+              <GlobeLock className="h-4 w-4 mr-2" />
+              {isUnpublishing ? 'Despublicando...' : 'Despublicar'}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              onClick={handleOpenPublishDialog}
+              className="bg-primary hover:bg-primary/90"
+            >
+              <Globe className="h-4 w-4 mr-2" />
+              Publicar
+            </Button>
+          )}
         </div>
       </header>
 
@@ -538,6 +581,17 @@ export default function FunnelEditorPage() {
           onExit={() => setIsTestMode(false)}
         />
       )}
+
+      {/* Publish Dialog */}
+      <PublishDialog
+        open={showPublishDialog}
+        onOpenChange={setShowPublishDialog}
+        funnelSlug={funnel.slug}
+        validation={publishValidation}
+        isValidating={isValidating}
+        isPublishing={isPublishing}
+        onPublish={handlePublish}
+      />
     </div>
   );
 }
