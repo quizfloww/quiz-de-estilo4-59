@@ -75,39 +75,61 @@ export const FunnelStagePreview: React.FC<FunnelStagePreviewProps> = ({ stage, f
     </div>
   );
 
-  const renderQuestion = () => (
-    <div className="flex flex-col gap-4 p-4 h-full">
-      <div className="flex flex-row w-full justify-center relative">
-        {config.allowBack !== false && (
-          <Button variant="ghost" size="icon" className="absolute left-0">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        )}
-        {renderHeader()}
-      </div>
-      
-      <div className="flex-1 flex flex-col gap-4 max-w-md mx-auto w-full">
-        <h1 className="text-2xl font-bold text-center">
-          {config.question || stage.title || 'Qual sua preferência?'}
-        </h1>
+  const renderQuestion = () => {
+    const options = config.options || [];
+    const displayType = config.displayType || 'text';
+    const hasImages = displayType === 'both' || displayType === 'image';
+    
+    return (
+      <div className="flex flex-col gap-4 p-4 h-full">
+        <div className="flex flex-row w-full justify-center relative">
+          {config.allowBack !== false && (
+            <Button variant="ghost" size="icon" className="absolute left-0">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          {renderHeader()}
+        </div>
         
-        <div className="space-y-2">
-          {(config.options || []).length > 0 ? (
-            config.options.map((option: any, index: number) => (
-              <button
-                key={option.id || index}
-                className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors flex items-center gap-3"
-              >
-                {option.imageUrl && config.displayType !== 'text' && (
-                  <img 
-                    src={option.imageUrl} 
-                    alt={option.text}
-                    className="w-16 h-16 object-cover rounded"
-                  />
-                )}
-                <span>{option.text}</span>
-              </button>
-            ))
+        <div className="flex-1 flex flex-col gap-4 max-w-md mx-auto w-full">
+          <h1 className="text-2xl font-bold text-center">
+            {config.question || stage.title || 'Qual sua preferência?'}
+          </h1>
+          
+          {/* Grid layout for image options */}
+          {hasImages && options.length > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              {options.map((option: any, index: number) => (
+                <button
+                  key={option.id || index}
+                  className="flex flex-col border rounded-lg overflow-hidden hover:ring-2 hover:ring-primary transition-all bg-background"
+                >
+                  {option.imageUrl && (
+                    <img 
+                      src={option.imageUrl} 
+                      alt={option.text}
+                      className="w-full aspect-square object-cover"
+                    />
+                  )}
+                  {displayType === 'both' && (
+                    <div className="p-2 text-xs text-center font-medium">
+                      {option.text}
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : options.length > 0 ? (
+            <div className="space-y-2">
+              {options.map((option: any, index: number) => (
+                <button
+                  key={option.id || index}
+                  className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {option.text}
+                </button>
+              ))}
+            </div>
           ) : (
             <div className="space-y-2">
               <button className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
@@ -121,14 +143,14 @@ export const FunnelStagePreview: React.FC<FunnelStagePreviewProps> = ({ stage, f
               </button>
             </div>
           )}
+          
+          {config.multiSelect && (
+            <Button className="w-full h-14">Continuar</Button>
+          )}
         </div>
-        
-        {!config.autoAdvance && (
-          <Button className="w-full h-14">Continuar</Button>
-        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderTransition = () => (
     <div className="flex flex-col items-center justify-center gap-6 p-4 h-full text-center">
@@ -159,7 +181,62 @@ export const FunnelStagePreview: React.FC<FunnelStagePreviewProps> = ({ stage, f
     </div>
   );
 
-  const renderStrategic = () => renderQuestion();
+  const renderStrategic = () => {
+    const options = config.options || [];
+    
+    return (
+      <div className="flex flex-col gap-4 p-4 h-full">
+        <div className="flex flex-row w-full justify-center relative">
+          {config.allowBack !== false && (
+            <Button variant="ghost" size="icon" className="absolute left-0">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
+          {renderHeader()}
+        </div>
+        
+        <div className="flex-1 flex flex-col gap-4 max-w-md mx-auto w-full">
+          <h1 className="text-2xl font-bold text-center">
+            {config.question || stage.title || 'Pergunta estratégica'}
+          </h1>
+          
+          {/* Image for strategic questions */}
+          {config.imageUrl && (
+            <img 
+              src={config.imageUrl} 
+              alt="Imagem da pergunta"
+              className="w-full max-w-64 mx-auto rounded-lg object-cover"
+            />
+          )}
+          
+          <div className="space-y-2">
+            {options.length > 0 ? (
+              options.map((option: any, index: number) => (
+                <button
+                  key={option.id || index}
+                  className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors"
+                >
+                  {option.text}
+                </button>
+              ))
+            ) : (
+              <>
+                <button className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
+                  Opção 1
+                </button>
+                <button className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
+                  Opção 2
+                </button>
+                <button className="w-full p-4 text-left border rounded-md hover:bg-primary hover:text-primary-foreground transition-colors">
+                  Opção 3
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderContent = () => {
     switch (stage.type) {
