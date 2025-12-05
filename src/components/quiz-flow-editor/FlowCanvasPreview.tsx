@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { QuizFlowStage, QuizFlowConfig } from '@/types/quizFlow';
 import { cn } from '@/lib/utils';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Check } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +25,9 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
   totalStages,
   currentStageIndex
 }) => {
+  // Estado para simular seleção de opções no preview
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
   if (!stage) {
     return (
       <div className="flex items-center justify-center h-full bg-muted/30">
@@ -36,6 +39,25 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
   const progress = totalStages > 0 ? ((currentStageIndex + 1) / totalStages) * 100 : 0;
   const primaryColor = globalConfig.primaryColor || '#B89B7A';
   const secondaryColor = globalConfig.secondaryColor || '#432818';
+
+  // Toggle option selection for preview
+  const handleOptionClick = (optionId: string, maxSelect: number = 3, isStrategic: boolean = false) => {
+    setSelectedOptions(prev => {
+      if (prev.includes(optionId)) {
+        // Para questões estratégicas, não permite desmarcar
+        if (isStrategic) return prev;
+        return prev.filter(id => id !== optionId);
+      }
+      if (isStrategic) {
+        // Para estratégicas, substitui seleção anterior
+        return [optionId];
+      }
+      if (prev.length >= maxSelect) {
+        return [...prev.slice(1), optionId];
+      }
+      return [...prev, optionId];
+    });
+  };
 
   // Render subtitle with highlighted words (matching QuizIntro)
   const renderHighlightedText = (text: string) => {
@@ -146,7 +168,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
               </div>
               
               <button
-                className="w-full py-3 px-4 text-sm font-semibold rounded-md shadow-md text-white"
+                className="w-full py-3 px-4 text-sm font-semibold rounded-md shadow-md text-white hover:shadow-lg transition-all duration-300 hover:scale-[1.01]"
                 style={{ backgroundColor: primaryColor }}
               >
                 {buttonText}
@@ -176,7 +198,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
     const question = stage.config.question || 'Pergunta não definida';
     const options = stage.config.options || [];
     const displayType = stage.config.displayType || 'text';
-    const multiSelect = stage.config.multiSelect || 1;
+    const multiSelect = stage.config.multiSelect || 3;
     const isStrategic = stage.type === 'strategic';
     const hasImageOptions = displayType === 'both' || displayType === 'image';
 
@@ -185,7 +207,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
         {/* Header */}
         <div className="flex flex-row w-full h-auto justify-center relative">
           {stage.config.allowBack && (
-            <button className="absolute left-0 p-2 hover:bg-muted rounded-md">
+            <button className="absolute left-0 p-2 hover:bg-muted rounded-md transition-colors">
               <ArrowLeft className="h-4 w-4" />
             </button>
           )}
@@ -200,7 +222,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
             {stage.config.showProgress && (
               <div className="relative w-full overflow-hidden rounded-full bg-zinc-300 h-2">
                 <div
-                  className="h-full transition-all"
+                  className="h-full transition-all duration-500"
                   style={{
                     width: `${progress}%`,
                     backgroundColor: primaryColor,
@@ -247,55 +269,122 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
           <div className={cn(
             "grid h-full",
             hasImageOptions 
-              ? "grid-cols-2 gap-2 px-1" // 2 colunas para opções com imagem
-              : "grid-cols-1 gap-3 px-2", // 1 coluna para opções só texto
+              ? "grid-cols-2 gap-2 px-1"
+              : "grid-cols-1 gap-3 px-2",
             isStrategic && "gap-4"
           )}>
-            {options.map((option) => (
-              <div
-                key={option.id}
-                className={cn(
-                  "relative h-full flex flex-col rounded-lg overflow-hidden cursor-pointer",
-                  "bg-white shadow-sm hover:shadow-md transition-all duration-300",
-                  !hasImageOptions && "p-4 border hover:bg-[#B89B7A]/5"
-                )}
-                style={{
-                  borderColor: !hasImageOptions ? primaryColor : 'transparent',
-                }}
-              >
-                {/* Option Image */}
-                {hasImageOptions && option.imageUrl && (
-                  <div className="relative w-full aspect-square overflow-hidden">
-                    <img
-                      src={option.imageUrl}
-                      alt={option.text}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                )}
-                
-                {/* Option Text */}
-                <p className={cn(
-                  "leading-relaxed",
-                  hasImageOptions 
-                    ? "text-xs py-1 px-2 mt-auto font-medium" 
-                    : cn(
-                        "text-sm",
-                        isStrategic && "text-base"
-                      )
-                )}
-                style={{ color: secondaryColor }}
+            {options.map((option) => {
+              const isSelected = selectedOptions.includes(option.id);
+              
+              return (
+                <div
+                  key={option.id}
+                  onClick={() => handleOptionClick(option.id, multiSelect, isStrategic)}
+                  className={cn(
+                    "relative h-full flex flex-col rounded-lg overflow-hidden cursor-pointer",
+                    "transition-all duration-300",
+                    // Estilos base
+                    "bg-[#FEFEFE]",
+                    // Estilos para opções de texto
+                    !hasImageOptions && cn(
+                      "p-4 border-2",
+                      isSelected 
+                        ? "shadow-lg" 
+                        : "shadow-sm hover:shadow-md"
+                    ),
+                    // Estilos para opções com imagem
+                    hasImageOptions && cn(
+                      isSelected 
+                        ? "shadow-xl ring-2 ring-offset-2" 
+                        : "shadow-sm hover:shadow-lg"
+                    ),
+                    // Transform no hover
+                    !isSelected && "hover:scale-[1.02]",
+                    isSelected && isStrategic && "transform -translate-y-1"
+                  )}
+                  style={{
+                    borderColor: !hasImageOptions 
+                      ? (isSelected ? '#b29670' : primaryColor) 
+                      : 'transparent',
+                    boxShadow: isSelected 
+                      ? (hasImageOptions 
+                          ? `0 12px 24px rgba(0, 0, 0, 0.2)` 
+                          : `0 4px 8px rgba(178, 150, 112, 0.35)`)
+                      : undefined,
+                    backgroundColor: isSelected && !hasImageOptions 
+                      ? '#faf6f1' 
+                      : '#FEFEFE',
+                    ...(hasImageOptions && isSelected && {
+                      '--tw-ring-color': primaryColor,
+                    } as React.CSSProperties)
+                  }}
                 >
-                  {option.text}
-                </p>
-              </div>
-            ))}
+                  {/* Option Image */}
+                  {hasImageOptions && option.imageUrl && (
+                    <div className={cn(
+                      "relative w-full aspect-square overflow-hidden",
+                      isSelected && "brightness-105"
+                    )}>
+                      <img
+                        src={option.imageUrl}
+                        alt={option.text}
+                        className={cn(
+                          "w-full h-full object-cover transition-transform duration-300",
+                          !isSelected && "hover:scale-105"
+                        )}
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Option Text */}
+                  <p className={cn(
+                    "leading-relaxed transition-colors duration-200",
+                    hasImageOptions 
+                      ? "text-xs py-1 px-2 mt-auto font-medium" 
+                      : cn(
+                          "text-sm",
+                          isStrategic && "text-base"
+                        )
+                  )}
+                  style={{ color: secondaryColor }}
+                  >
+                    {option.text}
+                  </p>
+
+                  {/* Indicador de seleção - Check */}
+                  {isSelected && (
+                    isStrategic ? (
+                      // Check maior para questões estratégicas
+                      <div 
+                        className="absolute -top-1 -right-1 h-7 w-7 rounded-full flex items-center justify-center shadow-lg animate-scale-in"
+                        style={{ backgroundColor: '#b29670' }}
+                      >
+                        <Check className="h-5 w-5 text-white" strokeWidth={3} />
+                      </div>
+                    ) : (
+                      // Check menor para questões normais
+                      <div 
+                        className="absolute -top-0.5 -right-0.5 animate-scale-in"
+                        style={{ color: '#b29670' }}
+                      >
+                        <Check className="h-4 w-4" strokeWidth={3} />
+                      </div>
+                    )
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Continue Button (if not auto-advance) */}
           {!stage.config.autoAdvance && (
             <Button
-              className="w-full h-14 mt-4 text-white"
+              className={cn(
+                "w-full h-14 mt-4 text-white transition-all duration-300",
+                selectedOptions.length > 0 
+                  ? "hover:shadow-lg hover:scale-[1.01]" 
+                  : "opacity-70"
+              )}
               style={{ backgroundColor: primaryColor }}
             >
               Continuar
@@ -321,7 +410,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
         
         {/* Title */}
         <h1 
-          className="text-xl md:text-2xl font-bold"
+          className="text-xl md:text-2xl font-bold animate-fade-in"
           style={{ color: secondaryColor }}
         >
           {title}
@@ -329,7 +418,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
         
         {/* Subtitle */}
         {subtitle && (
-          <p className="text-muted-foreground max-w-md text-sm">
+          <p className="text-muted-foreground max-w-md text-sm animate-fade-in" style={{ animationDelay: '0.1s' }}>
             {subtitle}
           </p>
         )}
@@ -337,10 +426,11 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
         {/* Motivational Message */}
         {message && (
           <p 
-            className="text-sm italic max-w-sm px-4 py-2 rounded-lg"
+            className="text-sm italic max-w-sm px-4 py-2 rounded-lg animate-fade-in"
             style={{ 
               color: primaryColor,
               backgroundColor: `${primaryColor}10`,
+              animationDelay: '0.2s'
             }}
           >
             "{message}"
@@ -353,11 +443,11 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
   const renderResultStage = () => {
     return (
       <div className="flex flex-col items-center gap-6 text-center p-4">
-        <h1 className="text-2xl md:text-3xl font-bold" style={{ color: secondaryColor }}>
+        <h1 className="text-2xl md:text-3xl font-bold animate-fade-in" style={{ color: secondaryColor }}>
           Seu Resultado
         </h1>
         <div 
-          className="w-full max-w-md p-6 rounded-xl border"
+          className="w-full max-w-md p-6 rounded-xl border animate-scale-in"
           style={{ 
             background: `linear-gradient(135deg, ${primaryColor}15, ${primaryColor}05)`,
           }}
@@ -371,7 +461,7 @@ export const FlowCanvasPreview: React.FC<FlowCanvasPreviewProps> = ({
           )}
         </div>
         <Button 
-          className="w-full max-w-md h-14"
+          className="w-full max-w-md h-14 text-white hover:shadow-lg hover:scale-[1.01] transition-all duration-300"
           style={{ backgroundColor: primaryColor }}
         >
           {stage.config.ctaText || 'Ver oferta especial'}
