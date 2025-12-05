@@ -241,9 +241,15 @@ export const useQuizFlowEditor = () => {
   }, [config]);
 
   const resetConfig = useCallback(() => {
-    setConfig(defaultQuizFlowConfig);
+    // Clear localStorage first to ensure fresh config loads
+    localStorage.removeItem('quiz-flow-config');
+    // Re-import the default config from the module (this gets the latest version)
+    setConfig({ ...defaultQuizFlowConfig });
     setIsDirty(true);
-    toast.success('Configuração resetada');
+    if (defaultQuizFlowConfig.stages.length > 0) {
+      setActiveStageId(defaultQuizFlowConfig.stages[0].id);
+    }
+    toast.success('Configuração resetada para o padrão com todas as questões!');
   }, []);
 
   return {
