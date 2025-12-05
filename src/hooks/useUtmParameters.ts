@@ -41,7 +41,7 @@ export const useUtmParameters = () => {
    */
   const saveUtmToSupabase = async (params: UtmParameters) => {
     try {
-      const { error } = await supabase.from('utm_analytics').insert({
+      const { error } = await (supabase as any).from('utm_analytics').insert({
         utm_source: params.source,
         utm_medium: params.medium,
         utm_campaign: params.campaign

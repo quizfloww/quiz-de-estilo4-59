@@ -14,7 +14,148 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      participant_answers: {
+        Row: {
+          created_at: string | null
+          id: string
+          option_id: string | null
+          participant_id: string | null
+          points: number | null
+          question_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          option_id?: string | null
+          participant_id?: string | null
+          points?: number | null
+          question_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          option_id?: string | null
+          participant_id?: string | null
+          points?: number | null
+          question_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "participant_answers_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_participants: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          name?: string | null
+        }
+        Relationships: []
+      }
+      quiz_questions: {
+        Row: {
+          created_at: string | null
+          id: string
+          question_order: number
+          question_text: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          question_order: number
+          question_text: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          question_order?: number
+          question_text?: string
+        }
+        Relationships: []
+      }
+      style_results: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_primary: boolean | null
+          participant_id: string | null
+          percentage: number | null
+          points: number | null
+          rank: number | null
+          style_type_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          participant_id?: string | null
+          percentage?: number | null
+          points?: number | null
+          rank?: number | null
+          style_type_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          participant_id?: string | null
+          percentage?: number | null
+          points?: number | null
+          rank?: number | null
+          style_type_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "style_results_participant_id_fkey"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_participants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      utm_analytics: {
+        Row: {
+          created_at: string | null
+          id: string
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
