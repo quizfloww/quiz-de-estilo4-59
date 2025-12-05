@@ -88,7 +88,7 @@ export const PersonalizedHook: React.FC<PersonalizedHookProps> = ({
         
         {/* Adicionando a imagem do estilo predominante aqui, 50% menor e com efeitos */}
         {image && (
-          <AnimatedWrapper animation="fade-in-up" show={true} duration={500} delay={250}>
+          <AnimatedWrapper animation="fade" show={true} duration={500} delay={250}>
             {/* Adicionado 'group' para permitir efeitos de hover no filho */}
             <div className="group my-6 mx-auto max-w-[200px] sm:max-w-[200px] md:max-w-[200px] lg:max-w-[200px] relative">
               <img
