@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Slider } from '@/components/ui/slider';
 
 interface BlockPropertiesPanelProps {
   block: CanvasBlock | null;
@@ -36,6 +37,25 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       },
     });
   };
+
+  const renderScaleControl = () => (
+    <div className="space-y-2 pb-3 border-b">
+      <Label>Escala</Label>
+      <div className="flex items-center gap-3">
+        <Slider
+          value={[(block.content.scale || 1) * 100]}
+          min={50}
+          max={200}
+          step={10}
+          onValueChange={([value]) => updateContent('scale', value / 100)}
+          className="flex-1"
+        />
+        <span className="text-sm text-muted-foreground w-12 text-right">
+          {((block.content.scale || 1) * 100).toFixed(0)}%
+        </span>
+      </div>
+    </div>
+  );
 
   const renderHeaderProperties = () => (
     <>
@@ -79,6 +99,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderHeadingProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="text">Texto</Label>
         <Textarea
@@ -129,6 +150,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderTextProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="text">Texto</Label>
         <Textarea
@@ -176,6 +198,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderImageProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="imageUrl">URL da Imagem</Label>
         <Input
@@ -195,19 +218,61 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         />
       </div>
       <div className="space-y-2">
-        <Label htmlFor="maxWidth">Largura Máxima</Label>
-        <Input
-          id="maxWidth"
-          value={block.content.maxWidth || '384px'}
-          onChange={(e) => updateContent('maxWidth', e.target.value)}
-          placeholder="384px"
-        />
+        <Label>Tamanho</Label>
+        <Select
+          value={block.content.imageSize || 'md'}
+          onValueChange={(value) => updateContent('imageSize', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sm">Pequeno (200px)</SelectItem>
+            <SelectItem value="md">Médio (384px)</SelectItem>
+            <SelectItem value="lg">Grande (512px)</SelectItem>
+            <SelectItem value="xl">Extra Grande (640px)</SelectItem>
+            <SelectItem value="full">Largura Total</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Alinhamento Horizontal</Label>
+        <Select
+          value={block.content.imageAlignment || 'center'}
+          onValueChange={(value) => updateContent('imageAlignment', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="left">Esquerda</SelectItem>
+            <SelectItem value="center">Centro</SelectItem>
+            <SelectItem value="right">Direita</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Posição Vertical</Label>
+        <Select
+          value={block.content.imagePosition || 'center'}
+          onValueChange={(value) => updateContent('imagePosition', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="top">Topo</SelectItem>
+            <SelectItem value="center">Centro</SelectItem>
+            <SelectItem value="bottom">Base</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </>
   );
 
   const renderInputProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="label">Rótulo</Label>
         <Input
@@ -255,6 +320,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderOptionsProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="displayType">Tipo de Exibição</Label>
         <Select
@@ -289,6 +355,43 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </Select>
       </div>
       <div className="space-y-2">
+        <Label>Tamanho do Texto</Label>
+        <Select
+          value={block.content.optionTextSize || 'base'}
+          onValueChange={(value) => updateContent('optionTextSize', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="xs">Extra Pequeno</SelectItem>
+            <SelectItem value="sm">Pequeno</SelectItem>
+            <SelectItem value="base">Normal</SelectItem>
+            <SelectItem value="lg">Grande</SelectItem>
+            <SelectItem value="xl">Extra Grande</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {(block.content.displayType === 'image' || block.content.displayType === 'both') && (
+        <div className="space-y-2">
+          <Label>Tamanho das Imagens</Label>
+          <Select
+            value={block.content.optionImageSize || 'md'}
+            onValueChange={(value) => updateContent('optionImageSize', value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sm">Pequeno</SelectItem>
+              <SelectItem value="md">Médio</SelectItem>
+              <SelectItem value="lg">Grande</SelectItem>
+              <SelectItem value="xl">Extra Grande</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      <div className="space-y-2">
         <Label htmlFor="multiSelect">Seleção Múltipla</Label>
         <Select
           value={String(block.content.multiSelect || 1)}
@@ -303,6 +406,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             <SelectItem value="3">3 opções</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showCheckIcon">Mostrar Check</Label>
+        <Switch
+          id="showCheckIcon"
+          checked={block.content.showCheckIcon !== false}
+          onCheckedChange={(checked) => updateContent('showCheckIcon', checked)}
+        />
       </div>
       <div className="flex items-center justify-between">
         <Label htmlFor="autoAdvance">Avançar Automaticamente</Label>
@@ -322,6 +433,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderButtonProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="buttonText">Texto do Botão</Label>
         <Input
@@ -359,15 +471,18 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   );
 
   const renderSpacerProperties = () => (
-    <div className="space-y-2">
-      <Label htmlFor="height">Altura</Label>
-      <Input
-        id="height"
-        value={block.content.height || '1rem'}
-        onChange={(e) => updateContent('height', e.target.value)}
-        placeholder="1rem"
-      />
-    </div>
+    <>
+      {renderScaleControl()}
+      <div className="space-y-2">
+        <Label htmlFor="height">Altura</Label>
+        <Input
+          id="height"
+          value={block.content.height || '1rem'}
+          onChange={(e) => updateContent('height', e.target.value)}
+          placeholder="1rem"
+        />
+      </div>
+    </>
   );
 
   const renderProperties = () => {

@@ -36,6 +36,9 @@ export interface CanvasBlockContent {
   imageAlt?: string;
   maxWidth?: string;
   borderRadius?: string;
+  imagePosition?: 'top' | 'center' | 'bottom';
+  imageAlignment?: 'left' | 'center' | 'right';
+  imageSize?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   
   // Input
   label?: string;
@@ -49,6 +52,9 @@ export interface CanvasBlockContent {
   autoAdvance?: boolean;
   options?: CanvasOption[];
   columns?: 1 | 2 | 3 | 4;
+  optionTextSize?: 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+  optionImageSize?: 'sm' | 'md' | 'lg' | 'xl';
+  showCheckIcon?: boolean;
   
   // Button
   buttonText?: string;
@@ -57,6 +63,9 @@ export interface CanvasBlockContent {
   
   // Spacer
   height?: string;
+  
+  // Global - Escala
+  scale?: number;
 }
 
 export interface CanvasBlockStyle {
