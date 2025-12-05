@@ -219,14 +219,10 @@ test.describe("FunnelEditor - Canvas/Editor", () => {
       const box = await element.boundingBox();
       if (box) {
         // Arrasta para uma posição nova
-        await page.dragAndDrop(
-          element,
-          page.locator('[data-testid="canvas"]'),
-          {
-            sourcePosition: { x: box.width / 2, y: box.height / 2 },
-            targetPosition: { x: 100, y: 100 },
-          }
-        );
+        await element.dragTo(page.locator('[data-testid="canvas"]'), {
+          sourcePosition: { x: box.width / 2, y: box.height / 2 },
+          targetPosition: { x: 100, y: 100 },
+        });
       }
     }
   });

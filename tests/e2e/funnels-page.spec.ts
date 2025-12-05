@@ -8,7 +8,7 @@ test.describe("FunnelsPage - Listagem", () => {
   test("deve carregar a página de funnels", async ({ page }) => {
     // Verifica se a página está carregada
     await expect(page).toHaveTitle(/.*Funnels.*/i);
-    await expect(page.locator("h1, h2")).first().toBeVisible();
+    await expect(page.locator("h1, h2").first()).toBeVisible();
   });
 
   test("deve exibir lista de funnels", async ({ page }) => {
