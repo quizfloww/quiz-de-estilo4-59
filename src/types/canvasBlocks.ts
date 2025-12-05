@@ -7,7 +7,20 @@ export type CanvasBlockType =
   | 'options'
   | 'button'
   | 'spacer'
-  | 'divider';
+  | 'divider'
+  // Blocos de Resultado
+  | 'styleResult'
+  | 'secondaryStyles'
+  | 'styleProgress'
+  // Blocos de Oferta
+  | 'priceAnchor'
+  | 'countdown'
+  | 'testimonial'
+  | 'benefitsList'
+  | 'guarantee'
+  | 'ctaOffer'
+  | 'faq'
+  | 'socialProof';
 
 export interface CanvasOption {
   id: string;
@@ -15,6 +28,34 @@ export interface CanvasOption {
   imageUrl?: string;
   styleCategory?: string;
   points?: number;
+}
+
+export interface PriceAnchorItem {
+  id: string;
+  label: string;
+  originalPrice: number;
+}
+
+export interface TestimonialItem {
+  id: string;
+  name: string;
+  role?: string;
+  text: string;
+  imageUrl?: string;
+  rating?: number;
+}
+
+export interface BenefitItem {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
 }
 
 export interface CanvasBlockContent {
@@ -58,14 +99,76 @@ export interface CanvasBlockContent {
   
   // Button
   buttonText?: string;
-  buttonVariant?: 'primary' | 'secondary' | 'outline';
+  buttonVariant?: 'primary' | 'secondary' | 'outline' | 'cta';
   fullWidth?: boolean;
+  buttonUrl?: string;
   
   // Spacer
   height?: string;
   
   // Global - Escala
   scale?: number;
+  
+  // Style Result
+  showPercentage?: boolean;
+  showDescription?: boolean;
+  layout?: 'side-by-side' | 'stacked';
+  styleImageSize?: 'sm' | 'md' | 'lg' | 'xl';
+  
+  // Secondary Styles
+  maxSecondaryStyles?: number;
+  showSecondaryPercentage?: boolean;
+  
+  // Style Progress
+  showLabels?: boolean;
+  maxStylesShown?: number;
+  
+  // Price Anchor
+  priceItems?: PriceAnchorItem[];
+  totalOriginal?: number;
+  finalPrice?: number;
+  installments?: { count: number; value: number };
+  discountBadge?: string;
+  currency?: string;
+  
+  // Countdown
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  countdownVariant?: 'dramatic' | 'simple' | 'minimal';
+  expiryMessage?: string;
+  
+  // Testimonial
+  testimonial?: TestimonialItem;
+  testimonialVariant?: 'card' | 'quote' | 'minimal';
+  
+  // Benefits List
+  benefits?: BenefitItem[];
+  benefitsLayout?: 'list' | 'grid';
+  benefitsColumns?: 1 | 2 | 3;
+  showBenefitIcons?: boolean;
+  
+  // Guarantee
+  guaranteeDays?: number;
+  guaranteeTitle?: string;
+  guaranteeDescription?: string;
+  guaranteeImageUrl?: string;
+  
+  // CTA Offer
+  ctaText?: string;
+  ctaUrl?: string;
+  ctaVariant?: 'green' | 'brand' | 'gradient';
+  urgencyText?: string;
+  showCtaIcon?: boolean;
+  
+  // FAQ
+  faqItems?: FaqItem[];
+  faqStyle?: 'accordion' | 'list';
+  
+  // Social Proof
+  socialProofText?: string;
+  socialProofIcon?: 'users' | 'star' | 'check' | 'heart';
+  socialProofVariant?: 'badge' | 'banner' | 'minimal';
 }
 
 export interface CanvasBlockStyle {
@@ -99,6 +202,19 @@ export const BLOCK_TYPE_LABELS: Record<CanvasBlockType, string> = {
   button: 'Botão',
   spacer: 'Espaçador',
   divider: 'Divisor',
+  // Resultado
+  styleResult: 'Resultado do Estilo',
+  secondaryStyles: 'Estilos Secundários',
+  styleProgress: 'Progresso dos Estilos',
+  // Oferta
+  priceAnchor: 'Ancoragem de Preço',
+  countdown: 'Contador Regressivo',
+  testimonial: 'Depoimento',
+  benefitsList: 'Lista de Benefícios',
+  guarantee: 'Garantia',
+  ctaOffer: 'CTA de Oferta',
+  faq: 'Perguntas Frequentes',
+  socialProof: 'Prova Social',
 };
 
 export const BLOCK_TYPE_ICONS: Record<CanvasBlockType, string> = {
@@ -111,4 +227,17 @@ export const BLOCK_TYPE_ICONS: Record<CanvasBlockType, string> = {
   button: 'MousePointer',
   spacer: 'Maximize2',
   divider: 'Minus',
+  // Resultado
+  styleResult: 'Award',
+  secondaryStyles: 'BarChart3',
+  styleProgress: 'TrendingUp',
+  // Oferta
+  priceAnchor: 'DollarSign',
+  countdown: 'Clock',
+  testimonial: 'Quote',
+  benefitsList: 'CheckCircle',
+  guarantee: 'Shield',
+  ctaOffer: 'ShoppingCart',
+  faq: 'HelpCircle',
+  socialProof: 'Users',
 };
