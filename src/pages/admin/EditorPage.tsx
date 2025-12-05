@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Save, Palette, Type, ArrowLeft } from "lucide-react";
+import { Edit, Eye, Save, Palette, Type, ArrowLeft, Workflow } from "lucide-react";
+import { QuizFlowEditor } from "@/components/quiz-flow-editor/QuizFlowEditor";
 
 // Lazy loading do editor para evitar problemas de importação
 const QuizOfferPageVisualEditor = React.lazy(
@@ -10,6 +11,27 @@ const QuizOfferPageVisualEditor = React.lazy(
 
 const EditorPage: React.FC = () => {
   const [activeEditor, setActiveEditor] = useState<string | null>(null);
+
+  // Quiz Flow Editor (novo)
+  if (activeEditor === "quiz-flow") {
+    return (
+      <div className="h-screen flex flex-col">
+        <div className="bg-white border-b p-4 flex-shrink-0">
+          <Button
+            variant="ghost"
+            onClick={() => setActiveEditor(null)}
+            className="flex items-center gap-2 text-[#432818] hover:text-[#B89B7A]"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar ao Dashboard
+          </Button>
+        </div>
+        <div className="flex-1 overflow-hidden">
+          <QuizFlowEditor />
+        </div>
+      </div>
+    );
+  }
 
   if (activeEditor === "quiz-offer") {
     return (
@@ -57,7 +79,32 @@ const EditorPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+        {/* Novo: Editor de Fluxo do Quiz */}
+        <Card
+          className="hover:shadow-lg transition-shadow cursor-pointer border-2 border-primary/20 bg-primary/5"
+          onClick={() => setActiveEditor("quiz-flow")}
+        >
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <Workflow className="h-5 w-5" />
+              Editor de Fluxo do Quiz
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-[#8F7A6A]">
+              Editor visual com drag-and-drop para criar e editar o fluxo completo do quiz
+            </p>
+            <Button
+              variant="outline"
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground border-primary"
+            >
+              <Workflow className="w-4 h-4 mr-2" />
+              Abrir Editor de Fluxo
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card
           className="hover:shadow-lg transition-shadow cursor-pointer"
           onClick={() => setActiveEditor("quiz-offer")}
