@@ -31,6 +31,7 @@ const QuizDescubraSeuEstilo = lazy(
 );
 const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 const EnhancedResultPageEditorPage = lazy(() => import("./pages/EnhancedResultPageEditorPage"));
+const FunnelEditorPage = lazy(() => import("./pages/admin/FunnelEditorPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 const App = () => {
@@ -83,6 +84,17 @@ const App = () => {
                 <Route
                   path="/advanced-editor"
                   element={<EnhancedResultPageEditorPage />}
+                />
+                {/* Funnel Editor - full screen */}
+                <Route
+                  path="/admin/funnels/:id/edit"
+                  element={
+                    <AdminAuthProvider>
+                      <AdminRoute>
+                        <FunnelEditorPage />
+                      </AdminRoute>
+                    </AdminAuthProvider>
+                  }
                 />
                 {/* Admin - protegido com AdminAuthProvider */}
                 <Route

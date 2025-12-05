@@ -11,7 +11,8 @@ import {
   Target,
   Code,
   TrendingUp,
-  Home
+  Home,
+  GitBranch
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -51,6 +52,12 @@ const sidebarItems = [
     title: 'Editor',
     href: '/admin/editor',
     icon: Code
+  },
+  {
+    title: 'Funis',
+    href: '/admin/funnels',
+    icon: GitBranch,
+    description: 'Gerenciar funis de quiz'
   }
 ];
 

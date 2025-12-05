@@ -12,6 +12,7 @@ const SettingsPage = lazy(() => import('./SettingsPage'));
 const CreativesPage = lazy(() => import('./CreativesPage'));
 const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
 const EditorPage = lazy(() => import('./EditorPage'));
+const FunnelsPage = lazy(() => import('./FunnelsPage'));
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -44,6 +45,7 @@ const DashboardPage: React.FC = () => {
               <Route path="criativos" element={<CreativesPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />
               <Route path="editor" element={<EditorPage />} />
+              <Route path="funnels" element={<FunnelsPage />} />
               
               {/* Redirecionamento para rota não encontrada */}
               <Route path="*" element={<Navigate to="/admin" replace />} />
