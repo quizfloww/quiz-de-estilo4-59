@@ -11,7 +11,18 @@ import {
   List, 
   MousePointer, 
   Maximize2, 
-  Minus 
+  Minus,
+  Award,
+  BarChart3,
+  TrendingUp,
+  DollarSign,
+  Clock,
+  Quote,
+  CheckCircle,
+  Shield,
+  ShoppingCart,
+  HelpCircle,
+  Users,
 } from 'lucide-react';
 
 interface BlocksSidebarProps {
@@ -28,6 +39,19 @@ const BLOCK_ICONS: Record<CanvasBlockType, React.ElementType> = {
   button: MousePointer,
   spacer: Maximize2,
   divider: Minus,
+  // Resultado
+  styleResult: Award,
+  secondaryStyles: BarChart3,
+  styleProgress: TrendingUp,
+  // Oferta
+  priceAnchor: DollarSign,
+  countdown: Clock,
+  testimonial: Quote,
+  benefitsList: CheckCircle,
+  guarantee: Shield,
+  ctaOffer: ShoppingCart,
+  faq: HelpCircle,
+  socialProof: Users,
 };
 
 const BLOCK_CATEGORIES = [
@@ -42,6 +66,14 @@ const BLOCK_CATEGORIES = [
   {
     name: 'Interação',
     blocks: ['input', 'options', 'button'] as CanvasBlockType[],
+  },
+  {
+    name: 'Resultado',
+    blocks: ['styleResult', 'secondaryStyles', 'styleProgress'] as CanvasBlockType[],
+  },
+  {
+    name: 'Oferta',
+    blocks: ['priceAnchor', 'countdown', 'ctaOffer', 'testimonial', 'benefitsList', 'guarantee', 'faq', 'socialProof'] as CanvasBlockType[],
   },
 ];
 

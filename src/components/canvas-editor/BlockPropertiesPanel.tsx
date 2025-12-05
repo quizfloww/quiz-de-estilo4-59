@@ -492,6 +492,443 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
+  const renderStyleResultProperties = () => (
+    <>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showPercentage">Mostrar Porcentagem</Label>
+        <Switch
+          id="showPercentage"
+          checked={block.content.showPercentage !== false}
+          onCheckedChange={(checked) => updateContent('showPercentage', checked)}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showDescription">Mostrar Descrição</Label>
+        <Switch
+          id="showDescription"
+          checked={block.content.showDescription !== false}
+          onCheckedChange={(checked) => updateContent('showDescription', checked)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Layout</Label>
+        <Select
+          value={block.content.layout || 'stacked'}
+          onValueChange={(value) => updateContent('layout', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="stacked">Empilhado</SelectItem>
+            <SelectItem value="side-by-side">Lado a Lado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Tamanho da Imagem</Label>
+        <Select
+          value={block.content.styleImageSize || 'lg'}
+          onValueChange={(value) => updateContent('styleImageSize', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sm">Pequeno</SelectItem>
+            <SelectItem value="md">Médio</SelectItem>
+            <SelectItem value="lg">Grande</SelectItem>
+            <SelectItem value="xl">Extra Grande</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
+  const renderSecondaryStylesProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label>Quantidade Máxima</Label>
+        <Select
+          value={String(block.content.maxSecondaryStyles || 3)}
+          onValueChange={(value) => updateContent('maxSecondaryStyles', parseInt(value))}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">1 estilo</SelectItem>
+            <SelectItem value="2">2 estilos</SelectItem>
+            <SelectItem value="3">3 estilos</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showSecondaryPercentage">Mostrar Porcentagem</Label>
+        <Switch
+          id="showSecondaryPercentage"
+          checked={block.content.showSecondaryPercentage !== false}
+          onCheckedChange={(checked) => updateContent('showSecondaryPercentage', checked)}
+        />
+      </div>
+    </>
+  );
+
+  const renderPriceAnchorProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="finalPrice">Preço Final</Label>
+        <Input
+          id="finalPrice"
+          type="number"
+          value={block.content.finalPrice || 39}
+          onChange={(e) => updateContent('finalPrice', parseFloat(e.target.value))}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="totalOriginal">Preço Original Total</Label>
+        <Input
+          id="totalOriginal"
+          type="number"
+          value={block.content.totalOriginal || 175}
+          onChange={(e) => updateContent('totalOriginal', parseFloat(e.target.value))}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="discountBadge">Badge de Desconto</Label>
+        <Input
+          id="discountBadge"
+          value={block.content.discountBadge || ''}
+          onChange={(e) => updateContent('discountBadge', e.target.value)}
+          placeholder="-78%"
+        />
+      </div>
+    </>
+  );
+
+  const renderCountdownProperties = () => (
+    <>
+      <div className="grid grid-cols-3 gap-2">
+        <div className="space-y-2">
+          <Label htmlFor="hours">Horas</Label>
+          <Input
+            id="hours"
+            type="number"
+            min="0"
+            max="23"
+            value={block.content.hours ?? 2}
+            onChange={(e) => updateContent('hours', parseInt(e.target.value))}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="minutes">Min</Label>
+          <Input
+            id="minutes"
+            type="number"
+            min="0"
+            max="59"
+            value={block.content.minutes ?? 47}
+            onChange={(e) => updateContent('minutes', parseInt(e.target.value))}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="seconds">Seg</Label>
+          <Input
+            id="seconds"
+            type="number"
+            min="0"
+            max="59"
+            value={block.content.seconds ?? 33}
+            onChange={(e) => updateContent('seconds', parseInt(e.target.value))}
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label>Estilo</Label>
+        <Select
+          value={block.content.countdownVariant || 'dramatic'}
+          onValueChange={(value) => updateContent('countdownVariant', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="dramatic">Dramático</SelectItem>
+            <SelectItem value="simple">Simples</SelectItem>
+            <SelectItem value="minimal">Mínimo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="expiryMessage">Mensagem</Label>
+        <Input
+          id="expiryMessage"
+          value={block.content.expiryMessage || ''}
+          onChange={(e) => updateContent('expiryMessage', e.target.value)}
+          placeholder="Esta oferta expira..."
+        />
+      </div>
+    </>
+  );
+
+  const renderCtaOfferProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="ctaText">Texto do Botão</Label>
+        <Input
+          id="ctaText"
+          value={block.content.ctaText || ''}
+          onChange={(e) => updateContent('ctaText', e.target.value)}
+          placeholder="GARANTIR MEU GUIA AGORA"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="ctaUrl">URL do Checkout</Label>
+        <Input
+          id="ctaUrl"
+          value={block.content.ctaUrl || ''}
+          onChange={(e) => updateContent('ctaUrl', e.target.value)}
+          placeholder="https://..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Cor do Botão</Label>
+        <Select
+          value={block.content.ctaVariant || 'green'}
+          onValueChange={(value) => updateContent('ctaVariant', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="green">Verde</SelectItem>
+            <SelectItem value="brand">Marca</SelectItem>
+            <SelectItem value="gradient">Gradiente</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="urgencyText">Texto de Urgência</Label>
+        <Input
+          id="urgencyText"
+          value={block.content.urgencyText || ''}
+          onChange={(e) => updateContent('urgencyText', e.target.value)}
+          placeholder="Preço pode aumentar..."
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showCtaIcon">Mostrar Ícone</Label>
+        <Switch
+          id="showCtaIcon"
+          checked={block.content.showCtaIcon !== false}
+          onCheckedChange={(checked) => updateContent('showCtaIcon', checked)}
+        />
+      </div>
+    </>
+  );
+
+  const renderGuaranteeProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="guaranteeDays">Dias de Garantia</Label>
+        <Input
+          id="guaranteeDays"
+          type="number"
+          value={block.content.guaranteeDays || 7}
+          onChange={(e) => updateContent('guaranteeDays', parseInt(e.target.value))}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="guaranteeTitle">Título</Label>
+        <Input
+          id="guaranteeTitle"
+          value={block.content.guaranteeTitle || ''}
+          onChange={(e) => updateContent('guaranteeTitle', e.target.value)}
+          placeholder="7 Dias de Garantia..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="guaranteeDescription">Descrição</Label>
+        <Textarea
+          id="guaranteeDescription"
+          value={block.content.guaranteeDescription || ''}
+          onChange={(e) => updateContent('guaranteeDescription', e.target.value)}
+          placeholder="Se você não ficar satisfeita..."
+          rows={3}
+        />
+      </div>
+    </>
+  );
+
+  const renderTestimonialProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label>Estilo</Label>
+        <Select
+          value={block.content.testimonialVariant || 'card'}
+          onValueChange={(value) => updateContent('testimonialVariant', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="card">Cartão</SelectItem>
+            <SelectItem value="quote">Citação</SelectItem>
+            <SelectItem value="minimal">Mínimo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        O conteúdo do depoimento pode ser configurado via código ou importação de dados.
+      </p>
+    </>
+  );
+
+  const renderBenefitsListProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label>Layout</Label>
+        <Select
+          value={block.content.benefitsLayout || 'list'}
+          onValueChange={(value) => updateContent('benefitsLayout', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="list">Lista</SelectItem>
+            <SelectItem value="grid">Grade</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      {block.content.benefitsLayout === 'grid' && (
+        <div className="space-y-2">
+          <Label>Colunas</Label>
+          <Select
+            value={String(block.content.benefitsColumns || 2)}
+            onValueChange={(value) => updateContent('benefitsColumns', parseInt(value))}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1 Coluna</SelectItem>
+              <SelectItem value="2">2 Colunas</SelectItem>
+              <SelectItem value="3">3 Colunas</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showBenefitIcons">Mostrar Ícones</Label>
+        <Switch
+          id="showBenefitIcons"
+          checked={block.content.showBenefitIcons !== false}
+          onCheckedChange={(checked) => updateContent('showBenefitIcons', checked)}
+        />
+      </div>
+    </>
+  );
+
+  const renderFaqProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label>Estilo</Label>
+        <Select
+          value={block.content.faqStyle || 'accordion'}
+          onValueChange={(value) => updateContent('faqStyle', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="accordion">Acordeão</SelectItem>
+            <SelectItem value="list">Lista</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {block.content.faqItems?.length || 4} perguntas configuradas
+      </p>
+    </>
+  );
+
+  const renderSocialProofProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="socialProofText">Texto</Label>
+        <Input
+          id="socialProofText"
+          value={block.content.socialProofText || ''}
+          onChange={(e) => updateContent('socialProofText', e.target.value)}
+          placeholder="+3.000 mulheres..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Ícone</Label>
+        <Select
+          value={block.content.socialProofIcon || 'users'}
+          onValueChange={(value) => updateContent('socialProofIcon', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="users">Usuários</SelectItem>
+            <SelectItem value="star">Estrela</SelectItem>
+            <SelectItem value="check">Check</SelectItem>
+            <SelectItem value="heart">Coração</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label>Variante</Label>
+        <Select
+          value={block.content.socialProofVariant || 'badge'}
+          onValueChange={(value) => updateContent('socialProofVariant', value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="badge">Badge</SelectItem>
+            <SelectItem value="banner">Banner</SelectItem>
+            <SelectItem value="minimal">Mínimo</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
+  const renderStyleProgressProperties = () => (
+    <>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showLabels">Mostrar Rótulos</Label>
+        <Switch
+          id="showLabels"
+          checked={block.content.showLabels !== false}
+          onCheckedChange={(checked) => updateContent('showLabels', checked)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Estilos Mostrados</Label>
+        <Select
+          value={String(block.content.maxStylesShown || 8)}
+          onValueChange={(value) => updateContent('maxStylesShown', parseInt(value))}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="4">4 estilos</SelectItem>
+            <SelectItem value="6">6 estilos</SelectItem>
+            <SelectItem value="8">8 estilos</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  );
+
   const renderProperties = () => {
     switch (block.type) {
       case 'header':
@@ -512,6 +949,30 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         return renderSpacerProperties();
       case 'divider':
         return <p className="text-sm text-muted-foreground">Sem propriedades configuráveis</p>;
+      // Blocos de Resultado
+      case 'styleResult':
+        return renderStyleResultProperties();
+      case 'secondaryStyles':
+        return renderSecondaryStylesProperties();
+      case 'styleProgress':
+        return renderStyleProgressProperties();
+      // Blocos de Oferta
+      case 'priceAnchor':
+        return renderPriceAnchorProperties();
+      case 'countdown':
+        return renderCountdownProperties();
+      case 'ctaOffer':
+        return renderCtaOfferProperties();
+      case 'testimonial':
+        return renderTestimonialProperties();
+      case 'benefitsList':
+        return renderBenefitsListProperties();
+      case 'guarantee':
+        return renderGuaranteeProperties();
+      case 'faq':
+        return renderFaqProperties();
+      case 'socialProof':
+        return renderSocialProofProperties();
       default:
         return <p className="text-sm text-muted-foreground">Bloco desconhecido</p>;
     }

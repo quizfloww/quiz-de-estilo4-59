@@ -1,4 +1,4 @@
-import { CanvasBlock, CanvasOption } from '@/types/canvasBlocks';
+import { CanvasBlock, CanvasBlockType, CanvasBlockContent } from '@/types/canvasBlocks';
 import { FunnelStage } from '@/hooks/useFunnelStages';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -61,6 +61,69 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
         textAlign: 'center',
       },
     });
+  } else if (stage.type === 'result') {
+    // Blocos especiais para resultado
+    blocks.push({
+      id: `${stage.id}-styleResult`,
+      type: 'styleResult',
+      order: order++,
+      content: {
+        showPercentage: true,
+        showDescription: true,
+        layout: 'stacked',
+        styleImageSize: 'lg',
+      },
+    });
+
+    blocks.push({
+      id: `${stage.id}-secondaryStyles`,
+      type: 'secondaryStyles',
+      order: order++,
+      content: {
+        maxSecondaryStyles: 3,
+        showSecondaryPercentage: true,
+      },
+    });
+
+    blocks.push({
+      id: `${stage.id}-spacer1`,
+      type: 'spacer',
+      order: order++,
+      content: { height: '2rem' },
+    });
+
+    blocks.push({
+      id: `${stage.id}-priceAnchor`,
+      type: 'priceAnchor',
+      order: order++,
+      content: {
+        finalPrice: 39,
+        totalOriginal: 175,
+        currency: 'R$',
+      },
+    });
+
+    blocks.push({
+      id: `${stage.id}-ctaOffer`,
+      type: 'ctaOffer',
+      order: order++,
+      content: {
+        ctaText: 'GARANTIR MEU GUIA AGORA',
+        ctaVariant: 'green',
+        showCtaIcon: true,
+      },
+    });
+
+    blocks.push({
+      id: `${stage.id}-guarantee`,
+      type: 'guarantee',
+      order: order++,
+      content: {
+        guaranteeDays: 7,
+      },
+    });
+
+    return blocks;
   }
 
   // 3. Image Block (se houver)
@@ -187,10 +250,10 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   return blocks;
 };
 
-export const createEmptyBlock = (type: CanvasBlock['type']): CanvasBlock => {
+export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
   const id = uuidv4();
   
-  const defaultContent: Record<CanvasBlock['type'], CanvasBlock['content']> = {
+  const defaultContent: Record<CanvasBlockType, CanvasBlockContent> = {
     header: {
       showLogo: true,
       showProgress: true,
@@ -235,6 +298,59 @@ export const createEmptyBlock = (type: CanvasBlock['type']): CanvasBlock => {
       height: '1rem',
     },
     divider: {},
+    // Blocos de Resultado
+    styleResult: {
+      showPercentage: true,
+      showDescription: true,
+      layout: 'stacked',
+      styleImageSize: 'lg',
+    },
+    secondaryStyles: {
+      maxSecondaryStyles: 3,
+      showSecondaryPercentage: true,
+    },
+    styleProgress: {
+      showLabels: true,
+      maxStylesShown: 8,
+    },
+    // Blocos de Oferta
+    priceAnchor: {
+      finalPrice: 39,
+      totalOriginal: 175,
+      currency: 'R$',
+    },
+    countdown: {
+      hours: 2,
+      minutes: 47,
+      seconds: 33,
+      countdownVariant: 'dramatic',
+      expiryMessage: 'Esta oferta expira ao sair desta página!',
+    },
+    testimonial: {
+      testimonialVariant: 'card',
+    },
+    benefitsList: {
+      benefitsLayout: 'list',
+      benefitsColumns: 1,
+      showBenefitIcons: true,
+    },
+    guarantee: {
+      guaranteeDays: 7,
+      guaranteeTitle: '7 Dias de Garantia Incondicional',
+    },
+    ctaOffer: {
+      ctaText: 'GARANTIR MEU GUIA AGORA',
+      ctaVariant: 'green',
+      showCtaIcon: true,
+    },
+    faq: {
+      faqStyle: 'accordion',
+    },
+    socialProof: {
+      socialProofText: '+3.000 mulheres já descobriram seu estilo',
+      socialProofIcon: 'users',
+      socialProofVariant: 'badge',
+    },
   };
 
   return {
