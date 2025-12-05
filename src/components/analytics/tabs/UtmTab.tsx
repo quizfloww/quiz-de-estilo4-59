@@ -33,7 +33,7 @@ export const UtmTab: React.FC<UtmTabProps> = ({
         setLoading(true);
         
         // Fetch data from the Supabase utm_analytics table
-        const { data, error } = await supabase
+        const { data, error } = await (supabase as any)
           .from('utm_analytics')
           .select('*');
           

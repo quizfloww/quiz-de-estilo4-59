@@ -1,9 +1,9 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { QuizQuestion, StyleResult } from '@/types/quiz';
+import { StyleResult } from '@/types/quiz';
 
 export const fetchQuizQuestions = async (quizId: string) => {
-  const { data: questions, error } = await supabase
+  const { data: questions, error } = await (supabase as any)
     .from('quiz_questions')
     .select(`
       *,
@@ -18,7 +18,7 @@ export const fetchQuizQuestions = async (quizId: string) => {
 };
 
 export const saveParticipant = async (name: string, email: string, quizId: string) => {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('quiz_participants')
     .insert({
       name,
@@ -36,7 +36,7 @@ export const saveAnswers = async (
   participantId: string,
   answers: Array<{ questionId: string; optionId: string; points: number }>
 ) => {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('participant_answers')
     .insert(
       answers.map(answer => ({
@@ -54,7 +54,7 @@ export const saveResults = async (
   participantId: string,
   results: Array<StyleResult>
 ) => {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('style_results')
     .insert(
       results.map((result, index) => ({
