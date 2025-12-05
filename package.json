@@ -11,7 +11,14 @@
     "build:funnel": "vite build && cp public/.htaccess dist/.htaccess && cp public/_redirects dist/_redirects",
     "lint": "eslint .",
     "preview": "vite preview",
-    "lovable:prepare": "node lovable-prepare-simple.js"
+    "lovable:prepare": "node lovable-prepare-simple.js",
+    "test:e2e": "cypress run",
+    "test:e2e:open": "cypress open",
+    "test:e2e:headed": "cypress run --headed",
+    "test:e2e:funnel": "cypress run --spec 'cypress/e2e/funnel-editor-*.cy.ts'",
+    "test:e2e:structure": "cypress run --spec 'cypress/e2e/funnel-editor-structure.cy.ts'",
+    "test:e2e:blocks": "cypress run --spec 'cypress/e2e/funnel-editor-blocks.cy.ts'",
+    "test:e2e:publish": "cypress run --spec 'cypress/e2e/funnel-editor-publish.cy.ts'"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
