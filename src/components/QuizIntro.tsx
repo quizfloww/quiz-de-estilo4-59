@@ -1,12 +1,13 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { getIntroConfigFromEditor, getGlobalConfigFromEditor } from '@/utils/quizConfigAdapter';
 
 // Design tokens centralizados - apenas os essenciais
-const colors = {
+const defaultColors = {
   primary: '#B89B7A',
   primaryDark: '#A1835D',
   secondary: '#432818',
@@ -17,121 +18,115 @@ const colors = {
   border: '#E5E7EB',
 };
 
-// --- Constantes e funções movidas para o escopo do módulo ---
-const LOGO_BASE_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/';
-const LOGO_IMAGE_ID = 'v1752430327/LOGO_DA_MARCA_GISELE_l78gin';
-
-const INTRO_IMAGE_BASE_URL = 'https://res.cloudinary.com/der8kogzu/image/upload/';
-const INTRO_IMAGE_ID = 'v1752443943/Gemini_Generated_Image_i5cst6i5cst6i5cs_fpoukb';
-
-// Otimizado para carregamento mais rápido - URLs pré-construídas
-const STATIC_LOGO_IMAGE_URLS = {
-  webp: `${LOGO_BASE_URL}f_webp,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.webp`,
-  png: `${LOGO_BASE_URL}f_png,q_70,w_120,h_50,c_fit/${LOGO_IMAGE_ID}.png`,
-};
-
-// Imagem LCP: Otimizada para carregamento mais rápido - URLs pré-construídas
-const STATIC_INTRO_IMAGE_URLS = {
-  avif: `${INTRO_IMAGE_BASE_URL}f_avif,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.avif`,
-  webp: `${INTRO_IMAGE_BASE_URL}f_webp,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.webp`,
-  png: `${INTRO_IMAGE_BASE_URL}f_png,q_85,w_300,c_limit/${INTRO_IMAGE_ID}.png`,
-};
+// Default fallback URLs
+const DEFAULT_LOGO_URL = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2';
+const DEFAULT_INTRO_IMAGE_URL = 'https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up';
 
 interface QuizIntroProps {
   onStart: (nome: string) => void;
 }
 
 /**
- * QuizIntro - Componente ultra-otimizado da página inicial do quiz
- * Renderização imediata sem estados de carregamento
+ * QuizIntro - Componente da página inicial do quiz
+ * Agora integrado com o editor para customização dinâmica
  */
-type QuizIntroComponent = React.FC<QuizIntroProps>;
-const QuizIntro: QuizIntroComponent = ({ onStart }) => {
+const QuizIntro: React.FC<QuizIntroProps> = ({ onStart }) => {
   const [nome, setNome] = useState('');
   const [error, setError] = useState('');
+  
+  // Load config from editor
+  const introConfig = useMemo(() => getIntroConfigFromEditor(), []);
+  const globalConfig = useMemo(() => getGlobalConfigFromEditor(), []);
+  
+  // Get values from editor config or use defaults
+  const logoUrl = introConfig?.logoUrl || globalConfig?.logoUrl || DEFAULT_LOGO_URL;
+  const imageUrl = introConfig?.imageUrl || DEFAULT_INTRO_IMAGE_URL;
+  const subtitle = introConfig?.subtitle || 'Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.';
+  const inputLabel = introConfig?.inputLabel || 'NOME';
+  const inputPlaceholder = introConfig?.inputPlaceholder || 'Digite seu nome aqui...';
+  const buttonText = introConfig?.buttonText || 'Continuar';
+  const primaryColor = globalConfig?.primaryColor || defaultColors.primary;
+  const secondaryColor = globalConfig?.secondaryColor || defaultColors.secondary;
   
   // Função simplificada de submit
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Verificar se o nome foi preenchido
     if (!nome.trim()) {
       setError('Por favor, digite seu nome para continuar');
       return;
     }
     
-    // Limpar qualquer erro anterior
     setError('');
-    
-    // Iniciar o quiz com o nome fornecido
     onStart(nome);
     
-    // Reportar Web Vitals após interação do usuário
     if (typeof window !== 'undefined' && 'performance' in window) {
       window.performance.mark('user-interaction');
     }
   };
 
-  // Efeito de inicialização única - executa apenas uma vez
   useEffect(() => {
-    // Reportar Web Vitals
     if (typeof window !== 'undefined' && 'performance' in window) {
       window.performance.mark('component-mounted');
     }
     
-    // Reportar que o LCP foi renderizado (para analytics)
     const reportLcpRendered = () => {
       if (typeof window !== 'undefined' && window.QUIZ_PERF) {
         window.QUIZ_PERF.mark('lcp_rendered');
       }
     };
     
-    // Usar requestAnimationFrame para garantir que o reporte aconteça após a renderização
     requestAnimationFrame(() => {
       requestAnimationFrame(reportLcpRendered);
     });
   }, []);
 
-  // Renderizar diretamente o conteúdo principal sem estados de carregamento
+  // Parse subtitle to highlight specific words
+  const renderSubtitle = () => {
+    // Simple highlighting for "Chega" and "Você"
+    const parts = subtitle.split(/(Chega|Você)/g);
+    return parts.map((part, index) => {
+      if (part === 'Chega' || part === 'Você') {
+        return <span key={index} style={{ color: primaryColor }}>{part}</span>;
+      }
+      return part;
+    });
+  };
+
   return (
     <main
       className="flex flex-col items-center justify-start min-h-screen bg-gradient-to-b from-white to-gray-50 py-8"
       data-section="intro"
     >
-      {/* Skip link para acessibilidade */}
       <a 
         href="#quiz-form" 
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white text-[#432818] px-4 py-2 rounded-md shadow-md"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-50 bg-white px-4 py-2 rounded-md shadow-md"
+        style={{ color: secondaryColor }}
       >
         Pular para o formulário
       </a>
       
       <header className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-8 mx-auto">
-        {/* Logo centralizado - renderização imediata */}
+        {/* Logo from editor config */}
         <div className="flex flex-col items-center space-y-2">
           <div className="relative">
-            <picture>
-              <source srcSet={STATIC_LOGO_IMAGE_URLS.webp} type="image/webp" />
-              <img
-                src={STATIC_LOGO_IMAGE_URLS.png}
-                alt="Logo Gisele Galvão"
-                className="h-auto mx-auto"
-                width={120}
-                height={50}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                style={{
-                  objectFit: 'contain',
-                  maxWidth: '100%',
-                  aspectRatio: '120 / 50',
-                }}
-              />
-            </picture>
+            <img
+              src={logoUrl}
+              alt="Logo"
+              className="h-auto mx-auto"
+              width={120}
+              height={50}
+              loading="eager"
+              style={{
+                objectFit: 'contain',
+                maxWidth: '100%',
+              }}
+            />
             {/* Barra dourada */}
             <div
-              className="h-[3px] bg-[#B89B7A] rounded-full mt-1.5"
+              className="h-[3px] rounded-full mt-1.5"
               style={{
+                backgroundColor: primaryColor,
                 width: '300px',
                 maxWidth: '90%',
                 margin: '0 auto',
@@ -140,48 +135,34 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
           </div>
         </div>
 
-        {/* Título principal com a fonte Playfair Display */}
+        {/* Título from editor config */}
         <h1
-          className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display text-[#432818]"
+          className="text-2xl font-bold text-center leading-tight px-2 sm:text-3xl md:text-4xl playfair-display"
           style={{
-            fontFamily: '"Playfair Display", serif',
+            fontFamily: globalConfig?.fontFamily ? `"${globalConfig.fontFamily}", serif` : '"Playfair Display", serif',
             fontWeight: 400,
+            color: secondaryColor,
           }}
         >
-          <span className="text-[#B89B7A]">Chega</span> de um guarda-roupa lotado e da sensação de que nada combina com{' '}
-          <span className="text-[#B89B7A]">Você</span>.
+          {renderSubtitle()}
         </h1>
       </header>
 
       <section className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 space-y-6 md:space-y-8 mx-auto">
-        {/* Imagem principal - renderização imediata e LCP */}
+        {/* Imagem from editor config */}
         <div className="mt-2 w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto">
           <div
             className="w-full overflow-hidden rounded-lg shadow-sm"
-            style={{ aspectRatio: '1.47', maxHeight: '204px' }}
+            style={{ maxHeight: '300px' }}
           >
             <div className="relative w-full h-full bg-[#F8F5F0]">
-              <picture>
-                <source
-                  srcSet={STATIC_INTRO_IMAGE_URLS.avif}
-                  type="image/avif"
-                />
-                <source
-                  srcSet={STATIC_INTRO_IMAGE_URLS.webp}
-                  type="image/webp"
-                />
-                <img
-                  src={STATIC_INTRO_IMAGE_URLS.png}
-                  alt="Descubra seu estilo predominante e transforme seu guarda-roupa"
-                  className="w-full h-full object-contain"
-                  width={300}
-                  height={204}
-                  loading="eager"
-                  fetchPriority="high"
-                  decoding="async"
-                  id="lcp-image"
-                />
-              </picture>
+              <img
+                src={imageUrl}
+                alt="Descubra seu estilo predominante"
+                className="w-full h-full object-contain"
+                loading="eager"
+                id="lcp-image"
+              />
             </div>
           </div>
         </div>
@@ -189,20 +170,19 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
         {/* Texto descritivo */}
         <p className="text-sm text-center leading-relaxed px-2 sm:text-base text-gray-600">
           Em poucos minutos, descubra seu{' '}
-          <span className="font-semibold text-[#B89B7A]">
+          <span className="font-semibold" style={{ color: primaryColor }}>
             Estilo Predominante
           </span>{' '}
           — e aprenda a montar looks que realmente refletem sua{' '}
-          <span className="font-semibold text-[#432818]">
+          <span className="font-semibold" style={{ color: secondaryColor }}>
             essência
-          </span>, com
-          praticidade e{' '}
-          <span className="font-semibold text-[#432818]">
+          </span>, com praticidade e{' '}
+          <span className="font-semibold" style={{ color: secondaryColor }}>
             confiança
           </span>.
         </p>
 
-        {/* Formulário - renderização imediata */}
+        {/* Formulário */}
         <div id="quiz-form" className="mt-8">
           <form
             onSubmit={handleSubmit}
@@ -212,24 +192,28 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
             <div>
               <label
                 htmlFor="name"
-                className="block text-xs font-semibold text-[#432818] mb-1.5"
+                className="block text-xs font-semibold mb-1.5"
+                style={{ color: secondaryColor }}
               >
-                NOME <span className="text-red-500">*</span>
+                {inputLabel} <span className="text-red-500">*</span>
               </label>
               <Input
                 id="name"
-                placeholder="Digite seu nome"
+                placeholder={inputPlaceholder}
                 value={nome}
                 onChange={(e) => {
                   setNome(e.target.value);
                   if (error) setError('');
                 }}
                 className={cn(
-                  "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2 focus-visible:ring-offset-2 focus:ring-offset-[#FEFEFE] focus-visible:ring-offset-[#FEFEFE]",
+                  "w-full p-2.5 bg-[#FEFEFE] rounded-md border-2 focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-offset-2",
                   error 
-                    ? "border-red-500 focus:ring-red-500 focus-visible:ring-red-500" 
-                    : "border-[#B89B7A] focus:ring-[#A1835D] focus-visible:ring-[#A1835D]"
+                    ? "border-red-500 focus:ring-red-500" 
+                    : ""
                 )}
+                style={{
+                  borderColor: error ? undefined : primaryColor,
+                }}
                 autoFocus
                 aria-required="true"
                 autoComplete="off"
@@ -248,17 +232,21 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
               type="submit"
               className={cn(
                 'w-full py-2 px-3 text-sm font-semibold rounded-md shadow-md transition-all duration-300',
-                'focus:outline-none focus:ring-2 focus:ring-[#B89B7A] focus:ring-offset-2',
+                'focus:outline-none focus:ring-2 focus:ring-offset-2',
                 'sm:py-3 sm:px-4 sm:text-base',
                 'md:py-3.5 md:text-lg',
                 nome.trim() 
-                  ? 'bg-[#B89B7A] text-white hover:bg-[#A1835D] active:bg-[#947645] hover:shadow-lg transform hover:scale-[1.01]' 
-                  : 'bg-[#B89B7A]/50 text-white/90 cursor-not-allowed'
+                  ? 'text-white hover:shadow-lg transform hover:scale-[1.01]' 
+                  : 'text-white/90 cursor-not-allowed'
               )}
+              style={{
+                backgroundColor: nome.trim() ? primaryColor : `${primaryColor}80`,
+                '--tw-ring-color': primaryColor,
+              } as React.CSSProperties}
               aria-disabled={!nome.trim()}
             >
               <span className="flex items-center justify-center gap-2">
-                {nome.trim() ? 'Quero Descobrir meu Estilo Agora!' : 'Digite seu nome para continuar'}
+                {nome.trim() ? buttonText : 'Digite seu nome para continuar'}
               </span>
             </button>
 
@@ -266,7 +254,8 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
               Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa{' '}
               <a 
                 href="#" 
-                className="text-[#B89B7A] hover:text-[#A1835D] underline focus:outline-none focus:ring-1 focus:ring-[#B89B7A] rounded"
+                className="underline focus:outline-none focus:ring-1 rounded"
+                style={{ color: primaryColor }}
               >
                 política de privacidade
               </a>
@@ -275,7 +264,6 @@ const QuizIntro: QuizIntroComponent = ({ onStart }) => {
         </div>
       </section>
       
-      {/* Rodapé */}
       <footer className="w-full max-w-xs sm:max-w-md md:max-w-lg px-4 mt-auto pt-6 text-center mx-auto">
         <p className="text-xs text-gray-500">
           © {new Date().getFullYear()} Gisele Galvão - Todos os direitos reservados
