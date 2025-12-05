@@ -1,0 +1,163 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Admin Panel" [level=2] [ref=e6]
+      - navigation [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: /admin
+          - generic [ref=e9]:
+            - img [ref=e10]
+            - generic [ref=e13]: Dashboard
+        - link "Quiz" [ref=e14] [cursor=pointer]:
+          - /url: /admin/quiz
+          - generic [ref=e15]:
+            - img [ref=e16]
+            - generic [ref=e22]: Quiz
+        - link "Testes A/B" [ref=e23] [cursor=pointer]:
+          - /url: /admin/ab-tests
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - generic [ref=e29]: Testes A/B
+        - link "Configurações Pixel, UTM, URL, Tokens API" [ref=e30] [cursor=pointer]:
+          - /url: /admin/settings
+          - generic [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]: Configurações
+          - generic [ref=e36]: Pixel, UTM, URL, Tokens API
+        - link "Criativos" [ref=e37] [cursor=pointer]:
+          - /url: /admin/criativos
+          - generic [ref=e38]:
+            - img [ref=e39]
+            - generic [ref=e42]: Criativos
+        - link "Análise de Métricas" [ref=e43] [cursor=pointer]:
+          - /url: /admin/analytics
+          - generic [ref=e44]:
+            - img [ref=e45]
+            - generic [ref=e50]: Análise de Métricas
+        - link "Editor Editor de Fluxo e Visual" [ref=e51] [cursor=pointer]:
+          - /url: /admin/editor
+          - generic [ref=e52]:
+            - img [ref=e53]
+            - generic [ref=e56]: Editor
+          - generic [ref=e57]: Editor de Fluxo e Visual
+        - link "Funis Gerenciar funis de quiz" [ref=e58] [cursor=pointer]:
+          - /url: /admin/funnels
+          - generic [ref=e59]:
+            - img [ref=e60]
+            - generic [ref=e65]: Funis
+          - generic [ref=e66]: Gerenciar funis de quiz
+      - link "Ver Site" [ref=e68] [cursor=pointer]:
+        - /url: /
+        - img [ref=e69]
+        - generic [ref=e72]: Ver Site
+    - main [ref=e74]:
+      - generic [ref=e76]:
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - link [ref=e79] [cursor=pointer]:
+              - /url: /admin
+              - img [ref=e80]
+            - generic [ref=e83]:
+              - heading "Funis" [level=1] [ref=e84]
+              - paragraph [ref=e85]: Gerencie seus funis de quiz
+          - button "Criar Funil" [ref=e86] [cursor=pointer]:
+            - img [ref=e87]
+            - text: Criar Funil
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - img [ref=e92]
+            - heading "Modelos Disponíveis" [level=2] [ref=e96]
+          - generic [ref=e97]:
+            - generic [ref=e98]:
+              - generic [ref=e99]:
+                - img "Quiz de Estilo Pessoal" [ref=e100]
+                - generic [ref=e101]:
+                  - img [ref=e102]
+                  - text: Principal
+              - generic [ref=e104]:
+                - heading "Quiz de Estilo Pessoal" [level=3] [ref=e105]
+                - paragraph [ref=e106]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
+                - paragraph [ref=e107]: /quiz
+                - generic [ref=e108]:
+                  - button "Ver" [ref=e109] [cursor=pointer]:
+                    - img [ref=e110]
+                    - text: Ver
+                  - button "Usar" [ref=e113] [cursor=pointer]:
+                    - img [ref=e114]
+                    - text: Usar
+            - generic [ref=e117]:
+              - img "Quiz Descubra seu Estilo" [ref=e119]
+              - generic [ref=e120]:
+                - heading "Quiz Descubra seu Estilo" [level=3] [ref=e121]
+                - paragraph [ref=e122]: Variante A/B com página de oferta diferenciada
+                - paragraph [ref=e123]: /quiz-descubra-seu-estilo
+                - generic [ref=e124]:
+                  - button "Ver" [ref=e125] [cursor=pointer]:
+                    - img [ref=e126]
+                    - text: Ver
+                  - button "Usar" [ref=e129] [cursor=pointer]:
+                    - img [ref=e130]
+                    - text: Usar
+            - generic [ref=e133]:
+              - img [ref=e137]
+              - generic [ref=e140]:
+                - heading "Modelo em Branco" [level=3] [ref=e141]
+                - paragraph [ref=e142]: Comece do zero e crie seu próprio funil personalizado
+                - button "Criar Novo" [ref=e144] [cursor=pointer]:
+                  - img [ref=e145]
+                  - text: Criar Novo
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - img [ref=e150]
+            - heading "Meus Funis" [level=2] [ref=e152]
+            - generic [ref=e153]: (4)
+          - generic [ref=e154]:
+            - generic [ref=e155]:
+              - generic [ref=e156]:
+                - img "Quiz de Estilo Pessoal - Cópia" [ref=e157]
+                - generic [ref=e158]: Rascunho
+                - button [ref=e160] [cursor=pointer]:
+                  - img [ref=e161]
+              - generic [ref=e165]:
+                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e166]
+                - paragraph [ref=e167]: /quiz-1764967927111
+                - paragraph [ref=e168]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
+                - paragraph [ref=e169]: 05/12/2025
+            - generic [ref=e170]:
+              - generic [ref=e171]:
+                - img [ref=e173]
+                - generic [ref=e179]: Rascunho
+                - button [ref=e181] [cursor=pointer]:
+                  - img [ref=e182]
+              - generic [ref=e186]:
+                - heading "Novo Funil" [level=3] [ref=e187]
+                - paragraph [ref=e188]: /funil-1764964107672
+                - paragraph [ref=e189]: 05/12/2025
+            - generic [ref=e190]:
+              - generic [ref=e191]:
+                - img "Quiz de Estilo Pessoal - Cópia" [ref=e192]
+                - generic [ref=e193]: Rascunho
+                - button [ref=e195] [cursor=pointer]:
+                  - img [ref=e196]
+              - generic [ref=e200]:
+                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e201]
+                - paragraph [ref=e202]: /quiz-1764963977016
+                - paragraph [ref=e203]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
+                - paragraph [ref=e204]: 05/12/2025
+            - generic [ref=e205]:
+              - generic [ref=e206]:
+                - img "Quiz de Estilo Pessoal - Cópia" [ref=e207]
+                - generic [ref=e208]: Rascunho
+                - button [ref=e210] [cursor=pointer]:
+                  - img [ref=e211]
+              - generic [ref=e215]:
+                - heading "Quiz de Estilo Pessoal - Cópia" [level=3] [ref=e216]
+                - paragraph [ref=e217]: /quiz-1764962296017
+                - paragraph [ref=e218]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
+                - paragraph [ref=e219]: 05/12/2025
+  - region "Notifications (F8)":
+    - list
+```
