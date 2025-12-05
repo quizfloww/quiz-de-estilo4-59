@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
-import { useFunnelStages, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
+import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
 import { toast } from 'sonner';
 import { FunnelStagePreview } from '@/components/funnel-editor/FunnelStagePreview';
 import { StagePropertiesPanel } from '@/components/funnel-editor/StagePropertiesPanel';
@@ -101,7 +101,7 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({ stage, isActive, 
 export default function FunnelEditorPage() {
   const { id } = useParams<{ id: string }>();
   const { data: funnel, isLoading: loadingFunnel } = useFunnel(id);
-  const { data: stages, isLoading: loadingStages } = useFunnelStages(id);
+  const { data: stages, isLoading: loadingStages } = useFunnelStagesWithOptions(id);
   const updateFunnel = useUpdateFunnel();
   const createStage = useCreateStage();
   const updateStage = useUpdateStage();
