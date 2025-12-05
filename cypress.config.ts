@@ -8,6 +8,8 @@ export default defineConfig({
     defaultCommandTimeout: 10000,
     requestTimeout: 10000,
     responseTimeout: 10000,
+    experimentalMemoryManagement: true,
+    numTestsKeptInMemory: 5,
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
