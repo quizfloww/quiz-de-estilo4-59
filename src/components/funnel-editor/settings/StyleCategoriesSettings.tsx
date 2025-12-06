@@ -239,6 +239,23 @@ export const StyleCategoriesSettings: React.FC<
                         />
                       )}
                     </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs text-muted-foreground">
+                        URL do Material/Compra
+                      </Label>
+                      <Input
+                        value={category.materialUrl || ""}
+                        onChange={(e) =>
+                          handleCategoryChange(
+                            index,
+                            "materialUrl",
+                            e.target.value
+                          )
+                        }
+                        placeholder="https://pay.hotmart.com/..."
+                      />
+                    </div>
                   </div>
                 </div>
 
