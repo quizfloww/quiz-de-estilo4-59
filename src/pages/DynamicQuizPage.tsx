@@ -1,12 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { usePublicFunnel, useSaveFunnelResponse, FunnelStage } from '@/hooks/usePublicFunnel';
-import { calculateDynamicResults, mapToLegacyResult } from '@/utils/dynamicQuizCalculator';
-import { DynamicQuizHeader } from '@/components/dynamic-quiz/DynamicQuizHeader';
-import { DynamicIntro } from '@/components/dynamic-quiz/DynamicIntro';
-import { DynamicQuestion } from '@/components/dynamic-quiz/DynamicQuestion';
-import { DynamicTransition } from '@/components/dynamic-quiz/DynamicTransition';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  usePublicFunnel,
+  useSaveFunnelResponse,
+  FunnelStage,
+} from "@/hooks/usePublicFunnel";
+import {
+  calculateDynamicResults,
+  mapToLegacyResult,
+} from "@/utils/dynamicQuizCalculator";
+import { DynamicQuizHeader } from "@/components/dynamic-quiz/DynamicQuizHeader";
+import { DynamicIntro } from "@/components/dynamic-quiz/DynamicIntro";
+import { DynamicQuestion } from "@/components/dynamic-quiz/DynamicQuestion";
+import { DynamicTransition } from "@/components/dynamic-quiz/DynamicTransition";
+import { AnimatedStageWrapper } from "@/components/dynamic-quiz/AnimatedStageWrapper";
+import { Loader2 } from "lucide-react";
 
 const DynamicQuizPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -15,7 +23,7 @@ const DynamicQuizPage: React.FC = () => {
   const saveResponse = useSaveFunnelResponse();
 
   const [currentStageIndex, setCurrentStageIndex] = useState(0);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState("");
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [isCalculating, setIsCalculating] = useState(false);
 
@@ -29,18 +37,18 @@ const DynamicQuizPage: React.FC = () => {
     if (funnel) {
       setCurrentStageIndex(0);
       setAnswers({});
-      setUserName('');
+      setUserName("");
     }
   }, [funnel?.id]);
 
   const handleIntroComplete = (name: string) => {
     setUserName(name);
-    localStorage.setItem('userName', name);
+    localStorage.setItem("userName", name);
     goToNextStage();
   };
 
   const handleAnswerChange = (stageId: string, selectedOptions: string[]) => {
-    setAnswers(prev => ({
+    setAnswers((prev) => ({
       ...prev,
       [stageId]: selectedOptions,
     }));
@@ -48,7 +56,7 @@ const DynamicQuizPage: React.FC = () => {
 
   const goToNextStage = () => {
     if (currentStageIndex < stages.length - 1) {
-      setCurrentStageIndex(prev => prev + 1);
+      setCurrentStageIndex((prev) => prev + 1);
     } else {
       // Quiz completed - calculate results
       handleQuizComplete();
@@ -57,19 +65,19 @@ const DynamicQuizPage: React.FC = () => {
 
   const goToPreviousStage = () => {
     if (currentStageIndex > 0) {
-      setCurrentStageIndex(prev => prev - 1);
+      setCurrentStageIndex((prev) => prev - 1);
     }
   };
 
   const handleQuizComplete = async () => {
     if (!funnel) return;
-    
+
     setIsCalculating(true);
 
     try {
       // Get all options from all stages
-      const allOptions = stages.flatMap(stage => stage.options);
-      
+      const allOptions = stages.flatMap((stage) => stage.options);
+
       // Calculate results
       const result = calculateDynamicResults(
         answers,
@@ -93,21 +101,24 @@ const DynamicQuizPage: React.FC = () => {
       });
 
       // Store in localStorage for result page
-      localStorage.setItem('quizResult', JSON.stringify({
-        primaryStyle: legacyResult.primaryStyle,
-        secondaryStyle: legacyResult.secondaryStyle,
-        scores: legacyResult.scores,
-        userName,
-      }));
+      localStorage.setItem(
+        "quizResult",
+        JSON.stringify({
+          primaryStyle: legacyResult.primaryStyle,
+          secondaryStyle: legacyResult.secondaryStyle,
+          scores: legacyResult.scores,
+          userName,
+        })
+      );
 
       // Navigate to result page
       setTimeout(() => {
-        navigate('/resultado');
+        navigate("/resultado");
       }, 1500);
     } catch (err) {
-      console.error('Error saving quiz response:', err);
+      console.error("Error saving quiz response:", err);
       // Still navigate to result even if save fails
-      navigate('/resultado');
+      navigate("/resultado");
     }
   };
 
@@ -118,7 +129,7 @@ const DynamicQuizPage: React.FC = () => {
     const allowReturn = stageConfig.allowReturn !== false;
 
     switch (stage.type) {
-      case 'intro':
+      case "intro":
         return (
           <DynamicIntro
             stage={stage}
@@ -127,8 +138,8 @@ const DynamicQuizPage: React.FC = () => {
           />
         );
 
-      case 'question':
-      case 'strategic':
+      case "question":
+      case "strategic":
         return (
           <DynamicQuestion
             stage={stage}
@@ -138,15 +149,10 @@ const DynamicQuizPage: React.FC = () => {
           />
         );
 
-      case 'transition':
-        return (
-          <DynamicTransition
-            stage={stage}
-            onContinue={goToNextStage}
-          />
-        );
+      case "transition":
+        return <DynamicTransition stage={stage} onContinue={goToNextStage} />;
 
-      case 'result':
+      case "result":
         // Result stage triggers completion
         handleQuizComplete();
         return null;
@@ -169,7 +175,9 @@ const DynamicQuizPage: React.FC = () => {
   if (error || !funnel) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4 p-4">
-        <h1 className="text-2xl font-bold text-foreground">Quiz não encontrado</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          Quiz não encontrado
+        </h1>
         <p className="text-muted-foreground text-center">
           O quiz que você está procurando não existe ou não está publicado.
         </p>
@@ -182,7 +190,9 @@ const DynamicQuizPage: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <p className="text-lg text-muted-foreground">Calculando seu resultado...</p>
+        <p className="text-lg text-muted-foreground">
+          Calculando seu resultado...
+        </p>
       </div>
     );
   }
