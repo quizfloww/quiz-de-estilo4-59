@@ -25,6 +25,8 @@ export const TextBlock: React.FC<TextBlockProps> = ({ content, isPreview }) => {
 
   // Background color
   const blockBackgroundColor = content.backgroundColor;
+  // Text color
+  const textColor = content.textColor;
 
   return (
     <div
@@ -33,10 +35,12 @@ export const TextBlock: React.FC<TextBlockProps> = ({ content, isPreview }) => {
     >
       <p
         className={cn(
-          "w-full text-muted-foreground",
+          "w-full",
+          !textColor && "text-muted-foreground",
           fontSizeClasses[content.fontSize || "base"],
           textAlignClasses[content.textAlign || "center"]
         )}
+        style={textColor ? { color: textColor } : undefined}
       >
         {content.text || "Texto"}
       </p>

@@ -49,13 +49,18 @@ export const convertStageToBlocks = (
       },
     });
   } else if (stage.type === "intro") {
+    // Para intro, o subtitle é o texto principal (como na página publicada)
     blocks.push({
       id: `${stage.id}-heading`,
       type: "heading",
       order: order++,
       content: {
-        text: config.title || stage.title || "Teste de Estilo Pessoal",
-        fontSize: "3xl",
+        text:
+          config.subtitle ||
+          config.title ||
+          stage.title ||
+          "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+        fontSize: "2xl",
         fontWeight: "bold",
         textAlign: "center",
       },
@@ -400,7 +405,22 @@ export const convertStageToBlocks = (
     });
   }
 
-  // 5. Input Block (para intro)
+  // 5. Description Text (para intro - texto explicativo antes do input)
+  if (stage.type === "intro" && config.descriptionText) {
+    blocks.push({
+      id: `${stage.id}-description`,
+      type: "text",
+      order: order++,
+      content: {
+        text: config.descriptionText,
+        fontSize: "sm",
+        textAlign: "center",
+        textColor: "#6B7280", // text-gray-500
+      },
+    });
+  }
+
+  // 6. Input Block (para intro)
   if (stage.type === "intro") {
     blocks.push({
       id: `${stage.id}-input`,
@@ -479,6 +499,36 @@ export const convertStageToBlocks = (
       fullWidth: true,
     },
   });
+
+  // 9. Privacy Text (para intro - texto de política de privacidade após o botão)
+  if (stage.type === "intro" && config.privacyText) {
+    blocks.push({
+      id: `${stage.id}-privacy`,
+      type: "text",
+      order: order++,
+      content: {
+        text: config.privacyText,
+        fontSize: "xs",
+        textAlign: "center",
+        textColor: "#9CA3AF", // text-gray-400
+      },
+    });
+  }
+
+  // 10. Footer Text (para intro - rodapé com copyright)
+  if (stage.type === "intro" && config.footerText) {
+    blocks.push({
+      id: `${stage.id}-footer`,
+      type: "text",
+      order: order++,
+      content: {
+        text: config.footerText,
+        fontSize: "xs",
+        textAlign: "center",
+        textColor: "#9CA3AF", // text-gray-400
+      },
+    });
+  }
 
   return blocks;
 };

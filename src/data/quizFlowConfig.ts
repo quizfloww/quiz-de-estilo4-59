@@ -22,9 +22,14 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
           "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
         imageUrl:
           "https://res.cloudinary.com/dqljyf76t/image/upload/v1746838118/20250509_2137_Desordem_e_Reflex%C3%A3o_simple_compose_01jtvszf8sfaytz493z9f16rf2_z1c2up",
+        descriptionText:
+          "Em poucos minutos, descubra seu Estilo Predominante — e aprenda a montar looks que realmente refletem sua essência, com praticidade e confiança.",
         inputLabel: "NOME",
         inputPlaceholder: "Digite seu nome aqui...",
         buttonText: "Continuar",
+        privacyText:
+          "Seu nome é necessário para personalizar sua experiência. Ao clicar, você concorda com nossa política de privacidade.",
+        footerText: "© 2025 Gisele Galvão - Todos os direitos reservados",
       },
     },
 
