@@ -18,6 +18,8 @@ import { UtmSettings } from "./settings/UtmSettings";
 import { BrandingSettings } from "./settings/BrandingSettings";
 import { AnalyticsSettings } from "./settings/AnalyticsSettings";
 import { EffectsSettings } from "./settings/EffectsSettings";
+import { ResultsSettings } from "./settings/ResultsSettings";
+import { StyleCategoriesSettings } from "./settings/StyleCategoriesSettings";
 import { toast } from "sonner";
 
 interface FunnelSettingsPanelProps {
@@ -95,29 +97,40 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
           defaultValue="general"
           className="flex flex-col h-[calc(100vh-140px)]"
         >
-          <TabsList className="grid grid-cols-7 mx-4 mt-4">
-            <TabsTrigger value="general" className="text-xs">
-              Geral
-            </TabsTrigger>
-            <TabsTrigger value="seo" className="text-xs">
-              SEO
-            </TabsTrigger>
-            <TabsTrigger value="pixel" className="text-xs">
-              Pixel
-            </TabsTrigger>
-            <TabsTrigger value="utm" className="text-xs">
-              UTM
-            </TabsTrigger>
-            <TabsTrigger value="branding" className="text-xs">
-              Visual
-            </TabsTrigger>
-            <TabsTrigger value="effects" className="text-xs">
-              Efeitos
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="text-xs">
-              Analytics
-            </TabsTrigger>
-          </TabsList>
+          <div className="mx-4 mt-4 space-y-2">
+            <TabsList className="grid grid-cols-5 w-full">
+              <TabsTrigger value="general" className="text-xs">
+                Geral
+              </TabsTrigger>
+              <TabsTrigger value="branding" className="text-xs">
+                Visual
+              </TabsTrigger>
+              <TabsTrigger value="effects" className="text-xs">
+                Efeitos
+              </TabsTrigger>
+              <TabsTrigger value="results" className="text-xs">
+                Resultados
+              </TabsTrigger>
+              <TabsTrigger value="styles" className="text-xs">
+                Estilos
+              </TabsTrigger>
+            </TabsList>
+            <TabsList className="grid grid-cols-5 w-full">
+              <TabsTrigger value="seo" className="text-xs">
+                SEO
+              </TabsTrigger>
+              <TabsTrigger value="pixel" className="text-xs">
+                Pixel
+              </TabsTrigger>
+              <TabsTrigger value="utm" className="text-xs">
+                UTM
+              </TabsTrigger>
+              <TabsTrigger value="analytics" className="text-xs">
+                Analytics
+              </TabsTrigger>
+              <div /> {/* Espaço vazio para manter grid */}
+            </TabsList>
+          </div>
 
           <ScrollArea className="flex-1 px-4 py-4">
             <TabsContent value="general" className="mt-0">
@@ -164,6 +177,24 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
                 config={config.effects}
                 onChange={(effects) =>
                   setConfig((prev) => ({ ...prev, effects }))
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="results" className="mt-0">
+              <ResultsSettings
+                config={config.results}
+                onChange={(results) =>
+                  setConfig((prev) => ({ ...prev, results }))
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="styles" className="mt-0">
+              <StyleCategoriesSettings
+                categories={config.styleCategories}
+                onChange={(styleCategories) =>
+                  setConfig((prev) => ({ ...prev, styleCategories }))
                 }
               />
             </TabsContent>
