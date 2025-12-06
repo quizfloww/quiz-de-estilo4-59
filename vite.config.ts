@@ -16,6 +16,8 @@ export default defineConfig(({ mode }) => ({
     headers: {
       "X-Content-Type-Options": "nosniff",
       "Access-Control-Allow-Origin": "*",
+      "Content-Security-Policy":
+        "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' https://res.cloudinary.com https://*.supabase.co https://www.facebook.com https://cakto-quiz-br01.b-cdn.net https://*.b-cdn.net https://*.cloudinary.com data: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co ws://localhost:* wss://* http://localhost:*;",
     },
     fs: {
       allow: ["../"],
