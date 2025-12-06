@@ -1,9 +1,9 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import type { Database } from '@/integrations/supabase/types';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import type { Database } from "@/integrations/supabase/types";
 
-type StageType = Database['public']['Enums']['stage_type'];
+type StageType = Database["public"]["Enums"]["stage_type"];
 
 export interface FunnelStage {
   id: string;
@@ -28,14 +28,14 @@ export interface StageOption {
 
 export const useFunnelStages = (funnelId: string | undefined) => {
   return useQuery({
-    queryKey: ['funnel-stages', funnelId],
+    queryKey: ["funnel-stages", funnelId],
     queryFn: async () => {
       if (!funnelId) return [];
       const { data, error } = await supabase
-        .from('funnel_stages')
-        .select('*')
-        .eq('funnel_id', funnelId)
-        .order('order_index', { ascending: true });
+        .from("funnel_stages")
+        .select("*")
+        .eq("funnel_id", funnelId)
+        .order("order_index", { ascending: true });
 
       if (error) throw error;
       return data as FunnelStage[];
@@ -47,35 +47,42 @@ export const useFunnelStages = (funnelId: string | undefined) => {
 // Hook que carrega stages COM suas opções para exibição no editor
 export const useFunnelStagesWithOptions = (funnelId: string | undefined) => {
   return useQuery({
-    queryKey: ['funnel-stages-with-options', funnelId],
+    queryKey: ["funnel-stages-with-options", funnelId],
     queryFn: async () => {
       if (!funnelId) return [];
-      
+
       // 1. Buscar stages
       const { data: stages, error: stagesError } = await supabase
-        .from('funnel_stages')
-        .select('*')
-        .eq('funnel_id', funnelId)
-        .order('order_index', { ascending: true });
+        .from("funnel_stages")
+        .select("*")
+        .eq("funnel_id", funnelId)
+        .order("order_index", { ascending: true });
 
       if (stagesError) throw stagesError;
       if (!stages || stages.length === 0) return [];
 
       // 2. Buscar todas as opções para essas stages
-      const stageIds = stages.map(s => s.id);
+      const stageIds = stages.map((s) => s.id);
       const { data: options, error: optionsError } = await supabase
-        .from('stage_options')
-        .select('*')
-        .in('stage_id', stageIds)
-        .order('order_index', { ascending: true });
+        .from("stage_options")
+        .select("*")
+        .in("stage_id", stageIds)
+        .order("order_index", { ascending: true });
 
       if (optionsError) throw optionsError;
 
       // 3. Mapear opções para cada stage (no formato esperado pelo preview)
-      return stages.map(stage => {
+      //    Preserva imagens existentes no config quando o registro do banco não as tem
+      return stages.map((stage) => {
+        const existingConfig = (stage.config as Record<string, any>) || {};
+        const configOptions = Array.isArray(existingConfig.options)
+          ? existingConfig.options
+          : [];
+
+        // Opções vindas do banco (stage_options)
         const stageOptions = (options || [])
-          .filter(opt => opt.stage_id === stage.id)
-          .map(opt => ({
+          .filter((opt) => opt.stage_id === stage.id)
+          .map((opt) => ({
             id: opt.id,
             text: opt.text,
             imageUrl: opt.image_url,
@@ -83,13 +90,29 @@ export const useFunnelStagesWithOptions = (funnelId: string | undefined) => {
             points: opt.points,
           }));
 
-        const existingConfig = (stage.config as Record<string, any>) || {};
-        
+        // Se o banco não tiver image_url, tenta herdar do config (mesmo id ou texto)
+        const mergedOptions = stageOptions.map((dbOpt) => {
+          if (dbOpt.imageUrl) return dbOpt;
+
+          const fallback = configOptions.find(
+            (co: any) => co.id === dbOpt.id || co.text === dbOpt.text
+          );
+
+          if (fallback?.imageUrl || fallback?.image_url) {
+            return {
+              ...dbOpt,
+              imageUrl: fallback.imageUrl || fallback.image_url,
+            };
+          }
+
+          return dbOpt;
+        });
+
         return {
           ...stage,
           config: {
             ...existingConfig,
-            options: stageOptions.length > 0 ? stageOptions : existingConfig.options,
+            options: mergedOptions.length > 0 ? mergedOptions : configOptions,
           },
         } as FunnelStage;
       });
@@ -100,14 +123,14 @@ export const useFunnelStagesWithOptions = (funnelId: string | undefined) => {
 
 export const useStageOptions = (stageId: string | undefined) => {
   return useQuery({
-    queryKey: ['stage-options', stageId],
+    queryKey: ["stage-options", stageId],
     queryFn: async () => {
       if (!stageId) return [];
       const { data, error } = await supabase
-        .from('stage_options')
-        .select('*')
-        .eq('stage_id', stageId)
-        .order('order_index', { ascending: true });
+        .from("stage_options")
+        .select("*")
+        .eq("stage_id", stageId)
+        .order("order_index", { ascending: true });
 
       if (error) throw error;
       return data as StageOption[];
@@ -120,9 +143,9 @@ export const useCreateStage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (stage: Omit<FunnelStage, 'id' | 'created_at'>) => {
+    mutationFn: async (stage: Omit<FunnelStage, "id" | "created_at">) => {
       const { data, error } = await supabase
-        .from('funnel_stages')
+        .from("funnel_stages")
         .insert({
           funnel_id: stage.funnel_id,
           type: stage.type,
@@ -138,10 +161,12 @@ export const useCreateStage = () => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnel_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages", data.funnel_id],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao criar etapa: ' + error.message);
+      toast.error("Erro ao criar etapa: " + error.message);
     },
   });
 };
@@ -150,11 +175,14 @@ export const useUpdateStage = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<FunnelStage> & { id: string }) => {
+    mutationFn: async ({
+      id,
+      ...updates
+    }: Partial<FunnelStage> & { id: string }) => {
       const { data, error } = await supabase
-        .from('funnel_stages')
+        .from("funnel_stages")
         .update(updates)
-        .eq('id', id)
+        .eq("id", id)
         .select()
         .single();
 
@@ -162,10 +190,12 @@ export const useUpdateStage = () => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnel_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages", data.funnel_id],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar etapa: ' + error.message);
+      toast.error("Erro ao atualizar etapa: " + error.message);
     },
   });
 };
@@ -174,26 +204,34 @@ export const useReorderStages = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ funnelId, stages }: { funnelId: string; stages: { id: string; order_index: number }[] }) => {
+    mutationFn: async ({
+      funnelId,
+      stages,
+    }: {
+      funnelId: string;
+      stages: { id: string; order_index: number }[];
+    }) => {
       // Update all stages in parallel
-      const updates = stages.map(stage => 
+      const updates = stages.map((stage) =>
         supabase
-          .from('funnel_stages')
+          .from("funnel_stages")
           .update({ order_index: stage.order_index })
-          .eq('id', stage.id)
+          .eq("id", stage.id)
       );
-      
+
       const results = await Promise.all(updates);
-      const errors = results.filter(r => r.error);
+      const errors = results.filter((r) => r.error);
       if (errors.length > 0) throw errors[0].error;
-      
+
       return { funnelId };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnelId] });
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages", data.funnelId],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao reordenar etapas: ' + error.message);
+      toast.error("Erro ao reordenar etapas: " + error.message);
     },
   });
 };
@@ -204,19 +242,21 @@ export const useDeleteStage = () => {
   return useMutation({
     mutationFn: async ({ id, funnelId }: { id: string; funnelId: string }) => {
       const { error } = await supabase
-        .from('funnel_stages')
+        .from("funnel_stages")
         .delete()
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
       return { funnelId };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnelId] });
-      toast.success('Etapa excluída!');
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages", data.funnelId],
+      });
+      toast.success("Etapa excluída!");
     },
     onError: (error) => {
-      toast.error('Erro ao excluir: ' + error.message);
+      toast.error("Erro ao excluir: " + error.message);
     },
   });
 };
@@ -225,9 +265,9 @@ export const useCreateOption = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (option: Omit<StageOption, 'id'>) => {
+    mutationFn: async (option: Omit<StageOption, "id">) => {
       const { data, error } = await supabase
-        .from('stage_options')
+        .from("stage_options")
         .insert(option)
         .select()
         .single();
@@ -236,10 +276,12 @@ export const useCreateOption = () => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['stage-options', data.stage_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["stage-options", data.stage_id],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao criar opção: ' + error.message);
+      toast.error("Erro ao criar opção: " + error.message);
     },
   });
 };
@@ -248,11 +290,14 @@ export const useUpdateOption = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<StageOption> & { id: string }) => {
+    mutationFn: async ({
+      id,
+      ...updates
+    }: Partial<StageOption> & { id: string }) => {
       const { data, error } = await supabase
-        .from('stage_options')
+        .from("stage_options")
         .update(updates)
-        .eq('id', id)
+        .eq("id", id)
         .select()
         .single();
 
@@ -260,10 +305,12 @@ export const useUpdateOption = () => {
       return data;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['stage-options', data.stage_id] });
+      queryClient.invalidateQueries({
+        queryKey: ["stage-options", data.stage_id],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao atualizar opção: ' + error.message);
+      toast.error("Erro ao atualizar opção: " + error.message);
     },
   });
 };
@@ -272,25 +319,33 @@ export const useReorderOptions = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ stageId, options }: { stageId: string; options: { id: string; order_index: number }[] }) => {
-      const updates = options.map(option => 
+    mutationFn: async ({
+      stageId,
+      options,
+    }: {
+      stageId: string;
+      options: { id: string; order_index: number }[];
+    }) => {
+      const updates = options.map((option) =>
         supabase
-          .from('stage_options')
+          .from("stage_options")
           .update({ order_index: option.order_index })
-          .eq('id', option.id)
+          .eq("id", option.id)
       );
-      
+
       const results = await Promise.all(updates);
-      const errors = results.filter(r => r.error);
+      const errors = results.filter((r) => r.error);
       if (errors.length > 0) throw errors[0].error;
-      
+
       return { stageId };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['stage-options', data.stageId] });
+      queryClient.invalidateQueries({
+        queryKey: ["stage-options", data.stageId],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao reordenar opções: ' + error.message);
+      toast.error("Erro ao reordenar opções: " + error.message);
     },
   });
 };
@@ -301,18 +356,20 @@ export const useDeleteOption = () => {
   return useMutation({
     mutationFn: async ({ id, stageId }: { id: string; stageId: string }) => {
       const { error } = await supabase
-        .from('stage_options')
+        .from("stage_options")
         .delete()
-        .eq('id', id);
+        .eq("id", id);
 
       if (error) throw error;
       return { stageId };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['stage-options', data.stageId] });
+      queryClient.invalidateQueries({
+        queryKey: ["stage-options", data.stageId],
+      });
     },
     onError: (error) => {
-      toast.error('Erro ao excluir opção: ' + error.message);
+      toast.error("Erro ao excluir opção: " + error.message);
     },
   });
 };
