@@ -2177,7 +2177,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderMotivationProperties = () => {
     const motivationPoints = block.content.motivationPoints || [];
-    
+
     return (
       <>
         <div className="space-y-2">
@@ -2194,7 +2194,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Textarea
             id="motivationSubtitle"
             value={block.content.motivationSubtitle || ""}
-            onChange={(e) => updateContent("motivationSubtitle", e.target.value)}
+            onChange={(e) =>
+              updateContent("motivationSubtitle", e.target.value)
+            }
             placeholder="Seu estilo é uma ferramenta poderosa..."
             rows={3}
           />
@@ -2204,7 +2206,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Input
             id="motivationImageUrl"
             value={block.content.motivationImageUrl || ""}
-            onChange={(e) => updateContent("motivationImageUrl", e.target.value)}
+            onChange={(e) =>
+              updateContent("motivationImageUrl", e.target.value)
+            }
             placeholder="https://..."
           />
         </div>
@@ -2214,7 +2218,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Label className="text-xs font-semibold text-muted-foreground uppercase">
             Pontos Motivacionais ({motivationPoints.length})
           </Label>
-          
+
           {motivationPoints.map((point: string, idx: number) => (
             <div key={idx} className="flex gap-2">
               <Input
@@ -2231,7 +2235,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                 type="button"
                 className="px-2 text-xs text-destructive hover:bg-destructive/10 rounded"
                 onClick={() => {
-                  const newItems = motivationPoints.filter((_: unknown, i: number) => i !== idx);
+                  const newItems = motivationPoints.filter(
+                    (_: unknown, i: number) => i !== idx
+                  );
                   updateContent("motivationPoints", newItems);
                 }}
               >
@@ -2239,7 +2245,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
               </button>
             </div>
           ))}
-          
+
           <button
             type="button"
             className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
@@ -2259,7 +2265,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderBonusProperties = () => {
     const bonusItems = block.content.bonusItems || [];
-    
+
     return (
       <>
         <div className="space-y-2">
@@ -2286,69 +2292,96 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Label className="text-xs font-semibold text-muted-foreground uppercase">
             Itens de Bônus ({bonusItems.length})
           </Label>
-          
-          {bonusItems.map((item: { id: string; title: string; description?: string; imageUrl?: string; value?: string }, idx: number) => (
-            <Card key={item.id} className="p-3">
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <Label className="text-xs font-medium">Bônus {idx + 1}</Label>
-                  <button
-                    type="button"
-                    className="text-xs text-destructive hover:underline"
-                    onClick={() => {
-                      const newItems = bonusItems.filter((_: unknown, i: number) => i !== idx);
-                      updateContent("bonusItems", newItems);
-                    }}
-                  >
-                    Remover
-                  </button>
-                </div>
-                
-                <Input
-                  value={item.title || ""}
-                  onChange={(e) => {
-                    const newItems = [...bonusItems];
-                    newItems[idx] = { ...newItems[idx], title: e.target.value };
-                    updateContent("bonusItems", newItems);
-                  }}
-                  placeholder="Título do bônus"
-                />
-                
-                <Textarea
-                  value={item.description || ""}
-                  onChange={(e) => {
-                    const newItems = [...bonusItems];
-                    newItems[idx] = { ...newItems[idx], description: e.target.value };
-                    updateContent("bonusItems", newItems);
-                  }}
-                  placeholder="Descrição"
-                  rows={2}
-                />
-                
-                <div className="grid grid-cols-2 gap-2">
+
+          {bonusItems.map(
+            (
+              item: {
+                id: string;
+                title: string;
+                description?: string;
+                imageUrl?: string;
+                value?: string;
+              },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">
+                      Bônus {idx + 1}
+                    </Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = bonusItems.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("bonusItems", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+
                   <Input
-                    value={item.imageUrl || ""}
+                    value={item.title || ""}
                     onChange={(e) => {
                       const newItems = [...bonusItems];
-                      newItems[idx] = { ...newItems[idx], imageUrl: e.target.value };
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        title: e.target.value,
+                      };
                       updateContent("bonusItems", newItems);
                     }}
-                    placeholder="URL da imagem"
+                    placeholder="Título do bônus"
                   />
-                  <Input
-                    value={item.value || ""}
+
+                  <Textarea
+                    value={item.description || ""}
                     onChange={(e) => {
                       const newItems = [...bonusItems];
-                      newItems[idx] = { ...newItems[idx], value: e.target.value };
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        description: e.target.value,
+                      };
                       updateContent("bonusItems", newItems);
                     }}
-                    placeholder="Valor (ex: R$97)"
+                    placeholder="Descrição"
+                    rows={2}
                   />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      value={item.imageUrl || ""}
+                      onChange={(e) => {
+                        const newItems = [...bonusItems];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          imageUrl: e.target.value,
+                        };
+                        updateContent("bonusItems", newItems);
+                      }}
+                      placeholder="URL da imagem"
+                    />
+                    <Input
+                      value={item.value || ""}
+                      onChange={(e) => {
+                        const newItems = [...bonusItems];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          value: e.target.value,
+                        };
+                        updateContent("bonusItems", newItems);
+                      }}
+                      placeholder="Valor (ex: R$97)"
+                    />
+                  </div>
                 </div>
-              </div>
-            </Card>
-          ))}
-          
+              </Card>
+            )
+          )}
+
           <button
             type="button"
             className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
@@ -2401,66 +2434,208 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderTestimonialsProperties = () => {
     const testimonials = block.content.testimonials || [];
-    
+
     return (
       <>
         <div className="space-y-2">
           <Label htmlFor="testimonialsTitle">Título</Label>
           <Input
             id="testimonialsTitle"
-          value={block.content.testimonialsTitle || ""}
-          onChange={(e) => updateContent("testimonialsTitle", e.target.value)}
-          placeholder="O Que Nossas Alunas Dizem"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label>Layout</Label>
-        <Select
-          value={block.content.testimonialsLayout || "grid"}
-          onValueChange={(value) => updateContent("testimonialsLayout", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="grid">Grade</SelectItem>
-            <SelectItem value="carousel">Carrossel</SelectItem>
-            <SelectItem value="list">Lista</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+            value={block.content.testimonialsTitle || ""}
+            onChange={(e) => updateContent("testimonialsTitle", e.target.value)}
+            placeholder="O Que Nossas Alunas Dizem"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Layout</Label>
+          <Select
+            value={block.content.testimonialsLayout || "grid"}
+            onValueChange={(value) =>
+              updateContent("testimonialsLayout", value)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="grid">Grade</SelectItem>
+              <SelectItem value="carousel">Carrossel</SelectItem>
+              <SelectItem value="list">Lista</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      {/* Mobile Layout Controls */}
-      <div className="space-y-2 pt-3 border-t">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase">
-          Layout Mobile
-        </Label>
-        <Select
-          value={block.content.mobileLayout || "stacked"}
-          onValueChange={(value) => updateContent("mobileLayout", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
-            <SelectItem value="side-by-side">
-              Lado a lado (2+ colunas)
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">
-          Como os depoimentos aparecem em celulares
-        </p>
-      </div>
+        {/* Editor de Depoimentos */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Depoimentos ({testimonials.length})
+          </Label>
 
-      {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+          {testimonials.map(
+            (
+              item: {
+                id: string;
+                name: string;
+                role?: string;
+                text: string;
+                imageUrl?: string;
+                rating?: number;
+              },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">
+                      Depoimento {idx + 1}
+                    </Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = testimonials.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("testimonials", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
 
-      <p className="text-xs text-muted-foreground">
-        {block.content.testimonials?.length || 3} depoimentos configurados
-      </p>
-    </>
-  );
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      value={item.name || ""}
+                      onChange={(e) => {
+                        const newItems = [...testimonials];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          name: e.target.value,
+                        };
+                        updateContent("testimonials", newItems);
+                      }}
+                      placeholder="Nome"
+                    />
+                    <Input
+                      value={item.role || ""}
+                      onChange={(e) => {
+                        const newItems = [...testimonials];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          role: e.target.value,
+                        };
+                        updateContent("testimonials", newItems);
+                      }}
+                      placeholder="Cargo/Descrição"
+                    />
+                  </div>
+
+                  <Textarea
+                    value={item.text || ""}
+                    onChange={(e) => {
+                      const newItems = [...testimonials];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        text: e.target.value,
+                      };
+                      updateContent("testimonials", newItems);
+                    }}
+                    placeholder="Depoimento"
+                    rows={3}
+                  />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <Input
+                      value={item.imageUrl || ""}
+                      onChange={(e) => {
+                        const newItems = [...testimonials];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          imageUrl: e.target.value,
+                        };
+                        updateContent("testimonials", newItems);
+                      }}
+                      placeholder="URL da foto"
+                    />
+                    <Select
+                      value={String(item.rating || 5)}
+                      onValueChange={(value) => {
+                        const newItems = [...testimonials];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          rating: parseInt(value),
+                        };
+                        updateContent("testimonials", newItems);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Avaliação" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="1">1 ★</SelectItem>
+                        <SelectItem value="2">2 ★</SelectItem>
+                        <SelectItem value="3">3 ★</SelectItem>
+                        <SelectItem value="4">4 ★</SelectItem>
+                        <SelectItem value="5">5 ★</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </Card>
+            )
+          )}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...testimonials,
+                {
+                  id: uuidv4(),
+                  name: "",
+                  role: "",
+                  text: "",
+                  imageUrl: "",
+                  rating: 5,
+                },
+              ];
+              updateContent("testimonials", newItems);
+            }}
+          >
+            + Adicionar Depoimento
+          </button>
+        </div>
+
+        {/* Mobile Layout Controls */}
+        <div className="space-y-2 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Layout Mobile
+          </Label>
+          <Select
+            value={block.content.mobileLayout || "stacked"}
+            onValueChange={(value) => updateContent("mobileLayout", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
+              <SelectItem value="side-by-side">
+                Lado a lado (2+ colunas)
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Como os depoimentos aparecem em celulares
+          </p>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
+
   const renderMentorProperties = () => (
     <>
       <div className="space-y-2">
@@ -2551,23 +2726,117 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
-  const renderSecurePurchaseProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="secureText">Texto de Segurança</Label>
-        <Textarea
-          id="secureText"
-          value={block.content.secureText || ""}
-          onChange={(e) => updateContent("secureText", e.target.value)}
-          placeholder="Pagamento processado pela Hotmart..."
-          rows={2}
-        />
-      </div>
-      <p className="text-xs text-muted-foreground">
-        Selos e formas de pagamento serão exibidos automaticamente
-      </p>
-    </>
-  );
+  const renderSecurePurchaseProperties = () => {
+    const securityBadges = block.content.securityBadges || [];
+    const paymentMethods = block.content.paymentMethods || [];
+
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="secureText">Texto de Segurança</Label>
+          <Textarea
+            id="secureText"
+            value={block.content.secureText || ""}
+            onChange={(e) => updateContent("secureText", e.target.value)}
+            placeholder="Pagamento processado pela Hotmart..."
+            rows={2}
+          />
+        </div>
+
+        {/* Editor de Selos de Segurança */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Selos de Segurança ({securityBadges.length})
+          </Label>
+
+          {securityBadges.map((badge: string, idx: number) => (
+            <div key={idx} className="flex gap-2">
+              <Input
+                value={badge}
+                onChange={(e) => {
+                  const newItems = [...securityBadges];
+                  newItems[idx] = e.target.value;
+                  updateContent("securityBadges", newItems);
+                }}
+                placeholder={`Selo ${idx + 1} (ex: Compra Segura)`}
+                className="flex-1"
+              />
+              <button
+                type="button"
+                className="px-2 text-xs text-destructive hover:bg-destructive/10 rounded"
+                onClick={() => {
+                  const newItems = securityBadges.filter(
+                    (_: unknown, i: number) => i !== idx
+                  );
+                  updateContent("securityBadges", newItems);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [...securityBadges, ""];
+              updateContent("securityBadges", newItems);
+            }}
+          >
+            + Adicionar Selo
+          </button>
+        </div>
+
+        {/* Editor de Formas de Pagamento */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Formas de Pagamento ({paymentMethods.length})
+          </Label>
+
+          {paymentMethods.map((method: string, idx: number) => (
+            <div key={idx} className="flex gap-2">
+              <Input
+                value={method}
+                onChange={(e) => {
+                  const newItems = [...paymentMethods];
+                  newItems[idx] = e.target.value;
+                  updateContent("paymentMethods", newItems);
+                }}
+                placeholder={`Método ${idx + 1} (ex: Cartão de Crédito)`}
+                className="flex-1"
+              />
+              <button
+                type="button"
+                className="px-2 text-xs text-destructive hover:bg-destructive/10 rounded"
+                onClick={() => {
+                  const newItems = paymentMethods.filter(
+                    (_: unknown, i: number) => i !== idx
+                  );
+                  updateContent("paymentMethods", newItems);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [...paymentMethods, ""];
+              updateContent("paymentMethods", newItems);
+            }}
+          >
+            + Adicionar Método de Pagamento
+          </button>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true })}
+      </>
+    );
+  };
 
   const renderProperties = () => {
     switch (block.type) {
