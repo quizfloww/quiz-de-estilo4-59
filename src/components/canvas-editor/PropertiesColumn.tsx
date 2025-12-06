@@ -607,6 +607,44 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             ⚙️ Configurações da Etapa
           </summary>
           <div className="space-y-4 pt-2">
+            {/* Card: Cor de Fundo do Canvas */}
+            <Card>
+              <CardHeader className="pb-2">
+                <p className="text-sm text-muted-foreground">
+                  Cor de Fundo do Canvas
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Label>Cor de Fundo</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="color"
+                      value={getConfigValue("canvasBackgroundColor", "#ffffff")}
+                      onChange={(e) =>
+                        updateStageConfig(
+                          "canvasBackgroundColor",
+                          e.target.value
+                        )
+                      }
+                      className="w-12 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      value={getConfigValue("canvasBackgroundColor", "#ffffff")}
+                      onChange={(e) =>
+                        updateStageConfig(
+                          "canvasBackgroundColor",
+                          e.target.value
+                        )
+                      }
+                      placeholder="#ffffff"
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Card: Título da Etapa */}
             <Card>
               <CardHeader className="pb-2">
