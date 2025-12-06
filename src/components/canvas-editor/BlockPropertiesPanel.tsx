@@ -499,12 +499,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                   <div>
                     <Label>Categoria de Estilo</Label>
                     <Select
-                      value={opt.styleCategory || ""}
+                      value={opt.styleCategory || "none"}
                       onValueChange={(value) => {
                         const newOptions = [...(block.content.options || [])];
                         newOptions[idx] = {
                           ...newOptions[idx],
-                          styleCategory: value,
+                          styleCategory: value === "none" ? "" : value,
                         };
                         updateContent("options", newOptions);
                       }}
@@ -513,7 +513,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Nenhuma</SelectItem>
+                        <SelectItem value="none">Nenhuma</SelectItem>
                         <SelectItem value="Natural">Natural</SelectItem>
                         <SelectItem value="Clássico">Clássico</SelectItem>
                         <SelectItem value="Contemporâneo">

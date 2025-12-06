@@ -76,6 +76,10 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   }
 
   const stageConfig = (activeStage.config as Record<string, unknown>) || {};
+  const getConfigValue = <T,>(key: string, defaultValue: T): T => {
+    const value = stageConfig[key];
+    return (value !== undefined && value !== null ? value : defaultValue) as T;
+  };
   const updateStageConfig = (key: string, value: unknown) => {
     onUpdateStage({
       config: {
@@ -90,7 +94,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Subtítulo</Label>
         <Textarea
-          value={stageConfig.subtitle || ""}
+          value={getConfigValue("subtitle", "")}
           onChange={(event) =>
             updateStageConfig("subtitle", event.target.value)
           }
@@ -100,7 +104,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>URL da Imagem (opcional)</Label>
         <Input
-          value={stageConfig.imageUrl || ""}
+          value={getConfigValue("imageUrl", "")}
           onChange={(event) =>
             updateStageConfig("imageUrl", event.target.value)
           }
@@ -110,7 +114,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Label do campo</Label>
         <Input
-          value={stageConfig.inputLabel || "NOME"}
+          value={getConfigValue("inputLabel", "NOME")}
           onChange={(event) =>
             updateStageConfig("inputLabel", event.target.value)
           }
@@ -119,7 +123,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Placeholder do campo</Label>
         <Input
-          value={stageConfig.inputPlaceholder || "Digite seu nome..."}
+          value={getConfigValue("inputPlaceholder", "Digite seu nome...")}
           onChange={(event) =>
             updateStageConfig("inputPlaceholder", event.target.value)
           }
@@ -129,14 +133,14 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   );
 
   const renderQuestionConfig = () => {
-    const displayType = stageConfig.displayType || "text";
+    const displayType = getConfigValue<string>("displayType", "text");
 
     return (
       <CardContent className="space-y-3">
         <div className="space-y-1">
           <Label>Pergunta principal</Label>
           <Textarea
-            value={stageConfig.question || ""}
+            value={getConfigValue("question", "")}
             onChange={(event) =>
               updateStageConfig("question", event.target.value)
             }
@@ -165,7 +169,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             <Input
               type="number"
               min={1}
-              value={stageConfig.multiSelect ?? 1}
+              value={getConfigValue("multiSelect", 1)}
               onChange={(event) =>
                 updateStageConfig("multiSelect", Number(event.target.value))
               }
@@ -174,7 +178,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <div className="space-y-1">
             <Label>Avanço automático</Label>
             <Switch
-              checked={stageConfig.autoAdvance !== false}
+              checked={getConfigValue("autoAdvance", true)}
               onCheckedChange={(checked) =>
                 updateStageConfig("autoAdvance", checked)
               }
@@ -185,7 +189,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <div className="space-y-1">
             <Label>Colunas de opções</Label>
             <Select
-              value={String(stageConfig.columns || 1)}
+              value={String(getConfigValue("columns", 1))}
               onValueChange={(value) =>
                 updateStageConfig("columns", Number(value))
               }
@@ -204,7 +208,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <div className="space-y-1">
             <Label>Mostrar ícone de seleção</Label>
             <Switch
-              checked={stageConfig.showCheckIcon !== false}
+              checked={getConfigValue("showCheckIcon", true)}
               onCheckedChange={(checked) =>
                 updateStageConfig("showCheckIcon", checked)
               }
@@ -214,7 +218,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Tamanho do texto das opções</Label>
           <Select
-            value={stageConfig.optionTextSize || "base"}
+            value={getConfigValue("optionTextSize", "base")}
             onValueChange={(value) =>
               updateStageConfig("optionTextSize", value)
             }
@@ -235,7 +239,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <div className="space-y-1">
             <Label>Tamanho das imagens</Label>
             <Select
-              value={stageConfig.optionImageSize || "md"}
+              value={getConfigValue("optionImageSize", "md")}
               onValueChange={(value) =>
                 updateStageConfig("optionImageSize", value)
               }
@@ -265,7 +269,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Título de transição</Label>
         <Input
-          value={stageConfig.transitionTitle || ""}
+          value={getConfigValue("transitionTitle", "")}
           onChange={(event) =>
             updateStageConfig("transitionTitle", event.target.value)
           }
@@ -274,7 +278,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Subtítulo</Label>
         <Textarea
-          value={stageConfig.transitionSubtitle || ""}
+          value={getConfigValue("transitionSubtitle", "")}
           onChange={(event) =>
             updateStageConfig("transitionSubtitle", event.target.value)
           }
@@ -284,7 +288,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Mensagem complementar</Label>
         <Textarea
-          value={stageConfig.transitionMessage || ""}
+          value={getConfigValue("transitionMessage", "")}
           onChange={(event) =>
             updateStageConfig("transitionMessage", event.target.value)
           }
@@ -301,7 +305,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <Label>Preço final</Label>
           <Input
             type="number"
-            value={stageConfig.finalPrice ?? ""}
+            value={getConfigValue("finalPrice", "")}
             onChange={(event) =>
               updateStageConfig("finalPrice", Number(event.target.value))
             }
@@ -312,7 +316,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <Label>Total original</Label>
           <Input
             type="number"
-            value={stageConfig.totalOriginal ?? ""}
+            value={getConfigValue("totalOriginal", "")}
             onChange={(event) =>
               updateStageConfig("totalOriginal", Number(event.target.value))
             }
@@ -323,7 +327,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Moeda</Label>
         <Input
-          value={stageConfig.currency || "R$"}
+          value={getConfigValue("currency", "R$")}
           onChange={(event) =>
             updateStageConfig("currency", event.target.value)
           }
@@ -332,7 +336,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Texto do botão</Label>
         <Input
-          value={stageConfig.ctaText || ""}
+          value={getConfigValue("ctaText", "")}
           onChange={(event) => updateStageConfig("ctaText", event.target.value)}
           placeholder="GARANTIR MEU GUIA AGORA"
         />
@@ -340,7 +344,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>URL do botão</Label>
         <Input
-          value={stageConfig.ctaUrl || ""}
+          value={getConfigValue("ctaUrl", "")}
           onChange={(event) => updateStageConfig("ctaUrl", event.target.value)}
           placeholder="https://"
         />
@@ -349,7 +353,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <Label>Variante do botão</Label>
         <Select
           onValueChange={(value) => updateStageConfig("ctaVariant", value)}
-          value={stageConfig.ctaVariant || "green"}
+          value={getConfigValue("ctaVariant", "green")}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Selecione" />
@@ -364,7 +368,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="space-y-1">
         <Label>Texto de urgência</Label>
         <Input
-          value={stageConfig.urgencyText || ""}
+          value={getConfigValue("urgencyText", "")}
           onChange={(event) =>
             updateStageConfig("urgencyText", event.target.value)
           }
@@ -374,7 +378,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
       <div className="flex items-center justify-between">
         <Label>Ícone do botão</Label>
         <Switch
-          checked={stageConfig.showCtaIcon !== false}
+          checked={getConfigValue("showCtaIcon", true)}
           onCheckedChange={(checked) =>
             updateStageConfig("showCtaIcon", checked)
           }
@@ -384,7 +388,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="flex items-center justify-between">
           <Label>Mostrar porcentagem principal</Label>
           <Switch
-            checked={stageConfig.showPercentage !== false}
+            checked={getConfigValue("showPercentage", true)}
             onCheckedChange={(checked) =>
               updateStageConfig("showPercentage", checked)
             }
@@ -393,7 +397,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="flex items-center justify-between">
           <Label>Mostrar descrição</Label>
           <Switch
-            checked={stageConfig.showDescription !== false}
+            checked={getConfigValue("showDescription", true)}
             onCheckedChange={(checked) =>
               updateStageConfig("showDescription", checked)
             }
@@ -402,7 +406,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Layout do resultado</Label>
           <Select
-            value={stageConfig.styleLayout || "stacked"}
+            value={getConfigValue("styleLayout", "stacked")}
             onValueChange={(value) => updateStageConfig("styleLayout", value)}
           >
             <SelectTrigger>
@@ -417,7 +421,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Tamanho da imagem</Label>
           <Select
-            value={stageConfig.styleImageSize || "lg"}
+            value={getConfigValue("styleImageSize", "lg")}
             onValueChange={(value) =>
               updateStageConfig("styleImageSize", value)
             }
@@ -438,7 +442,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Quantidade máxima de estilos</Label>
           <Select
-            value={String(stageConfig.maxSecondaryStyles ?? 3)}
+            value={String(getConfigValue("maxSecondaryStyles", 3))}
             onValueChange={(value) =>
               updateStageConfig("maxSecondaryStyles", Number(value))
             }
@@ -456,7 +460,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="flex items-center justify-between">
           <Label>Mostrar porcentagem dos secundários</Label>
           <Switch
-            checked={stageConfig.showSecondaryPercentage !== false}
+            checked={getConfigValue("showSecondaryPercentage", true)}
             onCheckedChange={(checked) =>
               updateStageConfig("showSecondaryPercentage", checked)
             }
@@ -469,7 +473,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           <Input
             type="number"
             min={0}
-            value={stageConfig.guaranteeDays ?? 7}
+            value={getConfigValue("guaranteeDays", 7)}
             onChange={(event) =>
               updateStageConfig("guaranteeDays", Number(event.target.value))
             }
@@ -478,7 +482,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Título da garantia</Label>
           <Input
-            value={stageConfig.guaranteeTitle || "7 Dias de Garantia"}
+            value={getConfigValue("guaranteeTitle", "7 Dias de Garantia")}
             onChange={(event) =>
               updateStageConfig("guaranteeTitle", event.target.value)
             }
@@ -487,7 +491,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
         <div className="space-y-1">
           <Label>Descrição da garantia</Label>
           <Textarea
-            value={stageConfig.guaranteeDescription || ""}
+            value={getConfigValue("guaranteeDescription", "")}
             onChange={(event) =>
               updateStageConfig("guaranteeDescription", event.target.value)
             }
