@@ -23,12 +23,12 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
     items.reduce((sum, item) => sum + (item.originalPrice || 0), 0);
   const finalPrice = content.finalPrice || 39;
   const installments = content.installments || { count: 5, value: 8.83 };
-  
+
   // Safe values for toFixed
   const safeTotalOriginal = totalOriginal || 0;
   const safeFinalPrice = finalPrice || 0;
   const safeInstallmentValue = installments?.value || 0;
-  
+
   const discountBadge =
     content.discountBadge ||
     `-${Math.round((1 - safeFinalPrice / safeTotalOriginal) * 100)}%`;
@@ -81,7 +81,8 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
           {currency} {safeFinalPrice.toFixed(2)}
         </p>
         <p className="text-sm text-[#8F7A6A] mt-2">
-          ou {installments.count}x de {currency} {safeInstallmentValue.toFixed(2)}
+          ou {installments.count}x de {currency}{" "}
+          {safeInstallmentValue.toFixed(2)}
         </p>
       </div>
     </div>
