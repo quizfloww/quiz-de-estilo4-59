@@ -58,23 +58,32 @@ Quando você importa um JSON:
 
    a) **Encontra stage correspondente** por `order_index`
 
-   b) **Atualiza no banco**:
+   b) **Se stage JÁ EXISTE no funil**:
 
-   - `title`
-   - `type` (agora aceita qualquer string!)
-   - `config`
-   - `is_enabled`
+   - **Atualiza**: `title`, `type`, `config`, `is_enabled`
+   - Preserva o `id` da stage existente
 
-   c) **Processa blocos**:
+   c) **Se stage NÃO EXISTE** (JSON tem mais stages):
 
-   - **Se JSON tem `blocks`**: Usa os blocos do JSON diretamente ✅
-   - **Se JSON só tem `config`**: Converte config → blocos automaticamente ✅
+   - **Cria nova stage** automaticamente
+   - Útil para adicionar etapas via JSON
 
-   d) **Salva no Supabase**: `saveStageBocks()` persiste os blocos
+   d) **Processa blocos** (super flexível):
 
-4. **Atualiza estado local**:
-   - `stageBlocks` ← blocos importados
-   - `localStages` ← stages atualizadas
+   - **Se JSON tem `blocks`**: Usa blocos do JSON ✅
+   - **Se JSON só tem `config`**: Converte config → blocos ✅
+   - **Se JSON não tem nem um nem outro**: Stage vazia (adiciona blocos depois) ✅
+
+   e) **Salva no Supabase**: `saveStageBocks()` persiste tudo
+
+4. **Stages não processadas**:
+
+   - Stages que existem no funil mas NÃO estão no JSON são **mantidas**
+   - Não remove automaticamente (por segurança)
+
+5. **Atualiza estado local**:
+   - `stageBlocks` ← blocos importados/convertidos
+   - `localStages` ← stages atualizadas + novas
    - `initialStageBlocks` ← snapshot para detectar mudanças
 
 ### 3. **Consumo dos blocos**
