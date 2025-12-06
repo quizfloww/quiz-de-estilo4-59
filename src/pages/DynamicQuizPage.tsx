@@ -45,6 +45,7 @@ const DynamicQuizPage: React.FC = () => {
   // Analytics tracking refs
   const quizStartTracked = useRef(false);
   const answersTracked = useRef<Set<string>>(new Set());
+  const milestonesTracked = useRef<Set<number>>(new Set());
 
   // Get enabled stages only - memoized to prevent infinite loops
   const stages = useMemo(() => funnel?.stages || [], [funnel?.stages]);
@@ -222,6 +223,28 @@ const DynamicQuizPage: React.FC = () => {
 
   const goToNextStage = useCallback(() => {
     setNavigationDirection("forward");
+
+    // Track progress milestones
+    if (stages.length > 0) {
+      const nextIndex = currentStageIndex + 1;
+      const progressPercent = Math.round((nextIndex / stages.length) * 100);
+
+      // Track 25%, 50%, 75% milestones
+      const milestones = [25, 50, 75];
+      for (const milestone of milestones) {
+        if (
+          progressPercent >= milestone &&
+          !milestonesTracked.current.has(milestone)
+        ) {
+          trackQuizAnswer(
+            `quiz_progress_${milestone}`,
+            `${milestone}% completed`
+          );
+          milestonesTracked.current.add(milestone);
+        }
+      }
+    }
+
     if (currentStageIndex < stages.length - 1) {
       setCurrentStageIndex((prev) => prev + 1);
     } else {
