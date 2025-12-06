@@ -367,6 +367,9 @@ export default function FunnelEditorPage() {
       const config = blocksToStageConfig(blocks);
       await updateStage.mutateAsync({ id: stageId, config });
     }
+    // Reset initial state to current state after successful save
+    setInitialStageBlocks(JSON.parse(JSON.stringify(stageBlocks)));
+    setHasUnsavedChanges(false);
     toast.success("Funil salvo com sucesso!");
   };
 
