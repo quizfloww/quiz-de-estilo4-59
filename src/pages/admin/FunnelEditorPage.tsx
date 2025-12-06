@@ -260,6 +260,7 @@ export default function FunnelEditorPage() {
       // Reset selected block when changing stages
       setSelectedBlockId(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStageId, localStages]);
 
   // Detect unsaved changes
@@ -311,7 +312,7 @@ export default function FunnelEditorPage() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [undo, redo]);
+  }, [undo, redo, handleSave]);
 
   const activeStage = localStages.find((s) => s.id === activeStageId);
   const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
@@ -435,10 +436,10 @@ export default function FunnelEditorPage() {
     return () => clearTimeout(autoSaveTimer);
   }, [hasUnsavedChanges, handleSaveInternal]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     await handleSaveInternal();
     toast.success("Funil salvo com sucesso!");
-  };
+  }, [handleSaveInternal]);
 
   const handleOpenPublishDialog = async () => {
     setShowPublishDialog(true);
