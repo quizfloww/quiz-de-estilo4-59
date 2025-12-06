@@ -95,6 +95,151 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </div>
   );
 
+  // ======== CONTROLES DE ESTILO GLOBAL ========
+  const renderColorControl = (
+    label: string,
+    key: string,
+    defaultColor: string
+  ) => (
+    <div className="space-y-2">
+      <Label>{label}</Label>
+      <div className="flex gap-2">
+        <Input
+          type="color"
+          value={block.content[key] || defaultColor}
+          onChange={(e) => updateContent(key, e.target.value)}
+          className="w-12 h-10 p-1 cursor-pointer"
+        />
+        <Input
+          value={block.content[key] || defaultColor}
+          onChange={(e) => updateContent(key, e.target.value)}
+          placeholder={defaultColor}
+          className="flex-1"
+        />
+      </div>
+    </div>
+  );
+
+  const renderGlobalStyleControls = (options?: {
+    showBackground?: boolean;
+    showText?: boolean;
+    showAccent?: boolean;
+    showBorder?: boolean;
+    showFont?: boolean;
+    showSpacing?: boolean;
+  }) => {
+    const {
+      showBackground = true,
+      showText = true,
+      showAccent = false,
+      showBorder = false,
+      showFont = false,
+      showSpacing = false,
+    } = options || {};
+
+    return (
+      <div className="space-y-3 pt-3 border-t">
+        <Label className="text-xs font-semibold text-muted-foreground uppercase">
+          Estilos Avançados
+        </Label>
+
+        {showBackground &&
+          renderColorControl("Cor de Fundo", "backgroundColor", "transparent")}
+        {showText && renderColorControl("Cor do Texto", "textColor", "#1a1a1a")}
+        {showAccent &&
+          renderColorControl("Cor de Destaque", "accentColor", "#B89B7A")}
+        {showBorder &&
+          renderColorControl("Cor da Borda", "borderColor", "#e5e5e5")}
+
+        {showFont && (
+          <>
+            <div className="space-y-2">
+              <Label>Fonte</Label>
+              <Select
+                value={block.content.fontFamily || "default"}
+                onValueChange={(value) => updateContent("fontFamily", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="default">Padrão do Sistema</SelectItem>
+                  <SelectItem value="playfair">Playfair Display</SelectItem>
+                  <SelectItem value="inter">Inter</SelectItem>
+                  <SelectItem value="roboto">Roboto</SelectItem>
+                  <SelectItem value="poppins">Poppins</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Altura da Linha</Label>
+              <Select
+                value={block.content.lineHeight || "normal"}
+                onValueChange={(value) => updateContent("lineHeight", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tight">Compacto</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="relaxed">Relaxado</SelectItem>
+                  <SelectItem value="loose">Espaçado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+
+        {showBorder && (
+          <div className="space-y-2">
+            <Label>Arredondamento</Label>
+            <Select
+              value={block.content.borderRadiusStyle || "md"}
+              onValueChange={(value) =>
+                updateContent("borderRadiusStyle", value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nenhum</SelectItem>
+                <SelectItem value="sm">Pequeno</SelectItem>
+                <SelectItem value="md">Médio</SelectItem>
+                <SelectItem value="lg">Grande</SelectItem>
+                <SelectItem value="xl">Extra Grande</SelectItem>
+                <SelectItem value="2xl">Muito Grande</SelectItem>
+                <SelectItem value="full">Completo</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {showSpacing && (
+          <div className="space-y-2">
+            <Label>Espaçamento Interno</Label>
+            <Select
+              value={block.content.paddingSize || "md"}
+              onValueChange={(value) => updateContent("paddingSize", value)}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nenhum</SelectItem>
+                <SelectItem value="sm">Pequeno</SelectItem>
+                <SelectItem value="md">Médio</SelectItem>
+                <SelectItem value="lg">Grande</SelectItem>
+                <SelectItem value="xl">Extra Grande</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const renderHeaderProperties = () => (
     <>
       <div className="flex items-center justify-between">
@@ -185,6 +330,31 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
+      {/* Peso da Fonte */}
+      <div className="space-y-2">
+        <Label>Peso da Fonte</Label>
+        <Select
+          value={block.content.fontWeight || "bold"}
+          onValueChange={(value) => updateContent("fontWeight", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="normal">Normal</SelectItem>
+            <SelectItem value="medium">Médio</SelectItem>
+            <SelectItem value="semibold">Semi-Bold</SelectItem>
+            <SelectItem value="bold">Bold</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {renderGlobalStyleControls({
+        showBackground: false,
+        showText: true,
+        showFont: true,
+      })}
     </>
   );
 
@@ -233,6 +403,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showFont: true,
+      })}
     </>
   );
 
@@ -310,6 +486,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+      
+      {renderGlobalStyleControls({ showBackground: false, showText: false, showBorder: true })}
     </>
   );
 
