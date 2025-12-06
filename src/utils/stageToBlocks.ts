@@ -1,23 +1,34 @@
-import { CanvasBlock, CanvasBlockType, CanvasBlockContent } from '@/types/canvasBlocks';
-import { FunnelStage } from '@/hooks/useFunnelStages';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  CanvasBlock,
+  CanvasBlockType,
+  CanvasBlockContent,
+} from "@/types/canvasBlocks";
+import { FunnelStage } from "@/hooks/useFunnelStages";
+import { v4 as uuidv4 } from "uuid";
 
-export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, currentIndex: number): CanvasBlock[] => {
+export const convertStageToBlocks = (
+  stage: FunnelStage,
+  totalStages: number,
+  currentIndex: number
+): CanvasBlock[] => {
   const blocks: CanvasBlock[] = [];
   const config = (stage.config as Record<string, any>) || {};
   let order = 0;
 
   // Calcular progresso
-  const progress = totalStages > 0 ? ((currentIndex + 1) / totalStages) * 100 : 0;
+  const progress =
+    totalStages > 0 ? ((currentIndex + 1) / totalStages) * 100 : 0;
 
   // 1. Header Block (sempre presente)
   blocks.push({
     id: `${stage.id}-header`,
-    type: 'header',
+    type: "header",
     order: order++,
     content: {
       showLogo: config.showLogo !== false,
-      logoUrl: config.logoUrl || 'https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png',
+      logoUrl:
+        config.logoUrl ||
+        "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
       showProgress: config.showProgress !== false,
       showBackButton: config.allowBack !== false,
       progress,
@@ -25,59 +36,62 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   });
 
   // 2. Heading Block baseado no tipo
-  if (stage.type === 'question' || stage.type === 'strategic') {
+  if (stage.type === "question" || stage.type === "strategic") {
     blocks.push({
       id: `${stage.id}-heading`,
-      type: 'heading',
+      type: "heading",
       order: order++,
       content: {
         text: config.question || stage.title,
-        fontSize: '2xl',
-        fontWeight: 'bold',
-        textAlign: 'center',
+        fontSize: "2xl",
+        fontWeight: "bold",
+        textAlign: "center",
       },
     });
-  } else if (stage.type === 'intro') {
+  } else if (stage.type === "intro") {
     blocks.push({
       id: `${stage.id}-heading`,
-      type: 'heading',
+      type: "heading",
       order: order++,
       content: {
-        text: config.title || stage.title || 'Teste de Estilo Pessoal',
-        fontSize: '3xl',
-        fontWeight: 'bold',
-        textAlign: 'center',
+        text: config.title || stage.title || "Teste de Estilo Pessoal",
+        fontSize: "3xl",
+        fontWeight: "bold",
+        textAlign: "center",
       },
     });
-  } else if (stage.type === 'transition') {
+  } else if (stage.type === "transition") {
     blocks.push({
       id: `${stage.id}-heading`,
-      type: 'heading',
+      type: "heading",
       order: order++,
       content: {
-        text: config.transitionTitle || stage.title || 'Enquanto calculamos o seu resultado...',
-        fontSize: '2xl',
-        fontWeight: 'bold',
-        textAlign: 'center',
+        text:
+          config.transitionTitle ||
+          stage.title ||
+          "Enquanto calculamos o seu resultado...",
+        fontSize: "2xl",
+        fontWeight: "bold",
+        textAlign: "center",
       },
     });
-  } else if (stage.type === 'result') {
+  } else if (stage.type === "result") {
     // Blocos especiais para resultado
     blocks.push({
       id: `${stage.id}-styleResult`,
-      type: 'styleResult',
+      type: "styleResult",
       order: order++,
       content: {
         showPercentage: true,
         showDescription: true,
-        layout: 'stacked',
-        styleImageSize: 'lg',
+        layout: "stacked",
+        styleImageSize: "lg",
       },
     });
 
     blocks.push({
       id: `${stage.id}-secondaryStyles`,
-      type: 'secondaryStyles',
+      type: "secondaryStyles",
       order: order++,
       content: {
         maxSecondaryStyles: 3,
@@ -87,36 +101,38 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
 
     blocks.push({
       id: `${stage.id}-spacer1`,
-      type: 'spacer',
+      type: "spacer",
       order: order++,
-      content: { height: '2rem' },
+      content: { height: "2rem" },
     });
 
     blocks.push({
       id: `${stage.id}-priceAnchor`,
-      type: 'priceAnchor',
+      type: "priceAnchor",
       order: order++,
       content: {
-        finalPrice: 39,
-        totalOriginal: 175,
-        currency: 'R$',
+        finalPrice: config.finalPrice ?? 39,
+        totalOriginal: config.totalOriginal ?? 175,
+        currency: config.currency || "R$",
       },
     });
 
     blocks.push({
       id: `${stage.id}-ctaOffer`,
-      type: 'ctaOffer',
+      type: "ctaOffer",
       order: order++,
       content: {
-        ctaText: 'GARANTIR MEU GUIA AGORA',
-        ctaVariant: 'green',
-        showCtaIcon: true,
+        ctaText: config.ctaText || "GARANTIR MEU GUIA AGORA",
+        ctaVariant: config.ctaVariant || "green",
+        ctaUrl: config.ctaUrl || "",
+        showCtaIcon: config.showCtaIcon !== false,
+        urgencyText: config.urgencyText || "",
       },
     });
 
     blocks.push({
       id: `${stage.id}-guarantee`,
-      type: 'guarantee',
+      type: "guarantee",
       order: order++,
       content: {
         guaranteeDays: 7,
@@ -130,13 +146,13 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   if (config.imageUrl) {
     blocks.push({
       id: `${stage.id}-image`,
-      type: 'image',
+      type: "image",
       order: order++,
       content: {
         imageUrl: config.imageUrl,
-        imageAlt: 'Imagem',
-        maxWidth: '384px',
-        borderRadius: '0.5rem',
+        imageAlt: "Imagem",
+        maxWidth: "384px",
+        borderRadius: "0.5rem",
       },
     });
   }
@@ -145,12 +161,12 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   if (config.subtitle) {
     blocks.push({
       id: `${stage.id}-subtitle`,
-      type: 'text',
+      type: "text",
       order: order++,
       content: {
         text: config.subtitle,
-        fontSize: 'base',
-        textAlign: 'center',
+        fontSize: "base",
+        textAlign: "center",
       },
     });
   }
@@ -158,12 +174,12 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   if (config.transitionSubtitle) {
     blocks.push({
       id: `${stage.id}-transition-subtitle`,
-      type: 'text',
+      type: "text",
       order: order++,
       content: {
         text: config.transitionSubtitle,
-        fontSize: 'base',
-        textAlign: 'center',
+        fontSize: "base",
+        textAlign: "center",
       },
     });
   }
@@ -171,29 +187,29 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   if (config.transitionMessage) {
     blocks.push({
       id: `${stage.id}-transition-message`,
-      type: 'text',
+      type: "text",
       order: order++,
       content: {
         text: config.transitionMessage,
-        fontSize: 'sm',
-        textAlign: 'center',
+        fontSize: "sm",
+        textAlign: "center",
       },
       style: {
-        marginTop: '1rem',
+        marginTop: "1rem",
       },
     });
   }
 
   // 5. Input Block (para intro)
-  if (stage.type === 'intro') {
+  if (stage.type === "intro") {
     blocks.push({
       id: `${stage.id}-input`,
-      type: 'input',
+      type: "input",
       order: order++,
       content: {
-        label: config.inputLabel || 'NOME',
-        placeholder: config.inputPlaceholder || 'Digite seu nome aqui...',
-        inputType: 'text',
+        label: config.inputLabel || "NOME",
+        placeholder: config.inputPlaceholder || "Digite seu nome aqui...",
+        inputType: "text",
         required: true,
       },
     });
@@ -203,10 +219,10 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   if (config.options && config.options.length > 0) {
     blocks.push({
       id: `${stage.id}-spacer`,
-      type: 'spacer',
+      type: "spacer",
       order: order++,
       content: {
-        height: '1rem',
+        height: "1rem",
       },
     });
   }
@@ -214,13 +230,13 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   // 7. Options Block (para questões)
   if (config.options && config.options.length > 0) {
     const hasImages = config.options.some((opt: any) => opt.imageUrl);
-    
+
     blocks.push({
       id: `${stage.id}-options`,
-      type: 'options',
+      type: "options",
       order: order++,
       content: {
-        displayType: hasImages ? 'both' : 'text',
+        displayType: hasImages ? "both" : "text",
         multiSelect: config.multiSelect || 1,
         autoAdvance: config.autoAdvance !== false,
         options: config.options.map((opt: any) => ({
@@ -238,11 +254,11 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
   // 8. Button Block
   blocks.push({
     id: `${stage.id}-button`,
-    type: 'button',
+    type: "button",
     order: order++,
     content: {
-      buttonText: config.buttonText || 'Continuar',
-      buttonVariant: 'primary',
+      buttonText: config.buttonText || "Continuar",
+      buttonVariant: "primary",
       fullWidth: true,
     },
   });
@@ -252,7 +268,7 @@ export const convertStageToBlocks = (stage: FunnelStage, totalStages: number, cu
 
 export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
   const id = uuidv4();
-  
+
   const defaultContent: Record<CanvasBlockType, CanvasBlockContent> = {
     header: {
       showLogo: true,
@@ -261,49 +277,49 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
       progress: 0,
     },
     heading: {
-      text: 'Novo Título',
-      fontSize: '2xl',
-      fontWeight: 'bold',
-      textAlign: 'center',
+      text: "Novo Título",
+      fontSize: "2xl",
+      fontWeight: "bold",
+      textAlign: "center",
     },
     text: {
-      text: 'Novo texto',
-      fontSize: 'base',
-      textAlign: 'center',
+      text: "Novo texto",
+      fontSize: "base",
+      textAlign: "center",
     },
     image: {
-      imageUrl: '',
-      imageAlt: 'Imagem',
-      maxWidth: '384px',
+      imageUrl: "",
+      imageAlt: "Imagem",
+      maxWidth: "384px",
     },
     input: {
-      label: 'Campo',
-      placeholder: 'Digite aqui...',
-      inputType: 'text',
+      label: "Campo",
+      placeholder: "Digite aqui...",
+      inputType: "text",
       required: false,
     },
     options: {
-      displayType: 'text',
+      displayType: "text",
       multiSelect: 1,
       autoAdvance: true,
       options: [],
       columns: 1,
     },
     button: {
-      buttonText: 'Continuar',
-      buttonVariant: 'primary',
+      buttonText: "Continuar",
+      buttonVariant: "primary",
       fullWidth: true,
     },
     spacer: {
-      height: '1rem',
+      height: "1rem",
     },
     divider: {},
     // Blocos de Resultado
     styleResult: {
       showPercentage: true,
       showDescription: true,
-      layout: 'stacked',
-      styleImageSize: 'lg',
+      layout: "stacked",
+      styleImageSize: "lg",
     },
     secondaryStyles: {
       maxSecondaryStyles: 3,
@@ -317,39 +333,39 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
     priceAnchor: {
       finalPrice: 39,
       totalOriginal: 175,
-      currency: 'R$',
+      currency: "R$",
     },
     countdown: {
       hours: 2,
       minutes: 47,
       seconds: 33,
-      countdownVariant: 'dramatic',
-      expiryMessage: 'Esta oferta expira ao sair desta página!',
+      countdownVariant: "dramatic",
+      expiryMessage: "Esta oferta expira ao sair desta página!",
     },
     testimonial: {
-      testimonialVariant: 'card',
+      testimonialVariant: "card",
     },
     benefitsList: {
-      benefitsLayout: 'list',
+      benefitsLayout: "list",
       benefitsColumns: 1,
       showBenefitIcons: true,
     },
     guarantee: {
       guaranteeDays: 7,
-      guaranteeTitle: '7 Dias de Garantia Incondicional',
+      guaranteeTitle: "7 Dias de Garantia Incondicional",
     },
     ctaOffer: {
-      ctaText: 'GARANTIR MEU GUIA AGORA',
-      ctaVariant: 'green',
+      ctaText: "GARANTIR MEU GUIA AGORA",
+      ctaVariant: "green",
       showCtaIcon: true,
     },
     faq: {
-      faqStyle: 'accordion',
+      faqStyle: "accordion",
     },
     socialProof: {
-      socialProofText: '+3.000 mulheres já descobriram seu estilo',
-      socialProofIcon: 'users',
-      socialProofVariant: 'badge',
+      socialProofText: "+3.000 mulheres já descobriram seu estilo",
+      socialProofIcon: "users",
+      socialProofVariant: "badge",
     },
   };
 
@@ -361,40 +377,42 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
   };
 };
 
-export const blocksToStageConfig = (blocks: CanvasBlock[]): Record<string, any> => {
+export const blocksToStageConfig = (
+  blocks: CanvasBlock[]
+): Record<string, any> => {
   const config: Record<string, any> = {};
 
-  blocks.forEach(block => {
+  blocks.forEach((block) => {
     switch (block.type) {
-      case 'header':
+      case "header":
         config.showLogo = block.content.showLogo;
         config.logoUrl = block.content.logoUrl;
         config.showProgress = block.content.showProgress;
         config.allowBack = block.content.showBackButton;
         break;
-      case 'heading':
+      case "heading":
         config.question = block.content.text;
         config.title = block.content.text;
         break;
-      case 'image':
+      case "image":
         config.imageUrl = block.content.imageUrl;
         break;
-      case 'text':
+      case "text":
         if (!config.subtitle) {
           config.subtitle = block.content.text;
         }
         break;
-      case 'input':
+      case "input":
         config.inputLabel = block.content.label;
         config.inputPlaceholder = block.content.placeholder;
         break;
-      case 'options':
+      case "options":
         config.options = block.content.options;
         config.displayType = block.content.displayType;
         config.multiSelect = block.content.multiSelect;
         config.autoAdvance = block.content.autoAdvance;
         break;
-      case 'button':
+      case "button":
         config.buttonText = block.content.buttonText;
         break;
     }
