@@ -100,7 +100,7 @@ export const BaseBlock: React.FC<BaseBlockProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  // @ts-ignore - campo dinâmico
+  // @ts-expect-error - campo dinâmico
   const isHidden = block.hidden === true;
 
   // Sortable hook do dnd-kit
@@ -200,7 +200,7 @@ export const BaseBlock: React.FC<BaseBlockProps> = ({
       e.stopPropagation();
       if (onUpdate) {
         onUpdate(block.id, {
-          // @ts-ignore
+          // @ts-expect-error - campo dinâmico
           hidden: !isHidden,
         });
       }

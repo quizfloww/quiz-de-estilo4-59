@@ -534,7 +534,7 @@ export function useBlockManager(
   const toggleBlockVisibility = useCallback(
     (id: string) => {
       updateBlock(id, {
-        // @ts-ignore - adicionando campo hidden dinamicamente
+        // @ts-expect-error - adicionando campo hidden dinamicamente
         hidden: !blocks.find((b) => b.id === id)?.hidden,
       });
     },

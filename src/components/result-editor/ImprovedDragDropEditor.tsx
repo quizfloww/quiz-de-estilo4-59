@@ -176,7 +176,10 @@ const BlockPaletteItem: React.FC<BlockPaletteItemProps> = ({
   onClick,
 }) => {
   const iconName = BLOCK_TYPE_ICONS[type];
-  const IconComponent = (Icons as any)[iconName] || Icons.Square;
+  const IconComponent =
+    (Icons[iconName as keyof typeof Icons] as React.ComponentType<{
+      className?: string;
+    }>) || Icons.Square;
 
   return (
     <TooltipProvider>

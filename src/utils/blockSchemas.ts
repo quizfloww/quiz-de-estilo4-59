@@ -429,5 +429,5 @@ export function sanitizeBlocks(data: unknown[]): ValidatedCanvasBlock[] {
  * Verifica se um tipo de bloco é válido
  */
 export function isValidBlockType(type: string): type is CanvasBlockType {
-  return blockTypes.includes(type as any);
+  return (blockTypes as readonly string[]).includes(type);
 }
