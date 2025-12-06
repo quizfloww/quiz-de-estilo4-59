@@ -20,17 +20,42 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 
+export interface StyleCategory {
+  id: string;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+}
+
+// Default categories fallback (when none provided by funnel)
+const DEFAULT_STYLE_CATEGORIES: StyleCategory[] = [
+  { id: "Natural", name: "Natural" },
+  { id: "Clássico", name: "Clássico" },
+  { id: "Contemporâneo", name: "Contemporâneo" },
+  { id: "Elegante", name: "Elegante" },
+  { id: "Romântico", name: "Romântico" },
+  { id: "Sexy", name: "Sexy" },
+  { id: "Dramático", name: "Dramático" },
+  { id: "Criativo", name: "Criativo" },
+];
+
 interface BlockPropertiesPanelProps {
   block: CanvasBlock | null;
   onUpdateBlock: (block: CanvasBlock) => void;
   compact?: boolean;
+  styleCategories?: StyleCategory[];
 }
 
 export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   block,
   onUpdateBlock,
   compact = false,
+  styleCategories = DEFAULT_STYLE_CATEGORIES,
 }) => {
+  // Use provided categories or fall back to defaults
+  const categories =
+    styleCategories.length > 0 ? styleCategories : DEFAULT_STYLE_CATEGORIES;
+
   if (!block) {
     return (
       <div className="p-4 text-center text-muted-foreground">
@@ -548,21 +573,18 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                           updateContent("options", newOptions);
                         }}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger
+                          className={hasNoCategory ? "border-yellow-400" : ""}
+                        >
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="none">Nenhuma</SelectItem>
-                          <SelectItem value="Natural">Natural</SelectItem>
-                          <SelectItem value="Clássico">Clássico</SelectItem>
-                          <SelectItem value="Contemporâneo">
-                            Contemporâneo
-                          </SelectItem>
-                          <SelectItem value="Elegante">Elegante</SelectItem>
-                          <SelectItem value="Romântico">Romântico</SelectItem>
-                          <SelectItem value="Sexy">Sexy</SelectItem>
-                          <SelectItem value="Dramático">Dramático</SelectItem>
-                          <SelectItem value="Criativo">Criativo</SelectItem>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat.id} value={cat.id}>
+                              {cat.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
