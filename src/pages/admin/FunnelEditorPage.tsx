@@ -718,8 +718,12 @@ export default function FunnelEditorPage() {
                 onBlocksChange={handleBlocksChange}
                 blocks={currentBlocks}
                 canvasBackgroundColor={
+                  // Prioridade: config da etapa > config global do funil > padrão
                   ((activeStage.config as Record<string, unknown>)
-                    ?.canvasBackgroundColor as string) || "#ffffff"
+                    ?.canvasBackgroundColor as string) ||
+                  (funnel?.global_config as FunnelConfig)?.branding
+                    ?.backgroundColor ||
+                  "#FAF9F7"
                 }
               />
             ) : (
