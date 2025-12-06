@@ -1,24 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Save, Eye, Plus, GripVertical, Trash2, Play, Globe, GlobeLock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Save,
+  Eye,
+  Plus,
+  GripVertical,
+  Trash2,
+  Play,
+  Globe,
+  GlobeLock,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-import { useFunnel, useUpdateFunnel } from '@/hooks/useFunnels';
-import { useFunnelStagesWithOptions, useCreateStage, useUpdateStage, useDeleteStage, useReorderStages, FunnelStage } from '@/hooks/useFunnelStages';
-import { toast } from 'sonner';
-import { FunnelSettingsPanel } from '@/components/funnel-editor/FunnelSettingsPanel';
-import { PublishDialog } from '@/components/funnel-editor/PublishDialog';
-import { StatusBadge } from '@/components/funnel-editor/StatusBadge';
-import { usePublishFunnel, PublishValidation } from '@/hooks/usePublishFunnel';
-import { StageCanvasEditor, BlocksSidebar, PropertiesColumn, TestModeOverlay } from '@/components/canvas-editor';
-import { CanvasBlock, CanvasBlockType, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
-import { convertStageToBlocks, createEmptyBlock, blocksToStageConfig } from '@/utils/stageToBlocks';
-import type { Database } from '@/integrations/supabase/types';
-import { FunnelConfig } from '@/types/funnelConfig';
+import { useFunnel, useUpdateFunnel } from "@/hooks/useFunnels";
+import {
+  useFunnelStagesWithOptions,
+  useCreateStage,
+  useUpdateStage,
+  useDeleteStage,
+  useReorderStages,
+  FunnelStage,
+} from "@/hooks/useFunnelStages";
+import { toast } from "sonner";
+import { FunnelSettingsPanel } from "@/components/funnel-editor/FunnelSettingsPanel";
+import { PublishDialog } from "@/components/funnel-editor/PublishDialog";
+import { StatusBadge } from "@/components/funnel-editor/StatusBadge";
+import { usePublishFunnel, PublishValidation } from "@/hooks/usePublishFunnel";
+import {
+  StageCanvasEditor,
+  BlocksSidebar,
+  PropertiesColumn,
+  TestModeOverlay,
+} from "@/components/canvas-editor";
+import {
+  CanvasBlock,
+  CanvasBlockType,
+  BLOCK_TYPE_LABELS,
+} from "@/types/canvasBlocks";
+import {
+  convertStageToBlocks,
+  createEmptyBlock,
+  blocksToStageConfig,
+} from "@/utils/stageToBlocks";
+import type { Database } from "@/integrations/supabase/types";
+import { FunnelConfig } from "@/types/funnelConfig";
 import {
   DndContext,
   closestCenter,
@@ -27,24 +67,24 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-type StageType = Database['public']['Enums']['stage_type'];
+type StageType = Database["public"]["Enums"]["stage_type"];
 
 const stageTypeLabels: Record<StageType, string> = {
-  intro: 'Introdução',
-  question: 'Questão',
-  strategic: 'Estratégica',
-  transition: 'Transição',
-  result: 'Resultado',
+  intro: "Introdução",
+  question: "Questão",
+  strategic: "Estratégica",
+  transition: "Transição",
+  result: "Resultado",
 };
 
 interface SortableStageItemProps {
@@ -54,7 +94,12 @@ interface SortableStageItemProps {
   onDelete: () => void;
 }
 
-const SortableStageItem: React.FC<SortableStageItemProps> = ({ stage, isActive, onClick, onDelete }) => {
+const SortableStageItem: React.FC<SortableStageItemProps> = ({
+  stage,
+  isActive,
+  onClick,
+  onDelete,
+}) => {
   const {
     attributes,
     listeners,
@@ -76,17 +121,25 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({ stage, isActive, 
       style={style}
       className={`
         flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors group
-        ${isActive ? 'bg-primary/10 border border-primary/20' : 'hover:bg-muted'}
-        ${isDragging ? 'shadow-lg' : ''}
+        ${
+          isActive ? "bg-primary/10 border border-primary/20" : "hover:bg-muted"
+        }
+        ${isDragging ? "shadow-lg" : ""}
       `}
       onClick={onClick}
     >
-      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+      <div
+        {...attributes}
+        {...listeners}
+        className="cursor-grab active:cursor-grabbing"
+      >
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{stage.title}</p>
-        <p className="text-xs text-muted-foreground">{stageTypeLabels[stage.type]}</p>
+        <p className="text-xs text-muted-foreground">
+          {stageTypeLabels[stage.type]}
+        </p>
       </div>
       <Button
         variant="ghost"
@@ -106,23 +159,36 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({ stage, isActive, 
 export default function FunnelEditorPage() {
   const { id } = useParams<{ id: string }>();
   const { data: funnel, isLoading: loadingFunnel } = useFunnel(id);
-  const { data: stages, isLoading: loadingStages } = useFunnelStagesWithOptions(id);
+  const { data: stages, isLoading: loadingStages } =
+    useFunnelStagesWithOptions(id);
   const updateFunnel = useUpdateFunnel();
   const createStage = useCreateStage();
   const updateStage = useUpdateStage();
   const deleteStage = useDeleteStage();
   const reorderStages = useReorderStages();
-  const { validateFunnel, publishFunnel, unpublishFunnel, isValidating, isPublishing, isUnpublishing } = usePublishFunnel(id);
-  
+  const {
+    validateFunnel,
+    publishFunnel,
+    unpublishFunnel,
+    isValidating,
+    isPublishing,
+    isUnpublishing,
+  } = usePublishFunnel(id);
+
   const [activeStageId, setActiveStageId] = useState<string | null>(null);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [previewMode, setPreviewMode] = useState<"desktop" | "mobile">(
+    "desktop"
+  );
   const [localStages, setLocalStages] = useState<FunnelStage[]>([]);
   const [isTestMode, setIsTestMode] = useState(false);
   const [showPublishDialog, setShowPublishDialog] = useState(false);
-  const [publishValidation, setPublishValidation] = useState<PublishValidation | null>(null);
-  
+  const [publishValidation, setPublishValidation] =
+    useState<PublishValidation | null>(null);
+
   // Canvas blocks state
-  const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>({});
+  const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>(
+    {}
+  );
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -151,42 +217,53 @@ export default function FunnelEditorPage() {
   // Convert active stage to blocks when it changes
   useEffect(() => {
     if (activeStageId && localStages.length > 0) {
-      const stageIndex = localStages.findIndex(s => s.id === activeStageId);
+      const stageIndex = localStages.findIndex((s) => s.id === activeStageId);
       const stage = localStages[stageIndex];
-      
+
       if (stage && !stageBlocks[activeStageId]) {
-        const blocks = convertStageToBlocks(stage, localStages.length, stageIndex);
-        setStageBlocks(prev => ({
+        const blocks = convertStageToBlocks(
+          stage,
+          localStages.length,
+          stageIndex
+        );
+        setStageBlocks((prev) => ({
           ...prev,
           [activeStageId]: blocks,
         }));
       }
-      
+
       // Reset selected block when changing stages
       setSelectedBlockId(null);
     }
   }, [activeStageId, localStages]);
 
-  const activeStage = localStages.find(s => s.id === activeStageId);
-  const activeStageIndex = localStages.findIndex(s => s.id === activeStageId);
+  const activeStage = localStages.find((s) => s.id === activeStageId);
+  const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
   const currentBlocks = activeStageId ? stageBlocks[activeStageId] || [] : [];
-  const selectedBlock = currentBlocks.find(b => b.id === selectedBlockId) || null;
+  const selectedBlock =
+    currentBlocks.find((b) => b.id === selectedBlockId) || null;
 
   // Count similar blocks and stages
   const similarBlocksCount = selectedBlock
-    ? Object.values(stageBlocks).flat().filter(b => b.type === selectedBlock.type && b.id !== selectedBlock.id).length
+    ? Object.values(stageBlocks)
+        .flat()
+        .filter(
+          (b) => b.type === selectedBlock.type && b.id !== selectedBlock.id
+        ).length
     : 0;
-  
+
   const similarStagesCount = activeStage
-    ? localStages.filter(s => s.type === activeStage.type && s.id !== activeStage.id).length
+    ? localStages.filter(
+        (s) => s.type === activeStage.type && s.id !== activeStage.id
+      ).length
     : 0;
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = localStages.findIndex(s => s.id === active.id);
-      const newIndex = localStages.findIndex(s => s.id === over.id);
+      const oldIndex = localStages.findIndex((s) => s.id === active.id);
+      const newIndex = localStages.findIndex((s) => s.id === over.id);
 
       const newStages = arrayMove(localStages, oldIndex, newIndex);
       setLocalStages(newStages);
@@ -215,8 +292,8 @@ export default function FunnelEditorPage() {
 
   const handleBlocksChange = (newBlocks: CanvasBlock[]) => {
     if (!activeStageId) return;
-    
-    setStageBlocks(prev => ({
+
+    setStageBlocks((prev) => ({
       ...prev,
       [activeStageId]: newBlocks,
     }));
@@ -224,10 +301,10 @@ export default function FunnelEditorPage() {
 
   const handleAddBlock = (type: CanvasBlockType) => {
     if (!activeStageId) return;
-    
+
     const newBlock = createEmptyBlock(type);
     newBlock.order = currentBlocks.length;
-    
+
     const newBlocks = [...currentBlocks, newBlock];
     handleBlocksChange(newBlocks);
     setSelectedBlockId(newBlock.id);
@@ -235,8 +312,8 @@ export default function FunnelEditorPage() {
 
   const handleUpdateBlock = (updatedBlock: CanvasBlock) => {
     if (!activeStageId) return;
-    
-    const newBlocks = currentBlocks.map(block =>
+
+    const newBlocks = currentBlocks.map((block) =>
       block.id === updatedBlock.id ? updatedBlock : block
     );
     handleBlocksChange(newBlocks);
@@ -247,7 +324,7 @@ export default function FunnelEditorPage() {
   };
 
   // Find header block for properties column
-  const headerBlock = currentBlocks.find(b => b.type === 'header') || null;
+  const headerBlock = currentBlocks.find((b) => b.type === "header") || null;
 
   const handleSave = async () => {
     // Save all stages with their blocks converted back to config
@@ -255,12 +332,16 @@ export default function FunnelEditorPage() {
       const config = blocksToStageConfig(blocks);
       await updateStage.mutateAsync({ id: stageId, config });
     }
-    toast.success('Funil salvo com sucesso!');
+    toast.success("Funil salvo com sucesso!");
   };
 
   const handleOpenPublishDialog = async () => {
     setShowPublishDialog(true);
-    const validation = await validateFunnel(localStages, stageBlocks, funnel?.slug || '');
+    const validation = await validateFunnel(
+      localStages,
+      stageBlocks,
+      funnel?.slug || ""
+    );
     setPublishValidation(validation);
   };
 
@@ -273,12 +354,15 @@ export default function FunnelEditorPage() {
   };
 
   // Apply block content to all similar blocks (same type) across all stages
-  const handleApplyBlockToAll = (sourceBlock: CanvasBlock, blockType: CanvasBlockType) => {
+  const handleApplyBlockToAll = (
+    sourceBlock: CanvasBlock,
+    blockType: CanvasBlockType
+  ) => {
     const newStageBlocks = { ...stageBlocks };
     let count = 0;
 
     for (const [stageId, blocks] of Object.entries(newStageBlocks)) {
-      const updatedBlocks = blocks.map(block => {
+      const updatedBlocks = blocks.map((block) => {
         if (block.type === blockType && block.id !== sourceBlock.id) {
           count++;
           return {
@@ -293,7 +377,9 @@ export default function FunnelEditorPage() {
     }
 
     setStageBlocks(newStageBlocks);
-    toast.success(`Configurações aplicadas a ${count} blocos "${BLOCK_TYPE_LABELS[blockType]}"`);
+    toast.success(
+      `Configurações aplicadas a ${count} blocos "${BLOCK_TYPE_LABELS[blockType]}"`
+    );
   };
 
   // Apply header config to all stages
@@ -303,9 +389,9 @@ export default function FunnelEditorPage() {
 
     for (const [stageId, blocks] of Object.entries(newStageBlocks)) {
       if (stageId === activeStageId) continue;
-      
-      const updatedBlocks = blocks.map(block => {
-        if (block.type === 'header') {
+
+      const updatedBlocks = blocks.map((block) => {
+        if (block.type === "header") {
           count++;
           return {
             ...block,
@@ -324,7 +410,7 @@ export default function FunnelEditorPage() {
   // Apply all blocks config from current stage to all stages of same type
   const handleApplyStageConfigToAll = (sourceStage: FunnelStage) => {
     if (!activeStageId) return;
-    
+
     const sourceBlocks = stageBlocks[activeStageId] || [];
     const newStageBlocks = { ...stageBlocks };
     let count = 0;
@@ -333,9 +419,11 @@ export default function FunnelEditorPage() {
       if (stage.type === sourceStage.type && stage.id !== sourceStage.id) {
         // Copy all blocks from source to target, preserving IDs
         const targetBlocks = stageBlocks[stage.id] || [];
-        
+
         const updatedBlocks = targetBlocks.map((targetBlock, index) => {
-          const sourceBlock = sourceBlocks.find(sb => sb.type === targetBlock.type);
+          const sourceBlock = sourceBlocks.find(
+            (sb) => sb.type === targetBlock.type
+          );
           if (sourceBlock) {
             return {
               ...targetBlock,
@@ -345,14 +433,40 @@ export default function FunnelEditorPage() {
           }
           return targetBlock;
         });
-        
+
         newStageBlocks[stage.id] = updatedBlocks;
         count++;
       }
     }
 
     setStageBlocks(newStageBlocks);
-    toast.success(`Configurações aplicadas a ${count} etapas do tipo "${stageTypeLabels[sourceStage.type]}"`);
+    toast.success(
+      `Configurações aplicadas a ${count} etapas do tipo "${
+        stageTypeLabels[sourceStage.type]
+      }"`
+    );
+  };
+
+  const handleStageUpdate = (updates: Partial<FunnelStage>) => {
+    if (!activeStage || !activeStageId || activeStageIndex < 0) return;
+
+    const updatedStage = { ...activeStage, ...updates };
+
+    setLocalStages((prev) =>
+      prev.map((stage) => (stage.id === activeStageId ? updatedStage : stage))
+    );
+
+    const rebuiltBlocks = convertStageToBlocks(
+      updatedStage,
+      Math.max(localStages.length, 1),
+      activeStageIndex
+    );
+    setStageBlocks((prev) => ({
+      ...prev,
+      [activeStageId]: rebuiltBlocks,
+    }));
+
+    updateStage.mutate({ id: activeStageId, ...updates });
   };
 
   if (loadingFunnel || loadingStages) {
@@ -392,24 +506,31 @@ export default function FunnelEditorPage() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-semibold">{funnel.name}</h1>
-              <StatusBadge status={(funnel.status as 'draft' | 'published' | 'archived') || 'draft'} />
+              <StatusBadge
+                status={
+                  (funnel.status as "draft" | "published" | "archived") ||
+                  "draft"
+                }
+              />
             </div>
-            <span className="text-xs text-muted-foreground">/{funnel.slug}</span>
+            <span className="text-xs text-muted-foreground">
+              /{funnel.slug}
+            </span>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center border rounded-md">
             <Button
-              variant={previewMode === 'desktop' ? 'secondary' : 'ghost'}
+              variant={previewMode === "desktop" ? "secondary" : "ghost"}
               size="sm"
-              onClick={() => setPreviewMode('desktop')}
+              onClick={() => setPreviewMode("desktop")}
             >
               Desktop
             </Button>
             <Button
-              variant={previewMode === 'mobile' ? 'secondary' : 'ghost'}
+              variant={previewMode === "mobile" ? "secondary" : "ghost"}
               size="sm"
-              onClick={() => setPreviewMode('mobile')}
+              onClick={() => setPreviewMode("mobile")}
             >
               Mobile
             </Button>
@@ -419,7 +540,9 @@ export default function FunnelEditorPage() {
             funnelName={funnel.name}
             funnelSlug={funnel.slug}
             globalConfig={funnel.global_config as FunnelConfig | null}
-            onSave={(updates) => updateFunnel.mutate({ id: funnel.id, ...updates })}
+            onSave={(updates) =>
+              updateFunnel.mutate({ id: funnel.id, ...updates })
+            }
           />
           <Button
             variant="default"
@@ -440,7 +563,7 @@ export default function FunnelEditorPage() {
             <Save className="h-4 w-4 mr-2" />
             Salvar
           </Button>
-          {funnel.status === 'published' ? (
+          {funnel.status === "published" ? (
             <Button
               variant="outline"
               size="sm"
@@ -448,7 +571,7 @@ export default function FunnelEditorPage() {
               disabled={isUnpublishing}
             >
               <GlobeLock className="h-4 w-4 mr-2" />
-              {isUnpublishing ? 'Despublicando...' : 'Despublicar'}
+              {isUnpublishing ? "Despublicando..." : "Despublicar"}
             </Button>
           ) : (
             <Button
@@ -470,7 +593,9 @@ export default function FunnelEditorPage() {
           <div className="h-full flex flex-col border-r">
             <div className="p-3 border-b flex items-center justify-between">
               <span className="font-medium text-sm">Etapas</span>
-              <Select onValueChange={(type) => handleAddStage(type as StageType)}>
+              <Select
+                onValueChange={(type) => handleAddStage(type as StageType)}
+              >
                 <SelectTrigger className="w-auto h-8">
                   <Plus className="h-4 w-4" />
                 </SelectTrigger>
@@ -491,7 +616,7 @@ export default function FunnelEditorPage() {
                   onDragEnd={handleDragEnd}
                 >
                   <SortableContext
-                    items={localStages.map(s => s.id)}
+                    items={localStages.map((s) => s.id)}
                     strategy={verticalListSortingStrategy}
                   >
                     {localStages.map((stage) => (
@@ -500,7 +625,9 @@ export default function FunnelEditorPage() {
                         stage={stage}
                         isActive={activeStageId === stage.id}
                         onClick={() => setActiveStageId(stage.id)}
-                        onDelete={() => deleteStage.mutate({ id: stage.id, funnelId: id! })}
+                        onDelete={() =>
+                          deleteStage.mutate({ id: stage.id, funnelId: id! })
+                        }
                       />
                     ))}
                   </SortableContext>
@@ -557,9 +684,7 @@ export default function FunnelEditorPage() {
               selectedBlock={selectedBlock}
               headerBlock={headerBlock}
               onUpdateStage={(updates) => {
-                if (activeStage) {
-                  updateStage.mutate({ id: activeStage.id, ...updates });
-                }
+                handleStageUpdate(updates);
               }}
               onUpdateBlock={handleUpdateBlock}
               onApplyBlockToAll={handleApplyBlockToAll}

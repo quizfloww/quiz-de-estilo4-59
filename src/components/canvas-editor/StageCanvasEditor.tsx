@@ -104,6 +104,10 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
     onSelectBlock(newBlock.id);
   };
 
+  const optionBlock = blocks.find((block) => block.type === 'options');
+  const optionItems = optionBlock?.content?.options || [];
+  const optionWarnings = optionItems.some((option: any) => !option.text && !option.imageUrl);
+
   return (
     <div
       className={cn(
@@ -119,6 +123,45 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
           )}
         >
           <div className="flex flex-col gap-4">
+              {optionItems.length > 0 && (
+                <div className="rounded-xl border border-border bg-background/80 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold text-muted-foreground">Pré-visualização das opções</p>
+                    <span className="text-xs text-muted-foreground">{optionItems.length} itens</span>
+                  </div>
+                  <div className="grid gap-3 pt-3 sm:grid-cols-2">
+                    {optionItems.map((option: any) => (
+                      <div
+                        key={option.id}
+                        className="flex flex-col gap-1 rounded-md border border-muted/20 p-2"
+                      >
+                        {option.imageUrl ? (
+                          <img
+                            src={option.imageUrl}
+                            alt={option.text || 'Opção'}
+                            className="h-16 w-full rounded object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-16 w-full items-center justify-center rounded bg-muted/30 text-xs text-muted-foreground">
+                            Sem imagem
+                          </div>
+                        )}
+                        <p className="text-sm font-medium">
+                          {option.text || <span className="text-xs italic text-muted-foreground">Sem texto</span>}
+                        </p>
+                        {option.styleCategory && (
+                          <p className="text-xs uppercase text-muted-foreground">{option.styleCategory}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {optionWarnings && (
+                    <p className="mt-2 text-xs text-amber-600">
+                      Algumas opções não possuem texto ou imagem, preencha para garantir que apareçam corretamente no quiz.
+                    </p>
+                  )}
+                </div>
+              )}
             {isPreview ? (
               // Modo preview - sem drag and drop
               blocks.map((block) => (
