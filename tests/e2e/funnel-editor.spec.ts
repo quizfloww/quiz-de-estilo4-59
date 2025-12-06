@@ -1,9 +1,16 @@
 import { test, expect } from "../fixtures/auth";
+import type { Page } from "@playwright/test";
+
+const waitForEditorReady = async (page: Page) => {
+  const header = page
+    .locator('h1, .funnel-title, [data-testid="funnel-name"]')
+    .first();
+  await header.waitFor({ state: "visible", timeout: 15000 });
+};
 
 test.describe("FunnelEditor - Navegação e Estrutura", () => {
   test.beforeEach(async ({ page }) => {
-    // Navega para editor de um funnel existente
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
   });
 
   test("deve carregar o editor do funnel", async ({ page }) => {
@@ -66,8 +73,8 @@ test.describe("FunnelEditor - Navegação e Estrutura", () => {
 
 test.describe("FunnelEditor - Barra de Ferramentas", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
-    // Aguarda carregamento
+    await waitForEditorReady(page);
+    // Aguarda carregamento extra
     await page.waitForTimeout(2000);
   });
 
@@ -160,7 +167,7 @@ test.describe("FunnelEditor - Barra de Ferramentas", () => {
 
 test.describe("FunnelEditor - Canvas/Editor", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     await page.waitForTimeout(2000);
   });
 
@@ -250,7 +257,7 @@ test.describe("FunnelEditor - Canvas/Editor", () => {
 
 test.describe("FunnelEditor - Painel de Propriedades", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     await page.waitForTimeout(2000);
   });
 
@@ -329,7 +336,7 @@ test.describe("FunnelEditor - Painel de Propriedades", () => {
 
 test.describe("FunnelEditor - Árvore/Estrutura", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     await page.waitForTimeout(2000);
   });
 
@@ -397,7 +404,7 @@ test.describe("FunnelEditor - Árvore/Estrutura", () => {
 
 test.describe("FunnelEditor - Undo/Redo", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     await page.waitForTimeout(2000);
   });
 
@@ -451,7 +458,7 @@ test.describe("FunnelEditor - Undo/Redo", () => {
 
 test.describe("FunnelEditor - Salvamento e Publicação", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     await page.waitForTimeout(2000);
   });
 

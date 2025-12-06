@@ -10,27 +10,33 @@ const ADMIN_CREDENTIALS = {
 
 export const test = base.extend({
   page: async ({ page }, use) => {
-    // Best-effort: add init script but don't block tests if it hangs
-    try {
-      await Promise.race([
-        page.addInitScript(({ email, userName, role }) => {
-          const loginTime = new Date().toISOString();
-          sessionStorage.setItem(
-            "adminSession",
-            JSON.stringify({ email, loginTime })
-          );
+    const context = page.context();
 
-          // Mantém compatibilidade com AuthContext/user data usada no app
-          localStorage.setItem("userName", userName);
-          localStorage.setItem("userRole", role);
-        }, ADMIN_CREDENTIALS),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("addInitScript timeout")), 5000)
-        ),
-      ]);
-    } catch (err) {
-      console.warn("auth fixture: addInitScript failed or timed out", err);
-    }
+    // Best-effort: share init script across the entire context so new pages inherit it
+    const addInitScript = async () => {
+      try {
+        await Promise.race([
+          context.addInitScript(({ email, userName, role }) => {
+            const loginTime = new Date().toISOString();
+            sessionStorage.setItem(
+              "adminSession",
+              JSON.stringify({ email, loginTime })
+            );
+
+            // Mantém compatibilidade com AuthContext/user data usada no app
+            localStorage.setItem("userName", userName);
+            localStorage.setItem("userRole", role);
+          }, ADMIN_CREDENTIALS),
+          new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("addInitScript timeout")), 5000)
+          ),
+        ]);
+      } catch (err) {
+        console.warn("auth fixture: addInitScript failed or timed out", err);
+      }
+    };
+
+    await addInitScript();
 
     // Interceptar chamadas Supabase REST para fornecer fixtures locais
     const mockFunnel = {
@@ -151,28 +157,23 @@ export const test = base.extend({
 
     // Intercept generic supabase REST requests for funnels, funnel_stages, stage_options
     // Sempre retornar lista de funis com nosso mock para evitar dependência do Supabase real
-    await page.route("**/rest/v1/funnels*", (route) => {
-      return route.fulfill({
+    const fulfillJson = (route: any, payload: unknown) =>
+      route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify([mockFunnel]),
+        body: JSON.stringify(payload),
       });
+
+    await context.route("**/rest/v1/funnels*", (route) => {
+      fulfillJson(route, [mockFunnel]);
     });
 
-    await page.route("**/rest/v1/funnel_stages*", (route) => {
-      return route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(mockStages),
-      });
+    await context.route("**/rest/v1/funnel_stages*", (route) => {
+      fulfillJson(route, mockStages);
     });
 
-    await page.route("**/rest/v1/stage_options*", (route) => {
-      return route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify(mockOptions),
-      });
+    await context.route("**/rest/v1/stage_options*", (route) => {
+      fulfillJson(route, mockOptions);
     });
 
     // Navigate to admin root to initialize app state. The routes above will provide funnel data.
@@ -197,7 +198,7 @@ export const test = base.extend({
       return false;
     };
 
-    await tryGoto("/admin");
+    await tryGoto("/admin/funnels/1/edit");
 
     // If login form is present, perform login using provided credentials (best-effort)
     try {
