@@ -59,6 +59,7 @@ export const SecondaryStylesBlock: React.FC<SecondaryStylesBlockProps> = ({
   const imageFrame = content.imageFrame || "circle";
   const imageBorderWidth = content.imageBorderWidth || 2;
   const imageBorderColor = content.imageBorderColor || "#B89B7A";
+  const blockBackgroundColor = content.backgroundColor || "transparent";
 
   const stylesToShow = PREVIEW_STYLES.slice(0, maxStyles);
 
@@ -67,7 +68,10 @@ export const SecondaryStylesBlock: React.FC<SecondaryStylesBlockProps> = ({
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div
+      className="w-full space-y-4 p-4 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <h3 className="text-xl font-semibold text-[#432818] text-center mb-4">
         Seus Estilos Secundários
       </h3>

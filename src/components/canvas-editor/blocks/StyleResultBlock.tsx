@@ -37,6 +37,14 @@ const IMAGE_FRAME_STYLES: Record<string, React.CSSProperties> = {
  * - Layout responsivo flex col/row
  * - Suporte a dados dinâmicos via styleConfig
  */
+// Mapeamento de tamanhos de imagem
+const IMAGE_SIZE_CLASSES: Record<string, string> = {
+  sm: "max-w-[150px]",
+  md: "max-w-[220px]",
+  lg: "max-w-[300px]",
+  xl: "max-w-[400px]",
+};
+
 export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
   content,
   isPreview,
@@ -47,6 +55,8 @@ export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
   const imageFrame = content.imageFrame || "rounded";
   const imageBorderWidth = content.imageBorderWidth || 0;
   const imageBorderColor = content.imageBorderColor || "#B89B7A";
+  const imageSize = content.styleImageSize || "lg";
+  const blockBackgroundColor = content.backgroundColor || "#ffffff";
 
   // Tenta usar categoria do content para dados dinâmicos
   const category = content.styleCategory as StyleCategory;
@@ -72,7 +82,10 @@ export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
   };
 
   return (
-    <Card className="p-4 sm:p-6 md:p-8 bg-white shadow-sm border border-[#B89B7A]/20 mb-8 md:mb-12">
+    <Card
+      className="p-4 sm:p-6 md:p-8 shadow-sm border border-[#B89B7A]/20 mb-8 md:mb-12"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       {/* Barra de Progresso do Estilo Predominante */}
       {showPercentage && (
         <div className="w-full max-w-md mx-auto mb-6">
@@ -114,9 +127,7 @@ export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
             alt={`Estilo ${styleName}`}
             className={cn(
               "w-full h-auto shadow-md mx-auto",
-              layout === "stacked"
-                ? "max-w-[300px]"
-                : "max-w-[238px] md:max-w-none"
+              IMAGE_SIZE_CLASSES[imageSize]
             )}
             style={imageStyle}
           />
