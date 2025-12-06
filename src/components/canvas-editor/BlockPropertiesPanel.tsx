@@ -435,27 +435,114 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           placeholder="Descrição da imagem"
         />
       </div>
+
+      {/* Escala Proporcional da Imagem */}
       <div className="space-y-2">
-        <Label>Tamanho</Label>
+        <Label>
+          Escala da Imagem: {((block.content.imageScale || 1) * 100).toFixed(0)}
+          %
+        </Label>
+        <Slider
+          value={[(block.content.imageScale || 1) * 100]}
+          min={10}
+          max={200}
+          step={5}
+          onValueChange={([value]) => updateContent("imageScale", value / 100)}
+          className="flex-1"
+        />
+        <p className="text-xs text-muted-foreground">
+          Ajuste proporcional do tamanho da imagem
+        </p>
+      </div>
+
+      {/* Largura Máxima */}
+      <div className="space-y-2">
+        <Label>Largura Máxima: {block.content.imageMaxWidth || 100}%</Label>
+        <Slider
+          value={[block.content.imageMaxWidth || 100]}
+          min={10}
+          max={100}
+          step={5}
+          onValueChange={([value]) => updateContent("imageMaxWidth", value)}
+          className="flex-1"
+        />
+      </div>
+
+      {/* Borda Arredondada */}
+      <div className="space-y-2">
+        <Label>
+          Borda Arredondada: {block.content.imageBorderRadius || 0}px
+        </Label>
+        <Slider
+          value={[block.content.imageBorderRadius || 0]}
+          min={0}
+          max={100}
+          step={2}
+          onValueChange={([value]) => updateContent("imageBorderRadius", value)}
+          className="flex-1"
+        />
+      </div>
+
+      {/* Espessura da Borda */}
+      <div className="space-y-2">
+        <Label>
+          Espessura da Borda: {block.content.imageBorderWidth || 0}px
+        </Label>
+        <Slider
+          value={[block.content.imageBorderWidth || 0]}
+          min={0}
+          max={20}
+          step={1}
+          onValueChange={([value]) => updateContent("imageBorderWidth", value)}
+          className="flex-1"
+        />
+      </div>
+
+      {/* Cor da Borda */}
+      {(block.content.imageBorderWidth || 0) > 0 && (
+        <div className="space-y-2">
+          <Label>Cor da Borda</Label>
+          <div className="flex gap-2">
+            <Input
+              type="color"
+              value={block.content.imageBorderColor || "#e5e5e5"}
+              onChange={(e) =>
+                updateContent("imageBorderColor", e.target.value)
+              }
+              className="w-12 h-10 p-1 cursor-pointer"
+            />
+            <Input
+              value={block.content.imageBorderColor || "#e5e5e5"}
+              onChange={(e) =>
+                updateContent("imageBorderColor", e.target.value)
+              }
+              placeholder="#e5e5e5"
+              className="flex-1"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Sombra */}
+      <div className="space-y-2">
+        <Label>Sombra</Label>
         <Select
-          value={block.content.imageSize || "md"}
-          onValueChange={(value) => updateContent("imageSize", value)}
+          value={block.content.imageShadow || "none"}
+          onValueChange={(value) => updateContent("imageShadow", value)}
         >
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="xs">Muito Pequeno (100px)</SelectItem>
-            <SelectItem value="sm">Pequeno (200px)</SelectItem>
-            <SelectItem value="md">Médio (384px)</SelectItem>
-            <SelectItem value="lg">Grande (512px)</SelectItem>
-            <SelectItem value="xl">Extra Grande (640px)</SelectItem>
-            <SelectItem value="2xl">2x Grande (800px)</SelectItem>
-            <SelectItem value="3xl">3x Grande (960px)</SelectItem>
-            <SelectItem value="full">Largura Total</SelectItem>
+            <SelectItem value="none">Sem Sombra</SelectItem>
+            <SelectItem value="sm">Sombra Leve</SelectItem>
+            <SelectItem value="md">Sombra Média</SelectItem>
+            <SelectItem value="lg">Sombra Grande</SelectItem>
+            <SelectItem value="xl">Sombra Extra Grande</SelectItem>
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
         <Label>Alinhamento Horizontal</Label>
         <Select
@@ -490,9 +577,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       </div>
 
       {renderGlobalStyleControls({
-        showBackground: false,
+        showBackground: true,
         showText: false,
-        showBorder: true,
+        showBorder: false,
       })}
     </>
   );
