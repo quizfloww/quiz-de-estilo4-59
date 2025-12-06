@@ -1068,41 +1068,137 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
-  const renderPriceAnchorProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="finalPrice">Preço Final</Label>
-        <Input
-          id="finalPrice"
-          type="number"
-          value={block.content.finalPrice || 39}
-          onChange={(e) =>
-            updateContent("finalPrice", parseFloat(e.target.value))
-          }
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="totalOriginal">Preço Original Total</Label>
-        <Input
-          id="totalOriginal"
-          type="number"
-          value={block.content.totalOriginal || 175}
-          onChange={(e) =>
-            updateContent("totalOriginal", parseFloat(e.target.value))
-          }
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="discountBadge">Badge de Desconto</Label>
-        <Input
-          id="discountBadge"
-          value={block.content.discountBadge || ""}
-          onChange={(e) => updateContent("discountBadge", e.target.value)}
-          placeholder="-78%"
-        />
-      </div>
-    </>
-  );
+  const renderPriceAnchorProperties = () => {
+    const priceItems = block.content.priceItems || [];
+
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="finalPrice">Preço Final</Label>
+          <Input
+            id="finalPrice"
+            type="number"
+            value={block.content.finalPrice || 39}
+            onChange={(e) =>
+              updateContent("finalPrice", parseFloat(e.target.value))
+            }
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="totalOriginal">Preço Original Total</Label>
+          <Input
+            id="totalOriginal"
+            type="number"
+            value={block.content.totalOriginal || 175}
+            onChange={(e) =>
+              updateContent("totalOriginal", parseFloat(e.target.value))
+            }
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="discountBadge">Badge de Desconto</Label>
+          <Input
+            id="discountBadge"
+            value={block.content.discountBadge || ""}
+            onChange={(e) => updateContent("discountBadge", e.target.value)}
+            placeholder="-78%"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="currency">Moeda</Label>
+          <Input
+            id="currency"
+            value={block.content.currency || "R$"}
+            onChange={(e) => updateContent("currency", e.target.value)}
+            placeholder="R$"
+          />
+        </div>
+
+        {/* Editor de Itens de Preço */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Itens de Preço ({priceItems.length})
+          </Label>
+
+          {priceItems.map(
+            (
+              item: { id: string; label: string; originalPrice: number },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">
+                      Item {idx + 1}
+                    </Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = priceItems.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("priceItems", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+
+                  <Input
+                    value={item.label || ""}
+                    onChange={(e) => {
+                      const newItems = [...priceItems];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        label: e.target.value,
+                      };
+                      updateContent("priceItems", newItems);
+                    }}
+                    placeholder="Nome do item (ex: Guia de Estilo)"
+                  />
+
+                  <Input
+                    type="number"
+                    value={item.originalPrice || 0}
+                    onChange={(e) => {
+                      const newItems = [...priceItems];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        originalPrice: parseFloat(e.target.value),
+                      };
+                      updateContent("priceItems", newItems);
+                    }}
+                    placeholder="Preço original"
+                  />
+                </div>
+              </Card>
+            )
+          )}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...priceItems,
+                {
+                  id: uuidv4(),
+                  label: "",
+                  originalPrice: 0,
+                },
+              ];
+              updateContent("priceItems", newItems);
+            }}
+          >
+            + Adicionar Item de Preço
+          </button>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
 
   const renderCountdownProperties = () => (
     <>
@@ -1288,103 +1384,397 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
-  const renderTestimonialProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label>Estilo</Label>
-        <Select
-          value={block.content.testimonialVariant || "card"}
-          onValueChange={(value) => updateContent("testimonialVariant", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="card">Cartão</SelectItem>
-            <SelectItem value="quote">Citação</SelectItem>
-            <SelectItem value="minimal">Mínimo</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        O conteúdo do depoimento pode ser configurado via código ou importação
-        de dados.
-      </p>
-    </>
-  );
+  const renderTestimonialProperties = () => {
+    const testimonial = block.content.testimonial || {
+      id: "",
+      name: "",
+      role: "",
+      text: "",
+      imageUrl: "",
+      rating: 5,
+    };
 
-  const renderBenefitsListProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label>Layout</Label>
-        <Select
-          value={block.content.benefitsLayout || "list"}
-          onValueChange={(value) => updateContent("benefitsLayout", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="list">Lista</SelectItem>
-            <SelectItem value="grid">Grade</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      {block.content.benefitsLayout === "grid" && (
+    return (
+      <>
         <div className="space-y-2">
-          <Label>Colunas</Label>
+          <Label>Estilo</Label>
           <Select
-            value={String(block.content.benefitsColumns || 2)}
+            value={block.content.testimonialVariant || "card"}
             onValueChange={(value) =>
-              updateContent("benefitsColumns", parseInt(value))
+              updateContent("testimonialVariant", value)
             }
           >
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="1">1 Coluna</SelectItem>
-              <SelectItem value="2">2 Colunas</SelectItem>
-              <SelectItem value="3">3 Colunas</SelectItem>
+              <SelectItem value="card">Cartão</SelectItem>
+              <SelectItem value="quote">Citação</SelectItem>
+              <SelectItem value="minimal">Mínimo</SelectItem>
             </SelectContent>
           </Select>
         </div>
-      )}
-      <div className="flex items-center justify-between">
-        <Label htmlFor="showBenefitIcons">Mostrar Ícones</Label>
-        <Switch
-          id="showBenefitIcons"
-          checked={block.content.showBenefitIcons !== false}
-          onCheckedChange={(checked) =>
-            updateContent("showBenefitIcons", checked)
-          }
-        />
-      </div>
-    </>
-  );
 
-  const renderFaqProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label>Estilo</Label>
-        <Select
-          value={block.content.faqStyle || "accordion"}
-          onValueChange={(value) => updateContent("faqStyle", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="accordion">Acordeão</SelectItem>
-            <SelectItem value="list">Lista</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        {block.content.faqItems?.length || 4} perguntas configuradas
-      </p>
-    </>
-  );
+        {/* Editor do Depoimento */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Conteúdo do Depoimento
+          </Label>
+
+          <div className="space-y-2">
+            <Label>Nome</Label>
+            <Input
+              value={testimonial.name || ""}
+              onChange={(e) =>
+                updateContent("testimonial", {
+                  ...testimonial,
+                  name: e.target.value,
+                })
+              }
+              placeholder="Nome da cliente"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Cargo/Descrição</Label>
+            <Input
+              value={testimonial.role || ""}
+              onChange={(e) =>
+                updateContent("testimonial", {
+                  ...testimonial,
+                  role: e.target.value,
+                })
+              }
+              placeholder="Ex: Cliente há 2 anos"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Depoimento</Label>
+            <Textarea
+              value={testimonial.text || ""}
+              onChange={(e) =>
+                updateContent("testimonial", {
+                  ...testimonial,
+                  text: e.target.value,
+                })
+              }
+              placeholder="O que a cliente disse..."
+              rows={4}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>URL da Foto</Label>
+            <Input
+              value={testimonial.imageUrl || ""}
+              onChange={(e) =>
+                updateContent("testimonial", {
+                  ...testimonial,
+                  imageUrl: e.target.value,
+                })
+              }
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Avaliação (1-5)</Label>
+            <Select
+              value={String(testimonial.rating || 5)}
+              onValueChange={(value) =>
+                updateContent("testimonial", {
+                  ...testimonial,
+                  rating: parseInt(value),
+                })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 estrela</SelectItem>
+                <SelectItem value="2">2 estrelas</SelectItem>
+                <SelectItem value="3">3 estrelas</SelectItem>
+                <SelectItem value="4">4 estrelas</SelectItem>
+                <SelectItem value="5">5 estrelas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
+
+  const renderBenefitsListProperties = () => {
+    const benefits = block.content.benefits || [];
+
+    return (
+      <>
+        <div className="space-y-2">
+          <Label>Layout</Label>
+          <Select
+            value={block.content.benefitsLayout || "list"}
+            onValueChange={(value) => updateContent("benefitsLayout", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="list">Lista</SelectItem>
+              <SelectItem value="grid">Grade</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {block.content.benefitsLayout === "grid" && (
+          <div className="space-y-2">
+            <Label>Colunas</Label>
+            <Select
+              value={String(block.content.benefitsColumns || 2)}
+              onValueChange={(value) =>
+                updateContent("benefitsColumns", parseInt(value))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 Coluna</SelectItem>
+                <SelectItem value="2">2 Colunas</SelectItem>
+                <SelectItem value="3">3 Colunas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="showBenefitIcons">Mostrar Ícones</Label>
+          <Switch
+            id="showBenefitIcons"
+            checked={block.content.showBenefitIcons !== false}
+            onCheckedChange={(checked) =>
+              updateContent("showBenefitIcons", checked)
+            }
+          />
+        </div>
+
+        {/* Editor de Benefícios */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Benefícios ({benefits.length})
+          </Label>
+
+          {benefits.map(
+            (
+              item: {
+                id: string;
+                title: string;
+                description?: string;
+                icon?: string;
+              },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">
+                      Benefício {idx + 1}
+                    </Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = benefits.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("benefits", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+
+                  <Input
+                    value={item.title || ""}
+                    onChange={(e) => {
+                      const newItems = [...benefits];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        title: e.target.value,
+                      };
+                      updateContent("benefits", newItems);
+                    }}
+                    placeholder="Título do benefício"
+                  />
+
+                  <Textarea
+                    value={item.description || ""}
+                    onChange={(e) => {
+                      const newItems = [...benefits];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        description: e.target.value,
+                      };
+                      updateContent("benefits", newItems);
+                    }}
+                    placeholder="Descrição (opcional)"
+                    rows={2}
+                  />
+
+                  <Select
+                    value={item.icon || "check"}
+                    onValueChange={(value) => {
+                      const newItems = [...benefits];
+                      newItems[idx] = { ...newItems[idx], icon: value };
+                      updateContent("benefits", newItems);
+                    }}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Ícone" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="check">✓ Check</SelectItem>
+                      <SelectItem value="star">★ Estrela</SelectItem>
+                      <SelectItem value="heart">♥ Coração</SelectItem>
+                      <SelectItem value="arrow">→ Seta</SelectItem>
+                      <SelectItem value="sparkle">✨ Brilho</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </Card>
+            )
+          )}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...benefits,
+                {
+                  id: uuidv4(),
+                  title: "",
+                  description: "",
+                  icon: "check",
+                },
+              ];
+              updateContent("benefits", newItems);
+            }}
+          >
+            + Adicionar Benefício
+          </button>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
+
+  const renderFaqProperties = () => {
+    const faqItems = block.content.faqItems || [];
+
+    return (
+      <>
+        <div className="space-y-2">
+          <Label>Estilo</Label>
+          <Select
+            value={block.content.faqStyle || "accordion"}
+            onValueChange={(value) => updateContent("faqStyle", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="accordion">Acordeão</SelectItem>
+              <SelectItem value="list">Lista</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Editor de FAQ */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Perguntas e Respostas ({faqItems.length})
+          </Label>
+
+          {faqItems.map(
+            (
+              item: { id: string; question: string; answer: string },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">FAQ {idx + 1}</Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = faqItems.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("faqItems", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+
+                  <Input
+                    value={item.question || ""}
+                    onChange={(e) => {
+                      const newItems = [...faqItems];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        question: e.target.value,
+                      };
+                      updateContent("faqItems", newItems);
+                    }}
+                    placeholder="Pergunta"
+                  />
+
+                  <Textarea
+                    value={item.answer || ""}
+                    onChange={(e) => {
+                      const newItems = [...faqItems];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        answer: e.target.value,
+                      };
+                      updateContent("faqItems", newItems);
+                    }}
+                    placeholder="Resposta"
+                    rows={3}
+                  />
+                </div>
+              </Card>
+            )
+          )}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...faqItems,
+                {
+                  id: uuidv4(),
+                  question: "",
+                  answer: "",
+                },
+              ];
+              updateContent("faqItems", newItems);
+            }}
+          >
+            + Adicionar Pergunta
+          </button>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true })}
+      </>
+    );
+  };
 
   const renderSocialProofProperties = () => (
     <>
@@ -1627,85 +2017,256 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
-  const renderBeforeAfterProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="beforeAfterTitle">Título da Seção</Label>
-        <Input
-          id="beforeAfterTitle"
-          value={block.content.beforeAfterTitle || ""}
-          onChange={(e) => updateContent("beforeAfterTitle", e.target.value)}
-          placeholder="Transformações Reais"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label>Layout</Label>
-        <Select
-          value={block.content.beforeAfterLayout || "side-by-side"}
-          onValueChange={(value) => updateContent("beforeAfterLayout", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="side-by-side">Lado a Lado</SelectItem>
-            <SelectItem value="stacked">Empilhado</SelectItem>
-            <SelectItem value="slider">Slider</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        {block.content.beforeAfterItems?.length || 2} transformações
-        configuradas
-      </p>
-    </>
-  );
+  const renderBeforeAfterProperties = () => {
+    const items = block.content.beforeAfterItems || [];
+
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="beforeAfterTitle">Título da Seção</Label>
+          <Input
+            id="beforeAfterTitle"
+            value={block.content.beforeAfterTitle || ""}
+            onChange={(e) => updateContent("beforeAfterTitle", e.target.value)}
+            placeholder="Transformações Reais"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label>Layout</Label>
+          <Select
+            value={block.content.beforeAfterLayout || "side-by-side"}
+            onValueChange={(value) => updateContent("beforeAfterLayout", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="side-by-side">Lado a Lado</SelectItem>
+              <SelectItem value="stacked">Empilhado</SelectItem>
+              <SelectItem value="slider">Slider</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Editor de Transformações */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Transformações ({items.length})
+          </Label>
+
+          {items.map(
+            (
+              item: {
+                id: string;
+                beforeImage: string;
+                afterImage: string;
+                name?: string;
+                description?: string;
+              },
+              idx: number
+            ) => (
+              <Card key={item.id} className="p-3">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <Label className="text-xs font-medium">
+                      Transformação {idx + 1}
+                    </Label>
+                    <button
+                      type="button"
+                      className="text-xs text-destructive hover:underline"
+                      onClick={() => {
+                        const newItems = items.filter(
+                          (_: unknown, i: number) => i !== idx
+                        );
+                        updateContent("beforeAfterItems", newItems);
+                      }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+
+                  <Input
+                    value={item.name || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        name: e.target.value,
+                      };
+                      updateContent("beforeAfterItems", newItems);
+                    }}
+                    placeholder="Nome da cliente"
+                  />
+
+                  <Textarea
+                    value={item.description || ""}
+                    onChange={(e) => {
+                      const newItems = [...items];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        description: e.target.value,
+                      };
+                      updateContent("beforeAfterItems", newItems);
+                    }}
+                    placeholder="Descrição da transformação"
+                    rows={2}
+                  />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <Label className="text-xs">Imagem Antes</Label>
+                      <Input
+                        value={item.beforeImage || ""}
+                        onChange={(e) => {
+                          const newItems = [...items];
+                          newItems[idx] = {
+                            ...newItems[idx],
+                            beforeImage: e.target.value,
+                          };
+                          updateContent("beforeAfterItems", newItems);
+                        }}
+                        placeholder="URL da imagem"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-xs">Imagem Depois</Label>
+                      <Input
+                        value={item.afterImage || ""}
+                        onChange={(e) => {
+                          const newItems = [...items];
+                          newItems[idx] = {
+                            ...newItems[idx],
+                            afterImage: e.target.value,
+                          };
+                          updateContent("beforeAfterItems", newItems);
+                        }}
+                        placeholder="URL da imagem"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            )
+          )}
+
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...items,
+                {
+                  id: uuidv4(),
+                  beforeImage: "",
+                  afterImage: "",
+                  name: "",
+                  description: "",
+                },
+              ];
+              updateContent("beforeAfterItems", newItems);
+            }}
+          >
+            + Adicionar Transformação
+          </button>
+        </div>
+      </>
+    );
+  };
 
   // === NOVOS BLOCOS DE VENDAS ===
 
-  const renderMotivationProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="motivationTitle">Título</Label>
-        <Input
-          id="motivationTitle"
-          value={block.content.motivationTitle || ""}
-          onChange={(e) => updateContent("motivationTitle", e.target.value)}
-          placeholder="Por Que Conhecer Seu Estilo..."
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="motivationSubtitle">Subtítulo</Label>
-        <Textarea
-          id="motivationSubtitle"
-          value={block.content.motivationSubtitle || ""}
-          onChange={(e) => updateContent("motivationSubtitle", e.target.value)}
-          placeholder="Seu estilo é uma ferramenta poderosa..."
-          rows={3}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="motivationImageUrl">URL da Imagem (opcional)</Label>
-        <Input
-          id="motivationImageUrl"
-          value={block.content.motivationImageUrl || ""}
-          onChange={(e) => updateContent("motivationImageUrl", e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
-      <p className="text-xs text-muted-foreground">
-        {block.content.motivationPoints?.length || 4} pontos configurados
-      </p>
-    </>
-  );
+  const renderMotivationProperties = () => {
+    const motivationPoints = block.content.motivationPoints || [];
+    
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="motivationTitle">Título</Label>
+          <Input
+            id="motivationTitle"
+            value={block.content.motivationTitle || ""}
+            onChange={(e) => updateContent("motivationTitle", e.target.value)}
+            placeholder="Por Que Conhecer Seu Estilo..."
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="motivationSubtitle">Subtítulo</Label>
+          <Textarea
+            id="motivationSubtitle"
+            value={block.content.motivationSubtitle || ""}
+            onChange={(e) => updateContent("motivationSubtitle", e.target.value)}
+            placeholder="Seu estilo é uma ferramenta poderosa..."
+            rows={3}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="motivationImageUrl">URL da Imagem (opcional)</Label>
+          <Input
+            id="motivationImageUrl"
+            value={block.content.motivationImageUrl || ""}
+            onChange={(e) => updateContent("motivationImageUrl", e.target.value)}
+            placeholder="https://..."
+          />
+        </div>
 
-  const renderBonusProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="bonusTitle">Título</Label>
-        <Input
-          id="bonusTitle"
-          value={block.content.bonusTitle || ""}
+        {/* Editor de Pontos Motivacionais */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Pontos Motivacionais ({motivationPoints.length})
+          </Label>
+          
+          {motivationPoints.map((point: string, idx: number) => (
+            <div key={idx} className="flex gap-2">
+              <Input
+                value={point}
+                onChange={(e) => {
+                  const newItems = [...motivationPoints];
+                  newItems[idx] = e.target.value;
+                  updateContent("motivationPoints", newItems);
+                }}
+                placeholder={`Ponto ${idx + 1}`}
+                className="flex-1"
+              />
+              <button
+                type="button"
+                className="px-2 text-xs text-destructive hover:bg-destructive/10 rounded"
+                onClick={() => {
+                  const newItems = motivationPoints.filter((_: unknown, i: number) => i !== idx);
+                  updateContent("motivationPoints", newItems);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [...motivationPoints, ""];
+              updateContent("motivationPoints", newItems);
+            }}
+          >
+            + Adicionar Ponto
+          </button>
+        </div>
+
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
+
+  const renderBonusProperties = () => {
+    const bonusItems = block.content.bonusItems || [];
+    
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="bonusTitle">Título</Label>
+          <Input
+            id="bonusTitle"
+            value={block.content.bonusTitle || ""}
           onChange={(e) => updateContent("bonusTitle", e.target.value)}
           placeholder="Bônus Exclusivos"
         />
