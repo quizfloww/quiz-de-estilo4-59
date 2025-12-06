@@ -1744,12 +1744,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </p>
       </div>
 
+      {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+
       <p className="text-xs text-muted-foreground">
         {block.content.bonusItems?.length || 3} bônus configurados
       </p>
     </>
   );
-
   const renderTestimonialsProperties = () => (
     <>
       <div className="space-y-2">
@@ -1802,12 +1803,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </p>
       </div>
 
+      {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+
       <p className="text-xs text-muted-foreground">
         {block.content.testimonials?.length || 3} depoimentos configurados
       </p>
     </>
   );
-
   const renderMentorProperties = () => (
     <>
       <div className="space-y-2">
@@ -1889,6 +1891,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </p>
         </div>
       )}
+
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showAccent: true,
+        showBorder: true,
+      })}
     </>
   );
 
