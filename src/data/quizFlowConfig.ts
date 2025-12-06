@@ -1033,11 +1033,30 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
       },
     },
 
+    // ==================== TRANSIÇÃO FINAL ====================
+    {
+      id: "transition-final",
+      type: "transition",
+      order: 19,
+      title: "Transição Final",
+      isEnabled: true,
+      config: {
+        showLogo: true,
+        showProgress: false,
+        allowBack: false,
+        transitionTitle: "Preparando seu resultado personalizado...",
+        transitionSubtitle:
+          "Estamos analisando suas respostas para criar uma experiência única.",
+        transitionMessage:
+          "Em instantes, você descobrirá seu estilo predominante e terá acesso a um guia completo para transformar sua imagem.",
+      },
+    },
+
     // ==================== RESULTADO ====================
     {
       id: "result",
       type: "result",
-      order: 19,
+      order: 20,
       title: "Resultado",
       isEnabled: true,
       config: {
