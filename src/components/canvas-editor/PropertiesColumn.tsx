@@ -54,7 +54,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   similarBlocksCount = 0,
   similarStagesCount = 0,
 }) => {
-  const updateHeaderContent = (key: string, value: any) => {
+  const updateHeaderContent = (key: string, value: unknown) => {
     if (!headerBlock) return;
     onUpdateBlock({
       ...headerBlock,
@@ -75,8 +75,8 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     );
   }
 
-  const stageConfig = (activeStage.config as Record<string, any>) || {};
-  const updateStageConfig = (key: string, value: any) => {
+  const stageConfig = (activeStage.config as Record<string, unknown>) || {};
+  const updateStageConfig = (key: string, value: unknown) => {
     onUpdateStage({
       config: {
         ...stageConfig,
@@ -128,58 +128,137 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     </CardContent>
   );
 
-  const renderQuestionConfig = () => (
-    <CardContent className="space-y-3">
-      <div className="space-y-1">
-        <Label>Pergunta principal</Label>
-        <Textarea
-          value={stageConfig.question || ""}
-          onChange={(event) =>
-            updateStageConfig("question", event.target.value)
-          }
-          placeholder="Qual estilo combina com sua personalidade?"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="display-type">Visualização das opções</Label>
-        <Select
-          onValueChange={(value) => updateStageConfig("displayType", value)}
-          value={stageConfig.displayType || "text"}
-        >
-          <SelectTrigger id="display-type" className="w-full">
-            <SelectValue placeholder="Selecione" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="text">Apenas texto</SelectItem>
-            <SelectItem value="image">Apenas imagem</SelectItem>
-            <SelectItem value="both">Texto + imagem</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="grid grid-cols-2 gap-2">
+  const renderQuestionConfig = () => {
+    const displayType = stageConfig.displayType || "text";
+
+    return (
+      <CardContent className="space-y-3">
         <div className="space-y-1">
-          <Label>Seleções simultâneas</Label>
-          <Input
-            type="number"
-            min={1}
-            value={stageConfig.multiSelect ?? 1}
+          <Label>Pergunta principal</Label>
+          <Textarea
+            value={stageConfig.question || ""}
             onChange={(event) =>
-              updateStageConfig("multiSelect", Number(event.target.value))
+              updateStageConfig("question", event.target.value)
             }
+            placeholder="Qual estilo combina com sua personalidade?"
           />
         </div>
         <div className="space-y-1">
-          <Label>Avanço automático</Label>
-          <Switch
-            checked={stageConfig.autoAdvance !== false}
-            onCheckedChange={(checked) =>
-              updateStageConfig("autoAdvance", checked)
-            }
-          />
+          <Label htmlFor="display-type">Visualização das opções</Label>
+          <Select
+            onValueChange={(value) => updateStageConfig("displayType", value)}
+            value={displayType}
+          >
+            <SelectTrigger id="display-type" className="w-full">
+              <SelectValue placeholder="Selecione" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="text">Apenas texto</SelectItem>
+              <SelectItem value="image">Apenas imagem</SelectItem>
+              <SelectItem value="both">Texto + imagem</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      </div>
-    </CardContent>
-  );
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <Label>Seleções simultâneas</Label>
+            <Input
+              type="number"
+              min={1}
+              value={stageConfig.multiSelect ?? 1}
+              onChange={(event) =>
+                updateStageConfig("multiSelect", Number(event.target.value))
+              }
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Avanço automático</Label>
+            <Switch
+              checked={stageConfig.autoAdvance !== false}
+              onCheckedChange={(checked) =>
+                updateStageConfig("autoAdvance", checked)
+              }
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <Label>Colunas de opções</Label>
+            <Select
+              value={String(stageConfig.columns || 1)}
+              onValueChange={(value) =>
+                updateStageConfig("columns", Number(value))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 Coluna</SelectItem>
+                <SelectItem value="2">2 Colunas</SelectItem>
+                <SelectItem value="3">3 Colunas</SelectItem>
+                <SelectItem value="4">4 Colunas</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="space-y-1">
+            <Label>Mostrar ícone de seleção</Label>
+            <Switch
+              checked={stageConfig.showCheckIcon !== false}
+              onCheckedChange={(checked) =>
+                updateStageConfig("showCheckIcon", checked)
+              }
+            />
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label>Tamanho do texto das opções</Label>
+          <Select
+            value={stageConfig.optionTextSize || "base"}
+            onValueChange={(value) =>
+              updateStageConfig("optionTextSize", value)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="xs">Extra Pequeno</SelectItem>
+              <SelectItem value="sm">Pequeno</SelectItem>
+              <SelectItem value="base">Normal</SelectItem>
+              <SelectItem value="lg">Grande</SelectItem>
+              <SelectItem value="xl">Extra Grande</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        {(displayType === "image" || displayType === "both") && (
+          <div className="space-y-1">
+            <Label>Tamanho das imagens</Label>
+            <Select
+              value={stageConfig.optionImageSize || "md"}
+              onValueChange={(value) =>
+                updateStageConfig("optionImageSize", value)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="xs">Extra Pequeno</SelectItem>
+                <SelectItem value="sm">Pequeno</SelectItem>
+                <SelectItem value="md">Médio</SelectItem>
+                <SelectItem value="lg">Grande</SelectItem>
+                <SelectItem value="xl">Extra Grande</SelectItem>
+                <SelectItem value="2xl">2x Grande</SelectItem>
+                <SelectItem value="3xl">3x Grande</SelectItem>
+                <SelectItem value="full">Largura Total</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </CardContent>
+    );
+  };
 
   const renderTransitionConfig = () => (
     <CardContent className="space-y-3">
@@ -300,6 +379,121 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             updateStageConfig("showCtaIcon", checked)
           }
         />
+      </div>
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <div className="flex items-center justify-between">
+          <Label>Mostrar porcentagem principal</Label>
+          <Switch
+            checked={stageConfig.showPercentage !== false}
+            onCheckedChange={(checked) =>
+              updateStageConfig("showPercentage", checked)
+            }
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <Label>Mostrar descrição</Label>
+          <Switch
+            checked={stageConfig.showDescription !== false}
+            onCheckedChange={(checked) =>
+              updateStageConfig("showDescription", checked)
+            }
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Layout do resultado</Label>
+          <Select
+            value={stageConfig.styleLayout || "stacked"}
+            onValueChange={(value) => updateStageConfig("styleLayout", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="stacked">Empilhado</SelectItem>
+              <SelectItem value="side-by-side">Lado a lado</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label>Tamanho da imagem</Label>
+          <Select
+            value={stageConfig.styleImageSize || "lg"}
+            onValueChange={(value) =>
+              updateStageConfig("styleImageSize", value)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="sm">Pequeno</SelectItem>
+              <SelectItem value="md">Médio</SelectItem>
+              <SelectItem value="lg">Grande</SelectItem>
+              <SelectItem value="xl">Extra Grande</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <div className="space-y-1">
+          <Label>Quantidade máxima de estilos</Label>
+          <Select
+            value={String(stageConfig.maxSecondaryStyles ?? 3)}
+            onValueChange={(value) =>
+              updateStageConfig("maxSecondaryStyles", Number(value))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1 estilo</SelectItem>
+              <SelectItem value="2">2 estilos</SelectItem>
+              <SelectItem value="3">3 estilos</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center justify-between">
+          <Label>Mostrar porcentagem dos secundários</Label>
+          <Switch
+            checked={stageConfig.showSecondaryPercentage !== false}
+            onCheckedChange={(checked) =>
+              updateStageConfig("showSecondaryPercentage", checked)
+            }
+          />
+        </div>
+      </div>
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <div className="space-y-1">
+          <Label>Dias de garantia</Label>
+          <Input
+            type="number"
+            min={0}
+            value={stageConfig.guaranteeDays ?? 7}
+            onChange={(event) =>
+              updateStageConfig("guaranteeDays", Number(event.target.value))
+            }
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Título da garantia</Label>
+          <Input
+            value={stageConfig.guaranteeTitle || "7 Dias de Garantia"}
+            onChange={(event) =>
+              updateStageConfig("guaranteeTitle", event.target.value)
+            }
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Descrição da garantia</Label>
+          <Textarea
+            value={stageConfig.guaranteeDescription || ""}
+            onChange={(event) =>
+              updateStageConfig("guaranteeDescription", event.target.value)
+            }
+            placeholder="Texto complementa a confiança"
+          />
+        </div>
       </div>
     </CardContent>
   );
