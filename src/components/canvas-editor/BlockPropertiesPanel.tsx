@@ -671,7 +671,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             <SelectItem value="2">2 Colunas</SelectItem>
           </SelectContent>
         </Select>
-        <p className="text-xs text-muted-foreground">Máximo 2 colunas para melhor responsividade</p>
+        <p className="text-xs text-muted-foreground">
+          Máximo 2 colunas para melhor responsividade
+        </p>
       </div>
 
       <div className="space-y-2">
@@ -695,27 +697,100 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
       {(block.content.displayType === "image" ||
         block.content.displayType === "both") && (
-        <div className="space-y-2">
-          <Label>Tamanho das Imagens</Label>
-          <Select
-            value={block.content.optionImageSize || "md"}
-            onValueChange={(value) => updateContent("optionImageSize", value)}
-          >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="xs">Muito Pequeno (64px)</SelectItem>
-              <SelectItem value="sm">Pequeno (80px)</SelectItem>
-              <SelectItem value="md">Médio (112px)</SelectItem>
-              <SelectItem value="lg">Grande (160px)</SelectItem>
-              <SelectItem value="xl">Extra Grande (208px)</SelectItem>
-              <SelectItem value="2xl">2x Grande (288px)</SelectItem>
-              <SelectItem value="3xl">3x Grande (384px)</SelectItem>
-              <SelectItem value="full">Máximo (480px)</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <>
+          {/* Escala Proporcional das Imagens */}
+          <div className="space-y-2">
+            <Label>
+              Escala das Imagens:{" "}
+              {((block.content.optionImageScale || 1) * 100).toFixed(0)}%
+            </Label>
+            <Slider
+              value={[(block.content.optionImageScale || 1) * 100]}
+              min={30}
+              max={200}
+              step={5}
+              onValueChange={([value]) =>
+                updateContent("optionImageScale", value / 100)
+              }
+            />
+            <p className="text-xs text-muted-foreground">
+              Ajuste proporcional do tamanho das imagens
+            </p>
+          </div>
+
+          {/* Largura Máxima */}
+          <div className="space-y-2">
+            <Label>
+              Largura Máxima: {block.content.optionImageMaxWidth || 100}%
+            </Label>
+            <Slider
+              value={[block.content.optionImageMaxWidth || 100]}
+              min={30}
+              max={100}
+              step={5}
+              onValueChange={([value]) =>
+                updateContent("optionImageMaxWidth", value)
+              }
+            />
+          </div>
+
+          {/* Borda Arredondada */}
+          <div className="space-y-2">
+            <Label>
+              Borda Arredondada: {block.content.optionImageBorderRadius || 8}px
+            </Label>
+            <Slider
+              value={[block.content.optionImageBorderRadius || 8]}
+              min={0}
+              max={100}
+              step={2}
+              onValueChange={([value]) =>
+                updateContent("optionImageBorderRadius", value)
+              }
+            />
+          </div>
+
+          {/* Espessura da Borda */}
+          <div className="space-y-2">
+            <Label>
+              Espessura da Borda: {block.content.optionImageBorderWidth || 0}px
+            </Label>
+            <Slider
+              value={[block.content.optionImageBorderWidth || 0]}
+              min={0}
+              max={10}
+              step={1}
+              onValueChange={([value]) =>
+                updateContent("optionImageBorderWidth", value)
+              }
+            />
+          </div>
+
+          {/* Cor da Borda */}
+          {(block.content.optionImageBorderWidth || 0) > 0 && (
+            <div className="space-y-2">
+              <Label>Cor da Borda</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="color"
+                  value={block.content.optionImageBorderColor || "#B89B7A"}
+                  onChange={(e) =>
+                    updateContent("optionImageBorderColor", e.target.value)
+                  }
+                  className="w-12 h-10 p-1 cursor-pointer"
+                />
+                <Input
+                  value={block.content.optionImageBorderColor || "#B89B7A"}
+                  onChange={(e) =>
+                    updateContent("optionImageBorderColor", e.target.value)
+                  }
+                  placeholder="#B89B7A"
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <div className="space-y-2">
@@ -1783,7 +1858,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                 <SelectItem value="2">2 Colunas</SelectItem>
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">Máximo 2 colunas para melhor responsividade</p>
+            <p className="text-xs text-muted-foreground">
+              Máximo 2 colunas para melhor responsividade
+            </p>
           </div>
         )}
         <div className="flex items-center justify-between">

@@ -1,7 +1,7 @@
-import React from 'react';
-import { CanvasBlockContent, BenefitItem } from '@/types/canvasBlocks';
-import { cn } from '@/lib/utils';
-import { Check, CheckCircle, Sparkles, Star } from 'lucide-react';
+import React from "react";
+import { CanvasBlockContent, BenefitItem } from "@/types/canvasBlocks";
+import { cn } from "@/lib/utils";
+import { Check, CheckCircle, Sparkles, Star } from "lucide-react";
 
 interface BenefitsListBlockProps {
   content: CanvasBlockContent;
@@ -9,10 +9,26 @@ interface BenefitsListBlockProps {
 }
 
 const DEFAULT_BENEFITS: BenefitItem[] = [
-  { id: '1', title: 'Guia personalizado para seu estilo', description: 'Descubra as peças que mais combinam com você' },
-  { id: '2', title: 'Paleta de cores exclusiva', description: 'As cores que realçam sua beleza natural' },
-  { id: '3', title: 'Dicas de combinações', description: 'Monte looks incríveis sem esforço' },
-  { id: '4', title: 'Peças-chave do guarda-roupa', description: 'Saiba o que não pode faltar' },
+  {
+    id: "1",
+    title: "Guia personalizado para seu estilo",
+    description: "Descubra as peças que mais combinam com você",
+  },
+  {
+    id: "2",
+    title: "Paleta de cores exclusiva",
+    description: "As cores que realçam sua beleza natural",
+  },
+  {
+    id: "3",
+    title: "Dicas de combinações",
+    description: "Monte looks incríveis sem esforço",
+  },
+  {
+    id: "4",
+    title: "Peças-chave do guarda-roupa",
+    description: "Saiba o que não pode faltar",
+  },
 ];
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -22,23 +38,28 @@ const ICON_MAP: Record<string, React.ElementType> = {
   star: Star,
 };
 
-export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({ content, isPreview }) => {
-  const benefits = content.benefits?.length ? content.benefits : DEFAULT_BENEFITS;
-  const layout = content.benefitsLayout || 'list';
+export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
+  content,
+  isPreview,
+}) => {
+  const benefits = content.benefits?.length
+    ? content.benefits
+    : DEFAULT_BENEFITS;
+  const layout = content.benefitsLayout || "list";
   // Limitar colunas a máximo 2 para melhor responsividade
   const columns = Math.min(content.benefitsColumns || 1, 2);
   const showIcons = content.showBenefitIcons !== false;
 
-  if (layout === 'grid') {
+  if (layout === "grid") {
     return (
-      <div 
+      <div
         className={cn(
-          'w-full grid gap-4',
-          columns === 2 && 'grid-cols-1 sm:grid-cols-2'
+          "w-full grid gap-4",
+          columns === 2 && "grid-cols-1 sm:grid-cols-2"
         )}
       >
         {benefits.map((benefit) => (
-          <div 
+          <div
             key={benefit.id}
             className="p-4 bg-white rounded-lg border border-[#B89B7A]/20 shadow-sm"
           >
@@ -47,7 +68,9 @@ export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({ content, i
                 <CheckCircle className="w-5 h-5 text-[#B89B7A]" />
               </div>
             )}
-            <h4 className="font-semibold text-[#432818] mb-1">{benefit.title}</h4>
+            <h4 className="font-semibold text-[#432818] mb-1">
+              {benefit.title}
+            </h4>
             {benefit.description && (
               <p className="text-sm text-[#8F7A6A]">{benefit.description}</p>
             )}
@@ -61,7 +84,7 @@ export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({ content, i
   return (
     <div className="w-full space-y-3">
       {benefits.map((benefit) => (
-        <div 
+        <div
           key={benefit.id}
           className="flex items-start gap-3 p-3 bg-white/50 rounded-lg"
         >

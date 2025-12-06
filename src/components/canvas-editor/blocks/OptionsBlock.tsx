@@ -41,7 +41,10 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
   const isLargeImage = ["2xl", "3xl", "full"].includes(imageSize);
   const baseColumns = content.columns || (hasImages ? 2 : 1);
   // Limitar colunas a máximo 2 para melhor responsividade mobile
-  const columns = Math.min(isLargeImage && baseColumns > 2 ? 2 : baseColumns, 2);
+  const columns = Math.min(
+    isLargeImage && baseColumns > 2 ? 2 : baseColumns,
+    2
+  );
   const showCheckIcon = content.showCheckIcon !== false;
   const textSize = (content.optionTextSize || "base") as
     | "xs"
