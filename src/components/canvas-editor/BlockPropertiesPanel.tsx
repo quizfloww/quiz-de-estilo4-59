@@ -2517,17 +2517,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             rows={3}
           />
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="motivationImageUrl">URL da Imagem (opcional)</Label>
-          <Input
-            id="motivationImageUrl"
-            value={block.content.motivationImageUrl || ""}
-            onChange={(e) =>
-              updateContent("motivationImageUrl", e.target.value)
-            }
-            placeholder="https://..."
-          />
-        </div>
+        <ImageFieldWithUpload
+          label="Imagem (opcional)"
+          value={block.content.motivationImageUrl || ""}
+          onChange={(url) => updateContent("motivationImageUrl", url)}
+          thumbnailSize="md"
+        />
 
         {/* Editor de Pontos Motivacionais */}
         <div className="space-y-3 pt-3 border-t">
