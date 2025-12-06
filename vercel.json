@@ -1,9 +1,4 @@
 {
-  "functions": {
-    "api/webhook/hotmart.ts": {
-      "runtime": "@vercel/node"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/webhook/hotmart",
