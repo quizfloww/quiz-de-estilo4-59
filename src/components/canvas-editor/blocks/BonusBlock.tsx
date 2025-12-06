@@ -1,107 +1,125 @@
 import React from "react";
 import { CanvasBlockContent, BonusItem } from "@/types/canvasBlocks";
-import { Gift, CheckCircle, Sparkles } from "lucide-react";
+import { Gift, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { optimizeCloudinaryUrl } from "@/utils/imageUtils";
+import ProgressiveImage from "@/components/ui/progressive-image";
 
 interface BonusBlockProps {
   content: CanvasBlockContent;
   isPreview?: boolean;
 }
 
+// URLs das imagens reais do Cloudinary
+const BONUS_IMAGES = {
+  bonus1:
+    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911668/C%C3%B3pia_de_Passo_5_Pe%C3%A7as_chaves_Documento_A4_lxmekf.webp",
+  bonus2:
+    "https://res.cloudinary.com/dqljyf76t/image/upload/v1745515076/C%C3%B3pia_de_MOCKUPS_10_-_Copia_bvoccn.webp",
+};
+
 const defaultBonuses: BonusItem[] = [
   {
     id: "1",
-    title: "Guia de Peças-Chave",
+    title: "Peças-chave do Guarda-roupa",
     description:
-      "As peças essenciais que toda mulher do seu estilo precisa ter no guarda-roupa.",
+      "Descubra as peças essenciais para seu estilo que maximizam suas combinações com investimento inteligente.",
     value: "R$ 67,00",
+    imageUrl: BONUS_IMAGES.bonus1,
   },
   {
     id: "2",
-    title: "Guia de Visagismo Facial",
+    title: "Visagismo Facial",
     description:
-      "Descubra os melhores cortes, acessórios e maquiagens para o seu rosto.",
+      "Aprenda a valorizar seus traços faciais, cortes de cabelo e acessórios que harmonizam com seu rosto.",
     value: "R$ 29,00",
-  },
-  {
-    id: "3",
-    title: "Paleta de Cores Personalizada",
-    description:
-      "As cores que mais valorizam seu tom de pele e estilo pessoal.",
-    value: "R$ 47,00",
+    imageUrl: BONUS_IMAGES.bonus2,
   },
 ];
 
+/**
+ * BonusBlock - Design igual ao BonusSection.tsx real
+ * - Grid 2 colunas com cards animados (motion)
+ * - Imagens grandes do Cloudinary
+ * - Stars de rating
+ * - Hover effects com scale
+ */
 export const BonusBlock: React.FC<BonusBlockProps> = ({
   content,
   isPreview,
 }) => {
-  const title = content.bonusTitle || "Bônus Exclusivos";
+  const title = content.bonusTitle || "Bônus Exclusivos para Você";
   const subtitle =
     content.bonusSubtitle ||
-    "Além do Guia Principal, você recebe gratuitamente:";
+    "Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:";
   const bonuses = content.bonusItems || defaultBonuses;
 
   return (
-    <div className="w-full py-8 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Gift className="w-5 h-5 text-[#aa6b5d]" />
-            <span className="text-sm font-medium uppercase tracking-wide text-[#aa6b5d]">
-              Bônus
-            </span>
-          </div>
+    <div className="py-10">
+      <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] text-center mb-2">
+        {title}
+      </h2>
+      <p className="text-center text-[#3a3a3a] mb-6 max-w-md mx-auto">
+        {subtitle}
+      </p>
+      <div className="elegant-divider w-32 mx-auto mt-0 mb-6"></div>
 
-          <h3 className="text-2xl md:text-3xl font-playfair font-bold text-[#432818] mb-2">
-            {title}
-          </h3>
+      <div className="max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6">
+          {bonuses.map((bonus, index) => {
+            const imageUrl =
+              bonus.imageUrl ||
+              (index === 0 ? BONUS_IMAGES.bonus1 : BONUS_IMAGES.bonus2);
+            const optimizedUrl = optimizeCloudinaryUrl(imageUrl, {
+              quality: 95,
+              format: "webp",
+            });
 
-          <p className="text-[#8F7A6A]">{subtitle}</p>
-        </div>
-
-        <div className="space-y-4">
-          {bonuses.map((bonus, index) => (
-            <div
-              key={bonus.id || index}
-              className="bg-white rounded-xl p-4 border border-[#B89B7A]/20 shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
+            return (
+              <motion.div
+                key={bonus.id || index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 25,
+                  delay: 0.2 + index * 0.2,
+                }}
+                className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow transform-3d hover:scale-[1.01] border-0"
+              >
+                <div className="flex justify-center mb-4">
+                  <ProgressiveImage
+                    src={optimizedUrl}
+                    alt={bonus.title}
+                    className="w-full max-w-[300px] h-auto rounded-lg shadow-sm hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    width={300}
+                    height={420}
+                  />
                 </div>
+                <h3 className="text-lg font-medium text-[#aa6b5d] mb-2 flex items-center">
+                  <Gift className="w-5 h-5 mr-2 text-[#B89B7A]" />
+                  {bonus.title}
+                </h3>
+                <p className="text-[#432818] text-sm">{bonus.description}</p>
 
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <h4 className="font-semibold text-[#432818]">
-                      {bonus.title}
-                    </h4>
-                    {bonus.value && (
-                      <span className="text-sm font-medium text-[#aa6b5d] bg-[#aa6b5d]/10 px-2 py-0.5 rounded">
-                        Valor: {bonus.value}
-                      </span>
-                    )}
+                <div className="mt-3 flex items-center">
+                  <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className="w-4 h-4 fill-[#B89B7A] text-[#B89B7A]"
+                      />
+                    ))}
                   </div>
-
-                  {bonus.description && (
-                    <p className="text-sm text-[#8F7A6A]">
-                      {bonus.description}
-                    </p>
-                  )}
+                  <span className="ml-2 text-xs text-[#3a3a3a]">
+                    Edição Premium
+                  </span>
                 </div>
-
-                <div className="flex-shrink-0">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-[#aa6b5d] font-medium">
-            Total em bônus: <span className="line-through">R$ 143,00</span>{" "}
-            <span className="text-green-600">GRÁTIS</span>
-          </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </div>
