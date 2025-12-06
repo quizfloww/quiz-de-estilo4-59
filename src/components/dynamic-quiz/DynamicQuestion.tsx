@@ -132,7 +132,7 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
       )}
 
       <div className={cn(getGridClasses(), isStrategicQuestion && "gap-4")}>
-        {stage.options.map((option) => (
+        {enrichedOptions.map((option) => (
           <DynamicQuizOption
             key={option.id}
             option={option}
