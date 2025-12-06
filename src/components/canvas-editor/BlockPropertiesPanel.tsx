@@ -486,8 +486,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
-      
-      {renderGlobalStyleControls({ showBackground: false, showText: false, showBorder: true })}
+
+      {renderGlobalStyleControls({
+        showBackground: false,
+        showText: false,
+        showBorder: true,
+      })}
     </>
   );
 
@@ -1162,6 +1166,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           placeholder="Esta oferta expira..."
         />
       </div>
+
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
@@ -1218,6 +1228,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onCheckedChange={(checked) => updateContent("showCtaIcon", checked)}
         />
       </div>
+
+      {renderGlobalStyleControls({
+        showBackground: false,
+        showText: false,
+        showAccent: true,
+        showBorder: true,
+      })}
     </>
   );
 
@@ -1255,6 +1272,19 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           rows={3}
         />
       </div>
+
+      {/* Subtítulo */}
+      <div className="space-y-2">
+        <Label htmlFor="guaranteeSubtitle">Subtítulo</Label>
+        <Input
+          id="guaranteeSubtitle"
+          value={block.content.guaranteeSubtitle || ""}
+          onChange={(e) => updateContent("guaranteeSubtitle", e.target.value)}
+          placeholder="Risco Zero"
+        />
+      </div>
+
+      {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
     </>
   );
 
