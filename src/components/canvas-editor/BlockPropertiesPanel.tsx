@@ -463,139 +463,179 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
       {/* Lista editável de opções */}
       <div className="space-y-3 pt-2">
-        {(block.content.options || []).map((opt: CanvasOption, idx: number) => (
-          <Card key={opt.id} className="p-2">
-            <div className="flex items-start gap-2">
-              <div className="flex-1 space-y-2">
-                <Label>Texto da Opção</Label>
-                <Textarea
-                  value={opt.text || ""}
-                  onChange={(e) => {
-                    const newOptions = [...(block.content.options || [])];
-                    newOptions[idx] = {
-                      ...newOptions[idx],
-                      text: e.target.value,
-                    };
-                    updateContent("options", newOptions);
-                  }}
-                  rows={2}
-                />
+        {(block.content.options || []).map((opt: CanvasOption, idx: number) => {
+          const hasNoCategory =
+            !opt.styleCategory || opt.styleCategory === "none";
+          const hasNoText = !opt.text?.trim();
+          const hasWarning = hasNoCategory || hasNoText;
 
-                <Label>URL da Imagem</Label>
-                <Input
-                  value={opt.imageUrl || ""}
-                  onChange={(e) => {
-                    const newOptions = [...(block.content.options || [])];
-                    newOptions[idx] = {
-                      ...newOptions[idx],
-                      imageUrl: e.target.value,
-                    };
-                    updateContent("options", newOptions);
-                  }}
-                  placeholder="https://..."
-                />
+          return (
+            <Card
+              key={opt.id}
+              className={`p-2 transition-colors ${
+                hasWarning
+                  ? "border-yellow-400 bg-yellow-50/50 dark:bg-yellow-900/10"
+                  : ""
+              }`}
+            >
+              {hasWarning && (
+                <div className="mb-2 px-2 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 rounded text-xs text-yellow-800 dark:text-yellow-200 flex items-center gap-1.5">
+                  <span className="text-yellow-600">⚠</span>
+                  {hasNoText && hasNoCategory
+                    ? "Configure o texto e a categoria de estilo"
+                    : hasNoText
+                    ? "Configure o texto da opção"
+                    : "Configure uma categoria de estilo para pontuação"}
+                </div>
+              )}
 
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <Label>Categoria de Estilo</Label>
-                    <Select
-                      value={opt.styleCategory || "none"}
-                      onValueChange={(value) => {
+              {/* Preview da imagem */}
+              {opt.imageUrl && (
+                <div className="mb-3 rounded-md overflow-hidden border border-muted">
+                  <img
+                    src={opt.imageUrl}
+                    alt={`Preview: ${opt.text || "Opção"}`}
+                    className="w-full h-20 object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = "none";
+                    }}
+                  />
+                </div>
+              )}
+
+              <div className="flex items-start gap-2">
+                <div className="flex-1 space-y-2">
+                  <Label>Texto da Opção</Label>
+                  <Textarea
+                    value={opt.text || ""}
+                    onChange={(e) => {
+                      const newOptions = [...(block.content.options || [])];
+                      newOptions[idx] = {
+                        ...newOptions[idx],
+                        text: e.target.value,
+                      };
+                      updateContent("options", newOptions);
+                    }}
+                    rows={2}
+                    className={hasNoText ? "border-yellow-400" : ""}
+                  />
+
+                  <Label>URL da Imagem</Label>
+                  <Input
+                    value={opt.imageUrl || ""}
+                    onChange={(e) => {
+                      const newOptions = [...(block.content.options || [])];
+                      newOptions[idx] = {
+                        ...newOptions[idx],
+                        imageUrl: e.target.value,
+                      };
+                      updateContent("options", newOptions);
+                    }}
+                    placeholder="https://..."
+                  />
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <Label>Categoria de Estilo</Label>
+                      <Select
+                        value={opt.styleCategory || "none"}
+                        onValueChange={(value) => {
+                          const newOptions = [...(block.content.options || [])];
+                          newOptions[idx] = {
+                            ...newOptions[idx],
+                            styleCategory: value === "none" ? "" : value,
+                          };
+                          updateContent("options", newOptions);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="none">Nenhuma</SelectItem>
+                          <SelectItem value="Natural">Natural</SelectItem>
+                          <SelectItem value="Clássico">Clássico</SelectItem>
+                          <SelectItem value="Contemporâneo">
+                            Contemporâneo
+                          </SelectItem>
+                          <SelectItem value="Elegante">Elegante</SelectItem>
+                          <SelectItem value="Romântico">Romântico</SelectItem>
+                          <SelectItem value="Sexy">Sexy</SelectItem>
+                          <SelectItem value="Dramático">Dramático</SelectItem>
+                          <SelectItem value="Criativo">Criativo</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Pontos</Label>
+                      <Input
+                        type="number"
+                        value={String(opt.points ?? 1)}
+                        onChange={(e) => {
+                          const newOptions = [...(block.content.options || [])];
+                          newOptions[idx] = {
+                            ...newOptions[idx],
+                            points: parseInt(e.target.value) || 0,
+                          };
+                          updateContent("options", newOptions);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-28 flex flex-col items-end gap-2">
+                  <div className="flex flex-col gap-1 w-full">
+                    <button
+                      type="button"
+                      className="btn btn-sm"
+                      onClick={() => {
                         const newOptions = [...(block.content.options || [])];
-                        newOptions[idx] = {
-                          ...newOptions[idx],
-                          styleCategory: value === "none" ? "" : value,
-                        };
+                        if (idx > 0) {
+                          const tmp = newOptions[idx - 1];
+                          newOptions[idx - 1] = newOptions[idx];
+                          newOptions[idx] = tmp;
+                          updateContent("options", newOptions);
+                        }
+                      }}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm"
+                      onClick={() => {
+                        const newOptions = [...(block.content.options || [])];
+                        if (idx < newOptions.length - 1) {
+                          const tmp = newOptions[idx + 1];
+                          newOptions[idx + 1] = newOptions[idx];
+                          newOptions[idx] = tmp;
+                          updateContent("options", newOptions);
+                        }
+                      }}
+                    >
+                      ↓
+                    </button>
+                  </div>
+                  <div className="w-full">
+                    <button
+                      type="button"
+                      className="btn btn-destructive btn-sm w-full"
+                      onClick={() => {
+                        const newOptions = [...(block.content.options || [])];
+                        newOptions.splice(idx, 1);
                         updateContent("options", newOptions);
                       }}
                     >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">Nenhuma</SelectItem>
-                        <SelectItem value="Natural">Natural</SelectItem>
-                        <SelectItem value="Clássico">Clássico</SelectItem>
-                        <SelectItem value="Contemporâneo">
-                          Contemporâneo
-                        </SelectItem>
-                        <SelectItem value="Elegante">Elegante</SelectItem>
-                        <SelectItem value="Romântico">Romântico</SelectItem>
-                        <SelectItem value="Sexy">Sexy</SelectItem>
-                        <SelectItem value="Dramático">Dramático</SelectItem>
-                        <SelectItem value="Criativo">Criativo</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label>Pontos</Label>
-                    <Input
-                      type="number"
-                      value={String(opt.points ?? 1)}
-                      onChange={(e) => {
-                        const newOptions = [...(block.content.options || [])];
-                        newOptions[idx] = {
-                          ...newOptions[idx],
-                          points: parseInt(e.target.value) || 0,
-                        };
-                        updateContent("options", newOptions);
-                      }}
-                    />
+                      Remover
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <div className="w-28 flex flex-col items-end gap-2">
-                <div className="flex flex-col gap-1 w-full">
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={() => {
-                      const newOptions = [...(block.content.options || [])];
-                      if (idx > 0) {
-                        const tmp = newOptions[idx - 1];
-                        newOptions[idx - 1] = newOptions[idx];
-                        newOptions[idx] = tmp;
-                        updateContent("options", newOptions);
-                      }
-                    }}
-                  >
-                    ↑
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-sm"
-                    onClick={() => {
-                      const newOptions = [...(block.content.options || [])];
-                      if (idx < newOptions.length - 1) {
-                        const tmp = newOptions[idx + 1];
-                        newOptions[idx + 1] = newOptions[idx];
-                        newOptions[idx] = tmp;
-                        updateContent("options", newOptions);
-                      }
-                    }}
-                  >
-                    ↓
-                  </button>
-                </div>
-                <div className="w-full">
-                  <button
-                    type="button"
-                    className="btn btn-destructive btn-sm w-full"
-                    onClick={() => {
-                      const newOptions = [...(block.content.options || [])];
-                      newOptions.splice(idx, 1);
-                      updateContent("options", newOptions);
-                    }}
-                  >
-                    Remover
-                  </button>
-                </div>
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
 
         <div>
           <button
