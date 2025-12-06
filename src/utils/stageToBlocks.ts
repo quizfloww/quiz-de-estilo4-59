@@ -78,12 +78,18 @@ export const convertStageToBlocks = (
   } else if (stage.type === "result") {
     // Blocos especiais para resultado - seguindo a estrutura da ResultPage.tsx
 
-    // 1. Personalized Hook (gancho personalizado)
+    // 1. Personalized Hook (gancho personalizado com saudação)
     blocks.push({
       id: `${stage.id}-personalizedHook`,
       type: "personalizedHook",
       order: order++,
       content: {
+        // Saudação personalizada com nome do usuário
+        showGreeting: config.showGreeting !== false,
+        greetingTemplate: config.greetingTemplate || "Olá, {nome}!",
+        greetingSubtitle:
+          config.greetingSubtitle || "Seu Estilo Predominante é:",
+        // Gancho de resultado
         hookTitle: config.hookTitle || "",
         hookSubtitle: config.hookSubtitle || "",
         hookStyle: config.hookStyle || "elegant",
