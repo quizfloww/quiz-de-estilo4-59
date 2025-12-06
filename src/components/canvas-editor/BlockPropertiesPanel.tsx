@@ -418,15 +418,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   const renderImageProperties = () => (
     <>
       {renderScaleControl()}
-      <div className="space-y-2">
-        <Label htmlFor="imageUrl">URL da Imagem</Label>
-        <Input
-          id="imageUrl"
-          value={block.content.imageUrl || ""}
-          onChange={(e) => updateContent("imageUrl", e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
+      <ImageFieldWithUpload
+        label="Imagem"
+        value={block.content.imageUrl || ""}
+        onChange={(url) => updateContent("imageUrl", url)}
+        thumbnailSize="lg"
+      />
       <div className="space-y-2">
         <Label htmlFor="imageAlt">Texto Alternativo</Label>
         <Input
