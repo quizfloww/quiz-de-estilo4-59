@@ -780,12 +780,14 @@ export const GuaranteeEditor: React.FC<BlockEditorProps> = ({
 };
 
 // ============================================
-// Mapeamento de Editores por Tipo
+// Registro de Editores (para uso externo)
 // ============================================
 
-export const BLOCK_EDITORS: Partial<
-  Record<string, React.FC<BlockEditorProps>>
-> = {
+// Importar o registry após definir os componentes
+import { registerBlockEditors } from "./blockEditorRegistry";
+
+// Registrar os editores
+registerBlockEditors({
   heading: HeadingEditor,
   text: TextEditor,
   image: ImageEditor,
@@ -795,13 +797,6 @@ export const BLOCK_EDITORS: Partial<
   ctaOffer: CtaOfferEditor,
   countdown: CountdownEditor,
   guarantee: GuaranteeEditor,
-};
+});
 
-/**
- * Retorna o editor apropriado para um tipo de bloco
- */
-export const getBlockEditor = (
-  blockType: string
-): React.FC<BlockEditorProps> | null => {
-  return BLOCK_EDITORS[blockType] || null;
-};
+// Para usar getBlockEditor, importe de "./blockEditorRegistry"
