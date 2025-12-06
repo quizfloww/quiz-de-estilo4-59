@@ -190,6 +190,10 @@ export default function FunnelEditorPage() {
     {}
   );
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [initialStageBlocks, setInitialStageBlocks] = useState<
+    Record<string, CanvasBlock[]>
+  >({});
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -230,12 +234,43 @@ export default function FunnelEditorPage() {
           ...prev,
           [activeStageId]: blocks,
         }));
+        // Store initial state for comparison
+        setInitialStageBlocks((prev) => ({
+          ...prev,
+          [activeStageId]: JSON.parse(JSON.stringify(blocks)),
+        }));
       }
 
       // Reset selected block when changing stages
       setSelectedBlockId(null);
     }
   }, [activeStageId, localStages]);
+
+  // Detect unsaved changes
+  useEffect(() => {
+    const hasChanges = Object.keys(stageBlocks).some((stageId) => {
+      const current = stageBlocks[stageId];
+      const initial = initialStageBlocks[stageId];
+      if (!initial) return false;
+      return JSON.stringify(current) !== JSON.stringify(initial);
+    });
+    setHasUnsavedChanges(hasChanges);
+  }, [stageBlocks, initialStageBlocks]);
+
+  // Warn before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue =
+          "Você tem alterações não salvas. Deseja realmente sair?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasUnsavedChanges]);
 
   const activeStage = localStages.find((s) => s.id === activeStageId);
   const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
