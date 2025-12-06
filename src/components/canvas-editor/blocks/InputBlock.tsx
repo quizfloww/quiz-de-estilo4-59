@@ -12,8 +12,14 @@ export const InputBlock: React.FC<InputBlockProps> = ({
   content,
   isPreview,
 }) => {
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="w-full grid items-center gap-1.5 px-2 sm:px-0">
+    <div
+      className="w-full grid items-center gap-1.5 px-2 sm:px-0 p-2 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <Label className="text-sm sm:text-base font-medium">
         {content.label || "Campo"}
         {content.required && <span className="text-destructive ml-1">*</span>}

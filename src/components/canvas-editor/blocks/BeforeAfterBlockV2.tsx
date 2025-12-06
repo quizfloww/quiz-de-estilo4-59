@@ -46,14 +46,18 @@ export const BeforeAfterBlockV2: React.FC<BeforeAfterBlockV2Props> = ({
   const items = content.beforeAfterItems || defaultItems;
   const activeItem = items[activeIndex] || items[0];
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSliderPosition(Number(e.target.value));
   };
 
   return (
     <div
-      className="min-h-[1.25rem] min-w-full relative self-auto box-border"
+      className="min-h-[1.25rem] min-w-full relative self-auto box-border p-4 rounded-xl"
       data-block-type="before-after-v2"
+      style={{ backgroundColor: blockBackgroundColor }}
     >
       {/* Título */}
       <motion.div

@@ -53,11 +53,14 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
     objectFit: "cover" as const,
   };
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   if (!content.imageUrl) {
     return (
       <div
         className={cn(
-          "flex items-center justify-center bg-muted border-2 border-dashed border-muted-foreground/25",
+          "flex items-center justify-center bg-muted border-2 border-dashed border-muted-foreground/25 p-2 rounded-lg",
           imageAlignment === "left" && "mr-auto",
           imageAlignment === "center" && "mx-auto",
           imageAlignment === "right" && "ml-auto"
@@ -74,6 +77,7 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
               ? "right center"
               : "center",
           borderRadius: `${imageBorderRadius}px`,
+          backgroundColor: blockBackgroundColor,
         }}
       >
         <div className="flex flex-col items-center gap-2 text-muted-foreground">
@@ -87,11 +91,12 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
   return (
     <div
       className={cn(
-        "flex w-full",
+        "flex w-full p-2 rounded-lg",
         imageAlignment === "left" && "justify-start",
         imageAlignment === "center" && "justify-center",
         imageAlignment === "right" && "justify-end"
       )}
+      style={{ backgroundColor: blockBackgroundColor }}
     >
       <img
         src={content.imageUrl}

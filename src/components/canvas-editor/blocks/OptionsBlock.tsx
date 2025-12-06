@@ -82,15 +82,19 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
         : undefined,
   };
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   // Layout em grid para opções com imagens
   if (hasImages) {
     return (
       <div
-        className="grid gap-3 w-full"
+        className="grid gap-3 w-full p-2 rounded-lg"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "top center",
           gridTemplateColumns: `repeat(${columns}, 1fr)`,
+          backgroundColor: blockBackgroundColor,
         }}
       >
         {quizOptions.map((option) => (
@@ -113,9 +117,11 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
   // Layout em lista para opções só com texto
   return (
     <div
+      className="p-2 rounded-lg"
       style={{
         transform: `scale(${scale})`,
         transformOrigin: "top center",
+        backgroundColor: blockBackgroundColor,
       }}
     >
       <div className="flex flex-col items-start justify-start gap-2 w-full">
