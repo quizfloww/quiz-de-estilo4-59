@@ -14,6 +14,7 @@ export { StyleProgressBlock } from "./StyleProgressBlock";
 export { PersonalizedHookBlock } from "./PersonalizedHookBlock";
 export { StyleGuideBlock } from "./StyleGuideBlock";
 export { BeforeAfterBlock } from "./BeforeAfterBlock";
+export { BeforeAfterBlockV2 } from "./BeforeAfterBlockV2";
 // Blocos de Oferta/Vendas
 export { PriceAnchorBlock } from "./PriceAnchorBlock";
 export { CountdownBlock } from "./CountdownBlock";
