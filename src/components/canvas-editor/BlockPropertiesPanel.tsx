@@ -1,13 +1,24 @@
-import React from 'react';
-import { CanvasBlock, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Slider } from '@/components/ui/slider';
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import {
+  CanvasBlock,
+  BLOCK_TYPE_LABELS,
+  CanvasOption,
+} from "@/types/canvasBlocks";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Slider } from "@/components/ui/slider";
 
 interface BlockPropertiesPanelProps {
   block: CanvasBlock | null;
@@ -23,12 +34,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   if (!block) {
     return (
       <div className="p-4 text-center text-muted-foreground">
-        <p className="text-sm">Selecione um bloco para editar suas propriedades</p>
+        <p className="text-sm">
+          Selecione um bloco para editar suas propriedades
+        </p>
       </div>
     );
   }
 
-  const updateContent = (key: string, value: any) => {
+  const updateContent = (key: string, value: unknown) => {
     onUpdateBlock({
       ...block,
       content: {
@@ -47,7 +60,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           min={50}
           max={200}
           step={10}
-          onValueChange={([value]) => updateContent('scale', value / 100)}
+          onValueChange={([value]) => updateContent("scale", value / 100)}
           className="flex-1"
         />
         <span className="text-sm text-muted-foreground w-12 text-right">
@@ -64,7 +77,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showLogo"
           checked={block.content.showLogo}
-          onCheckedChange={(checked) => updateContent('showLogo', checked)}
+          onCheckedChange={(checked) => updateContent("showLogo", checked)}
         />
       </div>
       {block.content.showLogo && (
@@ -72,8 +85,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Label htmlFor="logoUrl">URL do Logo</Label>
           <Input
             id="logoUrl"
-            value={block.content.logoUrl || ''}
-            onChange={(e) => updateContent('logoUrl', e.target.value)}
+            value={block.content.logoUrl || ""}
+            onChange={(e) => updateContent("logoUrl", e.target.value)}
             placeholder="https://..."
           />
         </div>
@@ -83,7 +96,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showProgress"
           checked={block.content.showProgress}
-          onCheckedChange={(checked) => updateContent('showProgress', checked)}
+          onCheckedChange={(checked) => updateContent("showProgress", checked)}
         />
       </div>
       <div className="flex items-center justify-between">
@@ -91,7 +104,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showBackButton"
           checked={block.content.showBackButton}
-          onCheckedChange={(checked) => updateContent('showBackButton', checked)}
+          onCheckedChange={(checked) =>
+            updateContent("showBackButton", checked)
+          }
         />
       </div>
     </>
@@ -104,8 +119,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="text">Texto</Label>
         <Textarea
           id="text"
-          value={block.content.text || ''}
-          onChange={(e) => updateContent('text', e.target.value)}
+          value={block.content.text || ""}
+          onChange={(e) => updateContent("text", e.target.value)}
           placeholder="Digite o título..."
           rows={3}
         />
@@ -113,8 +128,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="fontSize">Tamanho da Fonte</Label>
         <Select
-          value={block.content.fontSize || '2xl'}
-          onValueChange={(value) => updateContent('fontSize', value)}
+          value={block.content.fontSize || "2xl"}
+          onValueChange={(value) => updateContent("fontSize", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -132,8 +147,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select
-          value={block.content.textAlign || 'center'}
-          onValueChange={(value) => updateContent('textAlign', value)}
+          value={block.content.textAlign || "center"}
+          onValueChange={(value) => updateContent("textAlign", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -155,8 +170,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="text">Texto</Label>
         <Textarea
           id="text"
-          value={block.content.text || ''}
-          onChange={(e) => updateContent('text', e.target.value)}
+          value={block.content.text || ""}
+          onChange={(e) => updateContent("text", e.target.value)}
           placeholder="Digite o texto..."
           rows={4}
         />
@@ -164,8 +179,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="fontSize">Tamanho da Fonte</Label>
         <Select
-          value={block.content.fontSize || 'base'}
-          onValueChange={(value) => updateContent('fontSize', value)}
+          value={block.content.fontSize || "base"}
+          onValueChange={(value) => updateContent("fontSize", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -180,8 +195,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="textAlign">Alinhamento</Label>
         <Select
-          value={block.content.textAlign || 'center'}
-          onValueChange={(value) => updateContent('textAlign', value)}
+          value={block.content.textAlign || "center"}
+          onValueChange={(value) => updateContent("textAlign", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -203,8 +218,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="imageUrl">URL da Imagem</Label>
         <Input
           id="imageUrl"
-          value={block.content.imageUrl || ''}
-          onChange={(e) => updateContent('imageUrl', e.target.value)}
+          value={block.content.imageUrl || ""}
+          onChange={(e) => updateContent("imageUrl", e.target.value)}
           placeholder="https://..."
         />
       </div>
@@ -212,16 +227,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="imageAlt">Texto Alternativo</Label>
         <Input
           id="imageAlt"
-          value={block.content.imageAlt || ''}
-          onChange={(e) => updateContent('imageAlt', e.target.value)}
+          value={block.content.imageAlt || ""}
+          onChange={(e) => updateContent("imageAlt", e.target.value)}
           placeholder="Descrição da imagem"
         />
       </div>
       <div className="space-y-2">
         <Label>Tamanho</Label>
         <Select
-          value={block.content.imageSize || 'md'}
-          onValueChange={(value) => updateContent('imageSize', value)}
+          value={block.content.imageSize || "md"}
+          onValueChange={(value) => updateContent("imageSize", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -241,8 +256,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Alinhamento Horizontal</Label>
         <Select
-          value={block.content.imageAlignment || 'center'}
-          onValueChange={(value) => updateContent('imageAlignment', value)}
+          value={block.content.imageAlignment || "center"}
+          onValueChange={(value) => updateContent("imageAlignment", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -257,8 +272,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Posição Vertical</Label>
         <Select
-          value={block.content.imagePosition || 'center'}
-          onValueChange={(value) => updateContent('imagePosition', value)}
+          value={block.content.imagePosition || "center"}
+          onValueChange={(value) => updateContent("imagePosition", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -280,8 +295,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="label">Rótulo</Label>
         <Input
           id="label"
-          value={block.content.label || ''}
-          onChange={(e) => updateContent('label', e.target.value)}
+          value={block.content.label || ""}
+          onChange={(e) => updateContent("label", e.target.value)}
           placeholder="Nome do campo"
         />
       </div>
@@ -289,16 +304,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="placeholder">Placeholder</Label>
         <Input
           id="placeholder"
-          value={block.content.placeholder || ''}
-          onChange={(e) => updateContent('placeholder', e.target.value)}
+          value={block.content.placeholder || ""}
+          onChange={(e) => updateContent("placeholder", e.target.value)}
           placeholder="Digite aqui..."
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="inputType">Tipo</Label>
         <Select
-          value={block.content.inputType || 'text'}
-          onValueChange={(value) => updateContent('inputType', value)}
+          value={block.content.inputType || "text"}
+          onValueChange={(value) => updateContent("inputType", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -315,7 +330,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="required"
           checked={block.content.required}
-          onCheckedChange={(checked) => updateContent('required', checked)}
+          onCheckedChange={(checked) => updateContent("required", checked)}
         />
       </div>
     </>
@@ -327,8 +342,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="displayType">Tipo de Exibição</Label>
         <Select
-          value={block.content.displayType || 'text'}
-          onValueChange={(value) => updateContent('displayType', value)}
+          value={block.content.displayType || "text"}
+          onValueChange={(value) => updateContent("displayType", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -340,11 +355,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="columns">Colunas</Label>
         <Select
           value={String(block.content.columns || 1)}
-          onValueChange={(value) => updateContent('columns', parseInt(value))}
+          onValueChange={(value) => updateContent("columns", parseInt(value))}
         >
           <SelectTrigger>
             <SelectValue />
@@ -357,11 +373,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
       <div className="space-y-2">
         <Label>Tamanho do Texto</Label>
         <Select
-          value={block.content.optionTextSize || 'base'}
-          onValueChange={(value) => updateContent('optionTextSize', value)}
+          value={block.content.optionTextSize || "base"}
+          onValueChange={(value) => updateContent("optionTextSize", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -375,12 +392,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
-      {(block.content.displayType === 'image' || block.content.displayType === 'both') && (
+
+      {(block.content.displayType === "image" ||
+        block.content.displayType === "both") && (
         <div className="space-y-2">
           <Label>Tamanho das Imagens</Label>
           <Select
-            value={block.content.optionImageSize || 'md'}
-            onValueChange={(value) => updateContent('optionImageSize', value)}
+            value={block.content.optionImageSize || "md"}
+            onValueChange={(value) => updateContent("optionImageSize", value)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -398,11 +417,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </Select>
         </div>
       )}
+
       <div className="space-y-2">
         <Label htmlFor="multiSelect">Seleção Múltipla</Label>
         <Select
           value={String(block.content.multiSelect || 1)}
-          onValueChange={(value) => updateContent('multiSelect', parseInt(value))}
+          onValueChange={(value) =>
+            updateContent("multiSelect", parseInt(value))
+          }
         >
           <SelectTrigger>
             <SelectValue />
@@ -414,26 +436,186 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
       <div className="flex items-center justify-between">
         <Label htmlFor="showCheckIcon">Mostrar Check</Label>
         <Switch
           id="showCheckIcon"
           checked={block.content.showCheckIcon !== false}
-          onCheckedChange={(checked) => updateContent('showCheckIcon', checked)}
+          onCheckedChange={(checked) => updateContent("showCheckIcon", checked)}
         />
       </div>
+
       <div className="flex items-center justify-between">
         <Label htmlFor="autoAdvance">Avançar Automaticamente</Label>
         <Switch
           id="autoAdvance"
           checked={block.content.autoAdvance}
-          onCheckedChange={(checked) => updateContent('autoAdvance', checked)}
+          onCheckedChange={(checked) => updateContent("autoAdvance", checked)}
         />
       </div>
+
       <div className="pt-2 border-t">
         <p className="text-sm text-muted-foreground">
           {block.content.options?.length || 0} opções configuradas
         </p>
+      </div>
+
+      {/* Lista editável de opções */}
+      <div className="space-y-3 pt-2">
+        {(block.content.options || []).map((opt: CanvasOption, idx: number) => (
+          <Card key={opt.id} className="p-2">
+            <div className="flex items-start gap-2">
+              <div className="flex-1 space-y-2">
+                <Label>Texto da Opção</Label>
+                <Textarea
+                  value={opt.text || ""}
+                  onChange={(e) => {
+                    const newOptions = [...(block.content.options || [])];
+                    newOptions[idx] = {
+                      ...newOptions[idx],
+                      text: e.target.value,
+                    };
+                    updateContent("options", newOptions);
+                  }}
+                  rows={2}
+                />
+
+                <Label>URL da Imagem</Label>
+                <Input
+                  value={opt.imageUrl || ""}
+                  onChange={(e) => {
+                    const newOptions = [...(block.content.options || [])];
+                    newOptions[idx] = {
+                      ...newOptions[idx],
+                      imageUrl: e.target.value,
+                    };
+                    updateContent("options", newOptions);
+                  }}
+                  placeholder="https://..."
+                />
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <Label>Categoria de Estilo</Label>
+                    <Select
+                      value={opt.styleCategory || ""}
+                      onValueChange={(value) => {
+                        const newOptions = [...(block.content.options || [])];
+                        newOptions[idx] = {
+                          ...newOptions[idx],
+                          styleCategory: value,
+                        };
+                        updateContent("options", newOptions);
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">Nenhuma</SelectItem>
+                        <SelectItem value="Natural">Natural</SelectItem>
+                        <SelectItem value="Clássico">Clássico</SelectItem>
+                        <SelectItem value="Contemporâneo">
+                          Contemporâneo
+                        </SelectItem>
+                        <SelectItem value="Elegante">Elegante</SelectItem>
+                        <SelectItem value="Romântico">Romântico</SelectItem>
+                        <SelectItem value="Sexy">Sexy</SelectItem>
+                        <SelectItem value="Dramático">Dramático</SelectItem>
+                        <SelectItem value="Criativo">Criativo</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label>Pontos</Label>
+                    <Input
+                      type="number"
+                      value={String(opt.points ?? 1)}
+                      onChange={(e) => {
+                        const newOptions = [...(block.content.options || [])];
+                        newOptions[idx] = {
+                          ...newOptions[idx],
+                          points: parseInt(e.target.value) || 0,
+                        };
+                        updateContent("options", newOptions);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="w-28 flex flex-col items-end gap-2">
+                <div className="flex flex-col gap-1 w-full">
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    onClick={() => {
+                      const newOptions = [...(block.content.options || [])];
+                      if (idx > 0) {
+                        const tmp = newOptions[idx - 1];
+                        newOptions[idx - 1] = newOptions[idx];
+                        newOptions[idx] = tmp;
+                        updateContent("options", newOptions);
+                      }
+                    }}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-sm"
+                    onClick={() => {
+                      const newOptions = [...(block.content.options || [])];
+                      if (idx < newOptions.length - 1) {
+                        const tmp = newOptions[idx + 1];
+                        newOptions[idx + 1] = newOptions[idx];
+                        newOptions[idx] = tmp;
+                        updateContent("options", newOptions);
+                      }
+                    }}
+                  >
+                    ↓
+                  </button>
+                </div>
+                <div className="w-full">
+                  <button
+                    type="button"
+                    className="btn btn-destructive btn-sm w-full"
+                    onClick={() => {
+                      const newOptions = [...(block.content.options || [])];
+                      newOptions.splice(idx, 1);
+                      updateContent("options", newOptions);
+                    }}
+                  >
+                    Remover
+                  </button>
+                </div>
+              </div>
+            </div>
+          </Card>
+        ))}
+
+        <div>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={() => {
+              const newOptions = [...(block.content.options || [])];
+              newOptions.push({
+                id: uuidv4(),
+                text: "Nova opção",
+                imageUrl: "",
+                styleCategory: "",
+                points: 1,
+              });
+              updateContent("options", newOptions);
+            }}
+          >
+            Adicionar Opção
+          </button>
+        </div>
       </div>
     </>
   );
@@ -445,16 +627,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="buttonText">Texto do Botão</Label>
         <Input
           id="buttonText"
-          value={block.content.buttonText || ''}
-          onChange={(e) => updateContent('buttonText', e.target.value)}
+          value={block.content.buttonText || ""}
+          onChange={(e) => updateContent("buttonText", e.target.value)}
           placeholder="Continuar"
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="buttonVariant">Estilo</Label>
         <Select
-          value={block.content.buttonVariant || 'primary'}
-          onValueChange={(value) => updateContent('buttonVariant', value)}
+          value={block.content.buttonVariant || "primary"}
+          onValueChange={(value) => updateContent("buttonVariant", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -471,7 +653,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="fullWidth"
           checked={block.content.fullWidth}
-          onCheckedChange={(checked) => updateContent('fullWidth', checked)}
+          onCheckedChange={(checked) => updateContent("fullWidth", checked)}
         />
       </div>
     </>
@@ -484,8 +666,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="height">Altura</Label>
         <Input
           id="height"
-          value={block.content.height || '1rem'}
-          onChange={(e) => updateContent('height', e.target.value)}
+          value={block.content.height || "1rem"}
+          onChange={(e) => updateContent("height", e.target.value)}
           placeholder="1rem"
         />
       </div>
@@ -499,7 +681,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showPercentage"
           checked={block.content.showPercentage !== false}
-          onCheckedChange={(checked) => updateContent('showPercentage', checked)}
+          onCheckedChange={(checked) =>
+            updateContent("showPercentage", checked)
+          }
         />
       </div>
       <div className="flex items-center justify-between">
@@ -507,14 +691,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showDescription"
           checked={block.content.showDescription !== false}
-          onCheckedChange={(checked) => updateContent('showDescription', checked)}
+          onCheckedChange={(checked) =>
+            updateContent("showDescription", checked)
+          }
         />
       </div>
       <div className="space-y-2">
         <Label>Layout</Label>
         <Select
-          value={block.content.layout || 'stacked'}
-          onValueChange={(value) => updateContent('layout', value)}
+          value={block.content.layout || "stacked"}
+          onValueChange={(value) => updateContent("layout", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -528,8 +714,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Tamanho da Imagem</Label>
         <Select
-          value={block.content.styleImageSize || 'lg'}
-          onValueChange={(value) => updateContent('styleImageSize', value)}
+          value={block.content.styleImageSize || "lg"}
+          onValueChange={(value) => updateContent("styleImageSize", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -551,7 +737,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label>Quantidade Máxima</Label>
         <Select
           value={String(block.content.maxSecondaryStyles || 3)}
-          onValueChange={(value) => updateContent('maxSecondaryStyles', parseInt(value))}
+          onValueChange={(value) =>
+            updateContent("maxSecondaryStyles", parseInt(value))
+          }
         >
           <SelectTrigger>
             <SelectValue />
@@ -568,7 +756,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showSecondaryPercentage"
           checked={block.content.showSecondaryPercentage !== false}
-          onCheckedChange={(checked) => updateContent('showSecondaryPercentage', checked)}
+          onCheckedChange={(checked) =>
+            updateContent("showSecondaryPercentage", checked)
+          }
         />
       </div>
     </>
@@ -582,7 +772,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           id="finalPrice"
           type="number"
           value={block.content.finalPrice || 39}
-          onChange={(e) => updateContent('finalPrice', parseFloat(e.target.value))}
+          onChange={(e) =>
+            updateContent("finalPrice", parseFloat(e.target.value))
+          }
         />
       </div>
       <div className="space-y-2">
@@ -591,15 +783,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           id="totalOriginal"
           type="number"
           value={block.content.totalOriginal || 175}
-          onChange={(e) => updateContent('totalOriginal', parseFloat(e.target.value))}
+          onChange={(e) =>
+            updateContent("totalOriginal", parseFloat(e.target.value))
+          }
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="discountBadge">Badge de Desconto</Label>
         <Input
           id="discountBadge"
-          value={block.content.discountBadge || ''}
-          onChange={(e) => updateContent('discountBadge', e.target.value)}
+          value={block.content.discountBadge || ""}
+          onChange={(e) => updateContent("discountBadge", e.target.value)}
           placeholder="-78%"
         />
       </div>
@@ -617,7 +811,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             min="0"
             max="23"
             value={block.content.hours ?? 2}
-            onChange={(e) => updateContent('hours', parseInt(e.target.value))}
+            onChange={(e) => updateContent("hours", parseInt(e.target.value))}
           />
         </div>
         <div className="space-y-2">
@@ -628,7 +822,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             min="0"
             max="59"
             value={block.content.minutes ?? 47}
-            onChange={(e) => updateContent('minutes', parseInt(e.target.value))}
+            onChange={(e) => updateContent("minutes", parseInt(e.target.value))}
           />
         </div>
         <div className="space-y-2">
@@ -639,15 +833,15 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             min="0"
             max="59"
             value={block.content.seconds ?? 33}
-            onChange={(e) => updateContent('seconds', parseInt(e.target.value))}
+            onChange={(e) => updateContent("seconds", parseInt(e.target.value))}
           />
         </div>
       </div>
       <div className="space-y-2">
         <Label>Estilo</Label>
         <Select
-          value={block.content.countdownVariant || 'dramatic'}
-          onValueChange={(value) => updateContent('countdownVariant', value)}
+          value={block.content.countdownVariant || "dramatic"}
+          onValueChange={(value) => updateContent("countdownVariant", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -663,8 +857,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="expiryMessage">Mensagem</Label>
         <Input
           id="expiryMessage"
-          value={block.content.expiryMessage || ''}
-          onChange={(e) => updateContent('expiryMessage', e.target.value)}
+          value={block.content.expiryMessage || ""}
+          onChange={(e) => updateContent("expiryMessage", e.target.value)}
           placeholder="Esta oferta expira..."
         />
       </div>
@@ -677,8 +871,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="ctaText">Texto do Botão</Label>
         <Input
           id="ctaText"
-          value={block.content.ctaText || ''}
-          onChange={(e) => updateContent('ctaText', e.target.value)}
+          value={block.content.ctaText || ""}
+          onChange={(e) => updateContent("ctaText", e.target.value)}
           placeholder="GARANTIR MEU GUIA AGORA"
         />
       </div>
@@ -686,16 +880,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="ctaUrl">URL do Checkout</Label>
         <Input
           id="ctaUrl"
-          value={block.content.ctaUrl || ''}
-          onChange={(e) => updateContent('ctaUrl', e.target.value)}
+          value={block.content.ctaUrl || ""}
+          onChange={(e) => updateContent("ctaUrl", e.target.value)}
           placeholder="https://..."
         />
       </div>
       <div className="space-y-2">
         <Label>Cor do Botão</Label>
         <Select
-          value={block.content.ctaVariant || 'green'}
-          onValueChange={(value) => updateContent('ctaVariant', value)}
+          value={block.content.ctaVariant || "green"}
+          onValueChange={(value) => updateContent("ctaVariant", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -711,8 +905,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="urgencyText">Texto de Urgência</Label>
         <Input
           id="urgencyText"
-          value={block.content.urgencyText || ''}
-          onChange={(e) => updateContent('urgencyText', e.target.value)}
+          value={block.content.urgencyText || ""}
+          onChange={(e) => updateContent("urgencyText", e.target.value)}
           placeholder="Preço pode aumentar..."
         />
       </div>
@@ -721,7 +915,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showCtaIcon"
           checked={block.content.showCtaIcon !== false}
-          onCheckedChange={(checked) => updateContent('showCtaIcon', checked)}
+          onCheckedChange={(checked) => updateContent("showCtaIcon", checked)}
         />
       </div>
     </>
@@ -735,15 +929,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           id="guaranteeDays"
           type="number"
           value={block.content.guaranteeDays || 7}
-          onChange={(e) => updateContent('guaranteeDays', parseInt(e.target.value))}
+          onChange={(e) =>
+            updateContent("guaranteeDays", parseInt(e.target.value))
+          }
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="guaranteeTitle">Título</Label>
         <Input
           id="guaranteeTitle"
-          value={block.content.guaranteeTitle || ''}
-          onChange={(e) => updateContent('guaranteeTitle', e.target.value)}
+          value={block.content.guaranteeTitle || ""}
+          onChange={(e) => updateContent("guaranteeTitle", e.target.value)}
           placeholder="7 Dias de Garantia..."
         />
       </div>
@@ -751,8 +947,10 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="guaranteeDescription">Descrição</Label>
         <Textarea
           id="guaranteeDescription"
-          value={block.content.guaranteeDescription || ''}
-          onChange={(e) => updateContent('guaranteeDescription', e.target.value)}
+          value={block.content.guaranteeDescription || ""}
+          onChange={(e) =>
+            updateContent("guaranteeDescription", e.target.value)
+          }
           placeholder="Se você não ficar satisfeita..."
           rows={3}
         />
@@ -765,8 +963,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Estilo</Label>
         <Select
-          value={block.content.testimonialVariant || 'card'}
-          onValueChange={(value) => updateContent('testimonialVariant', value)}
+          value={block.content.testimonialVariant || "card"}
+          onValueChange={(value) => updateContent("testimonialVariant", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -779,7 +977,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </Select>
       </div>
       <p className="text-xs text-muted-foreground">
-        O conteúdo do depoimento pode ser configurado via código ou importação de dados.
+        O conteúdo do depoimento pode ser configurado via código ou importação
+        de dados.
       </p>
     </>
   );
@@ -789,8 +988,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Layout</Label>
         <Select
-          value={block.content.benefitsLayout || 'list'}
-          onValueChange={(value) => updateContent('benefitsLayout', value)}
+          value={block.content.benefitsLayout || "list"}
+          onValueChange={(value) => updateContent("benefitsLayout", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -801,12 +1000,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
-      {block.content.benefitsLayout === 'grid' && (
+      {block.content.benefitsLayout === "grid" && (
         <div className="space-y-2">
           <Label>Colunas</Label>
           <Select
             value={String(block.content.benefitsColumns || 2)}
-            onValueChange={(value) => updateContent('benefitsColumns', parseInt(value))}
+            onValueChange={(value) =>
+              updateContent("benefitsColumns", parseInt(value))
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -824,7 +1025,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showBenefitIcons"
           checked={block.content.showBenefitIcons !== false}
-          onCheckedChange={(checked) => updateContent('showBenefitIcons', checked)}
+          onCheckedChange={(checked) =>
+            updateContent("showBenefitIcons", checked)
+          }
         />
       </div>
     </>
@@ -835,8 +1038,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Estilo</Label>
         <Select
-          value={block.content.faqStyle || 'accordion'}
-          onValueChange={(value) => updateContent('faqStyle', value)}
+          value={block.content.faqStyle || "accordion"}
+          onValueChange={(value) => updateContent("faqStyle", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -859,16 +1062,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Label htmlFor="socialProofText">Texto</Label>
         <Input
           id="socialProofText"
-          value={block.content.socialProofText || ''}
-          onChange={(e) => updateContent('socialProofText', e.target.value)}
+          value={block.content.socialProofText || ""}
+          onChange={(e) => updateContent("socialProofText", e.target.value)}
           placeholder="+3.000 mulheres..."
         />
       </div>
       <div className="space-y-2">
         <Label>Ícone</Label>
         <Select
-          value={block.content.socialProofIcon || 'users'}
-          onValueChange={(value) => updateContent('socialProofIcon', value)}
+          value={block.content.socialProofIcon || "users"}
+          onValueChange={(value) => updateContent("socialProofIcon", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -884,8 +1087,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label>Variante</Label>
         <Select
-          value={block.content.socialProofVariant || 'badge'}
-          onValueChange={(value) => updateContent('socialProofVariant', value)}
+          value={block.content.socialProofVariant || "badge"}
+          onValueChange={(value) => updateContent("socialProofVariant", value)}
         >
           <SelectTrigger>
             <SelectValue />
@@ -907,14 +1110,16 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         <Switch
           id="showLabels"
           checked={block.content.showLabels !== false}
-          onCheckedChange={(checked) => updateContent('showLabels', checked)}
+          onCheckedChange={(checked) => updateContent("showLabels", checked)}
         />
       </div>
       <div className="space-y-2">
         <Label>Estilos Mostrados</Label>
         <Select
           value={String(block.content.maxStylesShown || 8)}
-          onValueChange={(value) => updateContent('maxStylesShown', parseInt(value))}
+          onValueChange={(value) =>
+            updateContent("maxStylesShown", parseInt(value))
+          }
         >
           <SelectTrigger>
             <SelectValue />
@@ -931,60 +1136,62 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderProperties = () => {
     switch (block.type) {
-      case 'header':
+      case "header":
         return renderHeaderProperties();
-      case 'heading':
+      case "heading":
         return renderHeadingProperties();
-      case 'text':
+      case "text":
         return renderTextProperties();
-      case 'image':
+      case "image":
         return renderImageProperties();
-      case 'input':
+      case "input":
         return renderInputProperties();
-      case 'options':
+      case "options":
         return renderOptionsProperties();
-      case 'button':
+      case "button":
         return renderButtonProperties();
-      case 'spacer':
+      case "spacer":
         return renderSpacerProperties();
-      case 'divider':
-        return <p className="text-sm text-muted-foreground">Sem propriedades configuráveis</p>;
+      case "divider":
+        return (
+          <p className="text-sm text-muted-foreground">
+            Sem propriedades configuráveis
+          </p>
+        );
       // Blocos de Resultado
-      case 'styleResult':
+      case "styleResult":
         return renderStyleResultProperties();
-      case 'secondaryStyles':
+      case "secondaryStyles":
         return renderSecondaryStylesProperties();
-      case 'styleProgress':
+      case "styleProgress":
         return renderStyleProgressProperties();
       // Blocos de Oferta
-      case 'priceAnchor':
+      case "priceAnchor":
         return renderPriceAnchorProperties();
-      case 'countdown':
+      case "countdown":
         return renderCountdownProperties();
-      case 'ctaOffer':
+      case "ctaOffer":
         return renderCtaOfferProperties();
-      case 'testimonial':
+      case "testimonial":
         return renderTestimonialProperties();
-      case 'benefitsList':
+      case "benefitsList":
         return renderBenefitsListProperties();
-      case 'guarantee':
+      case "guarantee":
         return renderGuaranteeProperties();
-      case 'faq':
+      case "faq":
         return renderFaqProperties();
-      case 'socialProof':
+      case "socialProof":
         return renderSocialProofProperties();
       default:
-        return <p className="text-sm text-muted-foreground">Bloco desconhecido</p>;
+        return (
+          <p className="text-sm text-muted-foreground">Bloco desconhecido</p>
+        );
     }
   };
 
   // Compact mode renders just the properties without wrapper
   if (compact) {
-    return (
-      <div className="space-y-4">
-        {renderProperties()}
-      </div>
-    );
+    return <div className="space-y-4">{renderProperties()}</div>;
   }
 
   return (
@@ -996,9 +1203,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
               {BLOCK_TYPE_LABELS[block.type]}
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {renderProperties()}
-          </CardContent>
+          <CardContent className="space-y-4">{renderProperties()}</CardContent>
         </Card>
       </div>
     </ScrollArea>
