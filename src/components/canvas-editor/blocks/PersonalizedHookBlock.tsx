@@ -1,6 +1,7 @@
 import React from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
 import { Sparkles } from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 interface PersonalizedHookBlockProps {
   content: CanvasBlockContent;
@@ -60,6 +61,16 @@ export const PersonalizedHookBlock: React.FC<PersonalizedHookBlockProps> = ({
   const title = content.hookTitle || defaultHook.title;
   const subtitle = content.hookSubtitle || defaultHook.subtitle;
 
+  // Configurações de saudação
+  const showGreeting = content.showGreeting !== false;
+  const greetingTemplate = content.greetingTemplate || "Olá, {nome}!";
+  const greetingSubtitle =
+    content.greetingSubtitle || "Seu Estilo Predominante é:";
+
+  // Nome de exemplo para preview
+  const userName = isPreview ? "Maria" : content.userName || "Visitante";
+  const formattedGreeting = greetingTemplate.replace("{nome}", userName);
+
   const styleClasses = {
     elegant:
       "bg-gradient-to-br from-[#fffaf7] to-[#f5ebe0] border-[#B89B7A]/20",
@@ -70,6 +81,29 @@ export const PersonalizedHookBlock: React.FC<PersonalizedHookBlockProps> = ({
   return (
     <div className={`w-full p-6 rounded-xl border ${styleClasses[hookStyle]}`}>
       <div className="text-center">
+        {/* Saudação Personalizada com Nome */}
+        {showGreeting && (
+          <div className="mb-6 pb-4 border-b border-[#B89B7A]/20">
+            <Logo className="h-12 md:h-16 mx-auto mb-4" />
+            <h1
+              className={`font-playfair text-xl md:text-2xl font-semibold mb-2 ${
+                hookStyle === "bold" ? "text-white" : "text-[#432818]"
+              }`}
+            >
+              {formattedGreeting}
+            </h1>
+            <p
+              className={`text-sm md:text-base ${
+                hookStyle === "bold" ? "text-gray-300" : "text-[#5a5a5a]"
+              }`}
+            >
+              {greetingSubtitle}
+            </p>
+            <div className="w-24 h-1 mx-auto bg-gradient-to-r from-amber-300 to-amber-500 rounded-full mt-3" />
+          </div>
+        )}
+
+        {/* Gancho Personalizado */}
         <div className="inline-flex items-center gap-2 mb-4">
           <Sparkles
             className={`w-5 h-5 ${
