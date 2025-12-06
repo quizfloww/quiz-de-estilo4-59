@@ -1,6 +1,6 @@
 /**
  * Testes E2E específicos para o Funil MVP Principal
- * Funil ID: bf54e10a-55df-447d-bbe7-bbe423006709
+ * Funil: Quiz de Estilo Pessoal (slug: "quiz")
  *
  * Este arquivo contém testes completos para:
  * - Carregamento do editor
@@ -13,9 +13,9 @@
 
 import { test as base, expect, Page, Locator } from "@playwright/test";
 
-// ID do funil MVP real
-const MVP_FUNNEL_ID = "bf54e10a-55df-447d-bbe7-bbe423006709";
-const MVP_FUNNEL_EDIT_URL = `/admin/funnels/${MVP_FUNNEL_ID}/edit`;
+// Slug do funil MVP - "quiz" é o Quiz de Estilo Pessoal principal
+const MVP_FUNNEL_SLUG = "quiz";
+const FUNNELS_LIST_URL = "/admin/funnels";
 
 // Credenciais de admin
 const ADMIN_CREDENTIALS = {
@@ -24,7 +24,7 @@ const ADMIN_CREDENTIALS = {
   password: process.env.PLAYWRIGHT_ADMIN_PASSWORD ?? "Gi$ele0809",
 };
 
-// Extend test with authenticated page
+// Extend test with authenticated page that navigates to the MVP funnel editor
 const test = base.extend<{ authenticatedPage: Page }>({
   authenticatedPage: async ({ page }, use) => {
     const context = page.context();
