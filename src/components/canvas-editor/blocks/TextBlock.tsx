@@ -23,8 +23,14 @@ export const TextBlock: React.FC<TextBlockProps> = ({ content, isPreview }) => {
     right: "text-right",
   };
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="w-full">
+    <div 
+      className="w-full p-2 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <p
         className={cn(
           "w-full text-muted-foreground",

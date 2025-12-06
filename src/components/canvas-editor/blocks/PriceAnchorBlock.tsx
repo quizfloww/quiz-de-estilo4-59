@@ -1,6 +1,6 @@
-import React from 'react';
-import { CanvasBlockContent, PriceAnchorItem } from '@/types/canvasBlocks';
-import { cn } from '@/lib/utils';
+import React from "react";
+import { CanvasBlockContent, PriceAnchorItem } from "@/types/canvasBlocks";
+import { cn } from "@/lib/utils";
 
 interface PriceAnchorBlockProps {
   content: CanvasBlockContent;
@@ -8,21 +8,34 @@ interface PriceAnchorBlockProps {
 }
 
 const DEFAULT_ITEMS: PriceAnchorItem[] = [
-  { id: '1', label: 'Guia de Estilo Personalizado', originalPrice: 97 },
-  { id: '2', label: 'Bônus: Peças-chave do Guarda-roupa', originalPrice: 67 },
-  { id: '3', label: 'Bônus: Guia de Visagismo', originalPrice: 47 },
+  { id: "1", label: "Guia de Estilo Personalizado", originalPrice: 97 },
+  { id: "2", label: "Bônus: Peças-chave do Guarda-roupa", originalPrice: 67 },
+  { id: "3", label: "Bônus: Guia de Visagismo", originalPrice: 47 },
 ];
 
-export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({ content, isPreview }) => {
+export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
+  content,
+  isPreview,
+}) => {
   const items = content.priceItems?.length ? content.priceItems : DEFAULT_ITEMS;
-  const totalOriginal = content.totalOriginal || items.reduce((sum, item) => sum + item.originalPrice, 0);
+  const totalOriginal =
+    content.totalOriginal ||
+    items.reduce((sum, item) => sum + item.originalPrice, 0);
   const finalPrice = content.finalPrice || 39;
   const installments = content.installments || { count: 5, value: 8.83 };
-  const discountBadge = content.discountBadge || `-${Math.round((1 - finalPrice / totalOriginal) * 100)}%`;
-  const currency = content.currency || 'R$';
+  const discountBadge =
+    content.discountBadge ||
+    `-${Math.round((1 - finalPrice / totalOriginal) * 100)}%`;
+  const currency = content.currency || "R$";
+
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
 
   return (
-    <div className="w-full p-6 rounded-xl bg-white border-2 border-[#B89B7A]/30 shadow-lg">
+    <div
+      className="w-full p-6 rounded-xl border-2 border-[#B89B7A]/30 shadow-lg"
+      style={{ backgroundColor: blockBackgroundColor || "#ffffff" }}
+    >
       {/* Badge de Desconto */}
       <div className="flex justify-center mb-4">
         <span className="inline-block px-4 py-1 bg-red-500 text-white text-sm font-bold rounded-full">
@@ -33,8 +46,13 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({ content, isP
       {/* Lista de itens */}
       <div className="space-y-3 mb-6">
         {items.map((item) => (
-          <div key={item.id} className="flex items-center justify-between py-2 border-b border-dashed border-[#B89B7A]/30">
-            <span className="text-[#5A4A3A] text-sm md:text-base">{item.label}</span>
+          <div
+            key={item.id}
+            className="flex items-center justify-between py-2 border-b border-dashed border-[#B89B7A]/30"
+          >
+            <span className="text-[#5A4A3A] text-sm md:text-base">
+              {item.label}
+            </span>
             <span className="text-[#8F7A6A] line-through text-sm">
               {currency} {item.originalPrice.toFixed(2)}
             </span>

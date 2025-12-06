@@ -70,8 +70,14 @@ export const BonusBlock: React.FC<BonusBlockProps> = ({
     return "grid grid-cols-1 md:grid-cols-2 gap-6"; // Padrão: 1 coluna mobile, 2 desktop
   };
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="w-full py-6 sm:py-8 md:py-10 px-2 sm:px-4">
+    <div
+      className="w-full py-6 sm:py-8 md:py-10 px-2 sm:px-4 rounded-xl"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <h2 className="text-xl sm:text-2xl md:text-3xl font-playfair text-[#aa6b5d] text-center mb-2">
         {title}
       </h2>

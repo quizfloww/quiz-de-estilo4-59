@@ -9,8 +9,14 @@ interface HeaderBlockProps {
 }
 
 export const HeaderBlock: React.FC<HeaderBlockProps> = ({ content, isPreview }) => {
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="flex flex-row w-full h-auto justify-center relative">
+    <div 
+      className="flex flex-row w-full h-auto justify-center relative p-2 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       {content.showBackButton && (
         <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-primary hover:text-primary-foreground h-10 w-10 absolute left-0">
           <ArrowLeft className="h-4 w-4" />

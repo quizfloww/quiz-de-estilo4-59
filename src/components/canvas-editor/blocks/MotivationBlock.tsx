@@ -27,8 +27,18 @@ export const MotivationBlock: React.FC<MotivationBlockProps> = ({
   const points = content.motivationPoints || defaultMotivationPoints;
   const imageUrl = content.motivationImageUrl;
 
+  // Background color (usa gradiente padrão se não configurado)
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="w-full py-8 px-4 bg-gradient-to-br from-[#fffaf7] to-white rounded-xl border border-[#B89B7A]/10">
+    <div
+      className="w-full py-8 px-4 rounded-xl border border-[#B89B7A]/10"
+      style={{
+        background:
+          blockBackgroundColor ||
+          "linear-gradient(to bottom right, #fffaf7, white)",
+      }}
+    >
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">

@@ -23,6 +23,9 @@ export const CountdownBlock: React.FC<CountdownBlockProps> = ({
   const expiryMessage =
     content.expiryMessage || "Esta oferta exclusiva expira em:";
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   const [timeLeft, setTimeLeft] = useState({
     hours: initialHours,
     minutes: initialMinutes,
@@ -49,7 +52,10 @@ export const CountdownBlock: React.FC<CountdownBlockProps> = ({
   }, [isPreview]);
 
   return (
-    <Card className="w-full bg-white p-3 sm:p-4 mb-4 sm:mb-6 border-[#B89B7A]/20 shadow-sm">
+    <Card
+      className="w-full p-3 sm:p-4 mb-4 sm:mb-6 border-[#B89B7A]/20 shadow-sm"
+      style={{ backgroundColor: blockBackgroundColor || "#ffffff" }}
+    >
       <div className="text-center">
         <p className="text-sm sm:text-base text-[#432818] mb-2 sm:mb-3 font-medium">
           {expiryMessage}

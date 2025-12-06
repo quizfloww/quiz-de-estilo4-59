@@ -36,6 +36,9 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
   const mobileLayout = content.mobileLayout || "stacked";
   const imagePosition = content.mentorImagePosition || "top";
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   // Classes baseadas na configuração de layout mobile
   const getGridClasses = () => {
     if (mobileLayout === "side-by-side") {
@@ -63,7 +66,10 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
   };
 
   return (
-    <Card className="w-full p-4 sm:p-6 md:p-8 mb-6 md:mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden relative">
+    <Card
+      className="w-full p-4 sm:p-6 md:p-8 mb-6 md:mb-10 shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden relative"
+      style={{ backgroundColor: blockBackgroundColor || "#ffffff" }}
+    >
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#B89B7A]/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[#aa6b5d]/5 rounded-full blur-3xl"></div>

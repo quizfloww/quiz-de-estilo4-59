@@ -25,8 +25,14 @@ export const SecurePurchaseBlock: React.FC<SecurePurchaseBlockProps> = ({
     content.secureText ||
     "Pagamento processado pela Hotmart, maior plataforma de produtos digitais da América Latina.";
 
+  // Background color
+  const blockBackgroundColor = content.backgroundColor;
+
   return (
-    <div className="w-full py-6 px-4">
+    <div
+      className="w-full py-6 px-4 rounded-xl"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <div className="max-w-md mx-auto text-center">
         {/* Selos de Segurança */}
         <div className="flex justify-center items-center gap-4 mb-4">
