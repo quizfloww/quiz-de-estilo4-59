@@ -1909,6 +1909,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderPersonalizedHookProperties = () => (
     <>
+      {renderScaleControl()}
       {/* Configuração de Saudação Personalizada */}
       <div className="space-y-2 pb-3 mb-3 border-b border-muted">
         <Label className="text-muted-foreground text-xs uppercase">
@@ -2013,6 +2014,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderStyleGuideProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="guideImageUrl">URL da Imagem do Guia</Label>
         <Input
@@ -2326,6 +2328,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="bonusTitle">Título</Label>
           <Input
@@ -2495,6 +2498,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="testimonialsTitle">Título</Label>
           <Input
@@ -2696,6 +2700,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderMentorProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="mentorName">Nome da Mentora</Label>
         <Input
@@ -2790,6 +2795,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="secureText">Texto de Segurança</Label>
           <Textarea
