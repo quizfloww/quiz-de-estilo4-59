@@ -76,7 +76,37 @@ export const convertStageToBlocks = (
       },
     });
   } else if (stage.type === "result") {
-    // Blocos especiais para resultado
+    // Blocos especiais para resultado - seguindo a estrutura da ResultPage.tsx
+
+    // 1. Personalized Hook (gancho personalizado)
+    blocks.push({
+      id: `${stage.id}-personalizedHook`,
+      type: "personalizedHook",
+      order: order++,
+      content: {
+        hookTitle: config.hookTitle || "",
+        hookSubtitle: config.hookSubtitle || "",
+        hookStyle: config.hookStyle || "elegant",
+        showCta: config.showHookCta !== false,
+      },
+    });
+
+    // 2. Countdown (urgência)
+    blocks.push({
+      id: `${stage.id}-countdown`,
+      type: "countdown",
+      order: order++,
+      content: {
+        hours: config.countdownHours ?? 2,
+        minutes: config.countdownMinutes ?? 47,
+        seconds: config.countdownSeconds ?? 33,
+        countdownVariant: config.countdownVariant || "dramatic",
+        expiryMessage:
+          config.expiryMessage || "Esta oferta expira ao sair desta página!",
+      },
+    });
+
+    // 3. Style Result
     blocks.push({
       id: `${stage.id}-styleResult`,
       type: "styleResult",
@@ -89,6 +119,7 @@ export const convertStageToBlocks = (
       },
     });
 
+    // 4. Secondary Styles
     blocks.push({
       id: `${stage.id}-secondaryStyles`,
       type: "secondaryStyles",
@@ -99,13 +130,83 @@ export const convertStageToBlocks = (
       },
     });
 
+    // 5. Style Guide Visual
     blocks.push({
-      id: `${stage.id}-spacer1`,
-      type: "spacer",
+      id: `${stage.id}-styleGuide`,
+      type: "styleGuide",
       order: order++,
-      content: { height: "2rem" },
+      content: {
+        showSecondaryGuides: config.showSecondaryGuides !== false,
+        guideImageSize: config.guideImageSize || "lg",
+        showExclusiveBadge: config.showExclusiveBadge !== false,
+        imageUrl: config.guideImageUrl || "",
+      },
     });
 
+    // 6. Benefits List (CTA Section)
+    blocks.push({
+      id: `${stage.id}-benefitsList`,
+      type: "benefitsList",
+      order: order++,
+      content: {
+        benefits: config.benefits || [],
+        benefitsLayout: config.benefitsLayout || "list",
+        benefitsColumns: config.benefitsColumns || 1,
+        showBenefitIcons: config.showBenefitIcons !== false,
+      },
+    });
+
+    // 7. Before/After Transformation
+    blocks.push({
+      id: `${stage.id}-beforeAfter`,
+      type: "beforeAfter",
+      order: order++,
+      content: {
+        beforeAfterItems: config.beforeAfterItems || [],
+        beforeAfterLayout: config.beforeAfterLayout || "side-by-side",
+        beforeAfterTitle: config.beforeAfterTitle || "Transformações Reais",
+      },
+    });
+
+    // 8. Motivation Section
+    blocks.push({
+      id: `${stage.id}-motivation`,
+      type: "motivation",
+      order: order++,
+      content: {
+        motivationTitle: config.motivationTitle || "",
+        motivationSubtitle: config.motivationSubtitle || "",
+        motivationPoints: config.motivationPoints || [],
+        motivationImageUrl: config.motivationImageUrl || "",
+      },
+    });
+
+    // 9. Bonus Section
+    blocks.push({
+      id: `${stage.id}-bonus`,
+      type: "bonus",
+      order: order++,
+      content: {
+        bonusItems: config.bonusItems || [],
+        bonusTitle: config.bonusTitle || "Bônus Exclusivos",
+        bonusSubtitle: config.bonusSubtitle || "",
+      },
+    });
+
+    // 10. Testimonials (múltiplos)
+    blocks.push({
+      id: `${stage.id}-testimonials`,
+      type: "testimonials",
+      order: order++,
+      content: {
+        testimonials: config.testimonials || [],
+        testimonialsLayout: config.testimonialsLayout || "grid",
+        testimonialsTitle:
+          config.testimonialsTitle || "O Que Nossas Alunas Dizem",
+      },
+    });
+
+    // 11. Price Anchor
     blocks.push({
       id: `${stage.id}-priceAnchor`,
       type: "priceAnchor",
@@ -114,9 +215,40 @@ export const convertStageToBlocks = (
         finalPrice: config.finalPrice ?? 39,
         totalOriginal: config.totalOriginal ?? 175,
         currency: config.currency || "R$",
+        priceItems: config.priceItems || [],
+        discountBadge: config.discountBadge || "-78% HOJE",
       },
     });
 
+    // 12. Guarantee
+    blocks.push({
+      id: `${stage.id}-guarantee`,
+      type: "guarantee",
+      order: order++,
+      content: {
+        guaranteeDays: config.guaranteeDays ?? 7,
+        guaranteeTitle:
+          config.guaranteeTitle || "7 Dias de Garantia Incondicional",
+        guaranteeDescription: config.guaranteeDescription || "",
+        guaranteeImageUrl: config.guaranteeImageUrl || "",
+      },
+    });
+
+    // 13. Mentor Section
+    blocks.push({
+      id: `${stage.id}-mentor`,
+      type: "mentor",
+      order: order++,
+      content: {
+        mentorName: config.mentorName || "Gisele Galvão",
+        mentorTitle: config.mentorTitle || "Consultora de Imagem & Estilo",
+        mentorDescription: config.mentorDescription || "",
+        mentorImageUrl: config.mentorImageUrl || "",
+        mentorCredentials: config.mentorCredentials || [],
+      },
+    });
+
+    // 14. CTA Offer (principal)
     blocks.push({
       id: `${stage.id}-ctaOffer`,
       type: "ctaOffer",
@@ -130,16 +262,15 @@ export const convertStageToBlocks = (
       },
     });
 
+    // 15. Secure Purchase
     blocks.push({
-      id: `${stage.id}-guarantee`,
-      type: "guarantee",
+      id: `${stage.id}-securePurchase`,
+      type: "securePurchase",
       order: order++,
       content: {
-        guaranteeDays: config.guaranteeDays ?? 7,
-        guaranteeTitle:
-          config.guaranteeTitle || "7 Dias de Garantia Incondicional",
-        guaranteeDescription: config.guaranteeDescription || "",
-        guaranteeImageUrl: config.guaranteeImageUrl || "",
+        securityBadges: config.securityBadges || [],
+        paymentMethods: config.paymentMethods || [],
+        secureText: config.secureText || "",
       },
     });
 
@@ -381,6 +512,52 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
       socialProofIcon: "users",
       socialProofVariant: "badge",
     },
+    // Novos blocos de Resultado
+    personalizedHook: {
+      hookTitle: "",
+      hookSubtitle: "",
+      hookStyle: "elegant",
+      showCta: false,
+    },
+    styleGuide: {
+      showSecondaryGuides: true,
+      guideImageSize: "lg",
+      showExclusiveBadge: true,
+    },
+    beforeAfter: {
+      beforeAfterItems: [],
+      beforeAfterLayout: "side-by-side",
+      beforeAfterTitle: "Transformações Reais",
+    },
+    // Novos blocos de Vendas
+    motivation: {
+      motivationTitle: "Por Que Conhecer Seu Estilo Transforma Sua Vida",
+      motivationSubtitle: "",
+      motivationPoints: [],
+      motivationImageUrl: "",
+    },
+    bonus: {
+      bonusItems: [],
+      bonusTitle: "Bônus Exclusivos",
+      bonusSubtitle: "",
+    },
+    testimonials: {
+      testimonials: [],
+      testimonialsLayout: "grid",
+      testimonialsTitle: "O Que Nossas Alunas Dizem",
+    },
+    mentor: {
+      mentorName: "Gisele Galvão",
+      mentorTitle: "Consultora de Imagem & Estilo",
+      mentorDescription: "",
+      mentorImageUrl: "",
+      mentorCredentials: [],
+    },
+    securePurchase: {
+      securityBadges: [],
+      paymentMethods: [],
+      secureText: "",
+    },
   };
 
   return {
@@ -461,6 +638,66 @@ export const blocksToStageConfig = (
         config.guaranteeTitle = block.content.guaranteeTitle;
         config.guaranteeDescription = block.content.guaranteeDescription;
         config.guaranteeImageUrl = block.content.guaranteeImageUrl;
+        break;
+      // Novos blocos de Resultado
+      case "personalizedHook":
+        config.hookTitle = block.content.hookTitle;
+        config.hookSubtitle = block.content.hookSubtitle;
+        config.hookStyle = block.content.hookStyle;
+        config.showHookCta = block.content.showCta;
+        break;
+      case "styleGuide":
+        config.showSecondaryGuides = block.content.showSecondaryGuides;
+        config.guideImageSize = block.content.guideImageSize;
+        config.showExclusiveBadge = block.content.showExclusiveBadge;
+        config.guideImageUrl = block.content.imageUrl;
+        break;
+      case "beforeAfter":
+        config.beforeAfterItems = block.content.beforeAfterItems;
+        config.beforeAfterLayout = block.content.beforeAfterLayout;
+        config.beforeAfterTitle = block.content.beforeAfterTitle;
+        break;
+      case "countdown":
+        config.countdownHours = block.content.hours;
+        config.countdownMinutes = block.content.minutes;
+        config.countdownSeconds = block.content.seconds;
+        config.countdownVariant = block.content.countdownVariant;
+        config.expiryMessage = block.content.expiryMessage;
+        break;
+      case "benefitsList":
+        config.benefits = block.content.benefits;
+        config.benefitsLayout = block.content.benefitsLayout;
+        config.benefitsColumns = block.content.benefitsColumns;
+        config.showBenefitIcons = block.content.showBenefitIcons;
+        break;
+      // Novos blocos de Vendas
+      case "motivation":
+        config.motivationTitle = block.content.motivationTitle;
+        config.motivationSubtitle = block.content.motivationSubtitle;
+        config.motivationPoints = block.content.motivationPoints;
+        config.motivationImageUrl = block.content.motivationImageUrl;
+        break;
+      case "bonus":
+        config.bonusItems = block.content.bonusItems;
+        config.bonusTitle = block.content.bonusTitle;
+        config.bonusSubtitle = block.content.bonusSubtitle;
+        break;
+      case "testimonials":
+        config.testimonials = block.content.testimonials;
+        config.testimonialsLayout = block.content.testimonialsLayout;
+        config.testimonialsTitle = block.content.testimonialsTitle;
+        break;
+      case "mentor":
+        config.mentorName = block.content.mentorName;
+        config.mentorTitle = block.content.mentorTitle;
+        config.mentorDescription = block.content.mentorDescription;
+        config.mentorImageUrl = block.content.mentorImageUrl;
+        config.mentorCredentials = block.content.mentorCredentials;
+        break;
+      case "securePurchase":
+        config.securityBadges = block.content.securityBadges;
+        config.paymentMethods = block.content.paymentMethods;
+        config.secureText = block.content.secureText;
         break;
     }
   });
