@@ -2267,57 +2267,147 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <Input
             id="bonusTitle"
             value={block.content.bonusTitle || ""}
-          onChange={(e) => updateContent("bonusTitle", e.target.value)}
-          placeholder="Bônus Exclusivos"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="bonusSubtitle">Subtítulo</Label>
-        <Input
-          id="bonusSubtitle"
-          value={block.content.bonusSubtitle || ""}
-          onChange={(e) => updateContent("bonusSubtitle", e.target.value)}
-          placeholder="Além do Guia Principal..."
-        />
-      </div>
+            onChange={(e) => updateContent("bonusTitle", e.target.value)}
+            placeholder="Bônus Exclusivos"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="bonusSubtitle">Subtítulo</Label>
+          <Input
+            id="bonusSubtitle"
+            value={block.content.bonusSubtitle || ""}
+            onChange={(e) => updateContent("bonusSubtitle", e.target.value)}
+            placeholder="Além do Guia Principal..."
+          />
+        </div>
 
-      {/* Mobile Layout Controls */}
-      <div className="space-y-2 pt-3 border-t">
-        <Label className="text-xs font-semibold text-muted-foreground uppercase">
-          Layout Mobile
-        </Label>
-        <Select
-          value={block.content.mobileLayout || "stacked"}
-          onValueChange={(value) => updateContent("mobileLayout", value)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
-            <SelectItem value="side-by-side">
-              Lado a lado (2 colunas)
-            </SelectItem>
-          </SelectContent>
-        </Select>
-        <p className="text-xs text-muted-foreground">
-          Como os bônus aparecem em celulares
-        </p>
-      </div>
+        {/* Editor de Bônus */}
+        <div className="space-y-3 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Itens de Bônus ({bonusItems.length})
+          </Label>
+          
+          {bonusItems.map((item: { id: string; title: string; description?: string; imageUrl?: string; value?: string }, idx: number) => (
+            <Card key={item.id} className="p-3">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xs font-medium">Bônus {idx + 1}</Label>
+                  <button
+                    type="button"
+                    className="text-xs text-destructive hover:underline"
+                    onClick={() => {
+                      const newItems = bonusItems.filter((_: unknown, i: number) => i !== idx);
+                      updateContent("bonusItems", newItems);
+                    }}
+                  >
+                    Remover
+                  </button>
+                </div>
+                
+                <Input
+                  value={item.title || ""}
+                  onChange={(e) => {
+                    const newItems = [...bonusItems];
+                    newItems[idx] = { ...newItems[idx], title: e.target.value };
+                    updateContent("bonusItems", newItems);
+                  }}
+                  placeholder="Título do bônus"
+                />
+                
+                <Textarea
+                  value={item.description || ""}
+                  onChange={(e) => {
+                    const newItems = [...bonusItems];
+                    newItems[idx] = { ...newItems[idx], description: e.target.value };
+                    updateContent("bonusItems", newItems);
+                  }}
+                  placeholder="Descrição"
+                  rows={2}
+                />
+                
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    value={item.imageUrl || ""}
+                    onChange={(e) => {
+                      const newItems = [...bonusItems];
+                      newItems[idx] = { ...newItems[idx], imageUrl: e.target.value };
+                      updateContent("bonusItems", newItems);
+                    }}
+                    placeholder="URL da imagem"
+                  />
+                  <Input
+                    value={item.value || ""}
+                    onChange={(e) => {
+                      const newItems = [...bonusItems];
+                      newItems[idx] = { ...newItems[idx], value: e.target.value };
+                      updateContent("bonusItems", newItems);
+                    }}
+                    placeholder="Valor (ex: R$97)"
+                  />
+                </div>
+              </div>
+            </Card>
+          ))}
+          
+          <button
+            type="button"
+            className="w-full py-2 text-sm border border-dashed rounded-md hover:bg-muted/50"
+            onClick={() => {
+              const newItems = [
+                ...bonusItems,
+                {
+                  id: uuidv4(),
+                  title: "",
+                  description: "",
+                  imageUrl: "",
+                  value: "",
+                },
+              ];
+              updateContent("bonusItems", newItems);
+            }}
+          >
+            + Adicionar Bônus
+          </button>
+        </div>
 
-      {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {/* Mobile Layout Controls */}
+        <div className="space-y-2 pt-3 border-t">
+          <Label className="text-xs font-semibold text-muted-foreground uppercase">
+            Layout Mobile
+          </Label>
+          <Select
+            value={block.content.mobileLayout || "stacked"}
+            onValueChange={(value) => updateContent("mobileLayout", value)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
+              <SelectItem value="side-by-side">
+                Lado a lado (2 colunas)
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Como os bônus aparecem em celulares
+          </p>
+        </div>
 
-      <p className="text-xs text-muted-foreground">
-        {block.content.bonusItems?.length || 3} bônus configurados
-      </p>
-    </>
-  );
-  const renderTestimonialsProperties = () => (
-    <>
-      <div className="space-y-2">
-        <Label htmlFor="testimonialsTitle">Título</Label>
-        <Input
-          id="testimonialsTitle"
+        {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      </>
+    );
+  };
+
+  const renderTestimonialsProperties = () => {
+    const testimonials = block.content.testimonials || [];
+    
+    return (
+      <>
+        <div className="space-y-2">
+          <Label htmlFor="testimonialsTitle">Título</Label>
+          <Input
+            id="testimonialsTitle"
           value={block.content.testimonialsTitle || ""}
           onChange={(e) => updateContent("testimonialsTitle", e.target.value)}
           placeholder="O Que Nossas Alunas Dizem"
