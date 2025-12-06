@@ -102,7 +102,7 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 - Instale a CLI: `npm i -g vercel` e faça login: `vercel login`.
 - Na Vercel, importe o repositório do GitHub e selecione framework "Vite".
 - Configure Environment Variables (Production/Preview):
-  - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_ENV` (ex: `production`), `VITE_SENTRY_DSN` (opcional).
+  - `VITE_SUPABASE_URL` (Project URL do Supabase), `VITE_SUPABASE_ANON_KEY` (Anon/Public key), `VITE_APP_ENV` (ex: `production`), `VITE_SENTRY_DSN` (opcional).
 - Build & Output:
   - Build: `npm run build` | Output: `dist` | Node 20.
 - Secrets no GitHub (para workflow):
