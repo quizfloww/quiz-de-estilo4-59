@@ -1,4 +1,3 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -7,103 +6,108 @@ import { componentTagger } from "./src/plugins/lovable-component-tagger.js";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  root: '.',
-  base: './',
-  
+  root: ".",
+  base: "/",
+
   server: {
-    host: '0.0.0.0',
+    host: "0.0.0.0",
     port: 8080,
     // Configurações CORS e mime-types para desenvolvimento
     headers: {
-      'X-Content-Type-Options': 'nosniff',
-      'Access-Control-Allow-Origin': '*',
+      "X-Content-Type-Options": "nosniff",
+      "Access-Control-Allow-Origin": "*",
     },
     fs: {
-      allow: ['../']
+      allow: ["../"],
     },
-    allowedHosts: [
-      "a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com"
-    ]
+    allowedHosts: ["a10d1b34-b5d4-426b-8c97-45f125d03ec1.lovableproject.com"],
   },
-  
+
   plugins: [
     react(),
     componentTagger(),
     // Compressão GZIP
     compression({
-      algorithm: 'gzip',
-      ext: '.gz',
+      algorithm: "gzip",
+      ext: ".gz",
       threshold: 10240,
       deleteOriginFile: false,
     }),
     // Compressão Brotli
     compression({
-      algorithm: 'brotliCompress',
-      ext: '.br',
+      algorithm: "brotliCompress",
+      ext: ".br",
       threshold: 10240,
       deleteOriginFile: false,
     }),
   ],
-  
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
   },
-  
+
   build: {
-    outDir: 'dist',
-    assetsDir: 'assets',
+    outDir: "dist",
+    assetsDir: "assets",
     emptyOutDir: true,
     sourcemap: false,
-    target: 'es2015',
-    minify: 'terser',
+    target: "es2015",
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info'],
+        pure_funcs: ["console.log", "console.info"],
       },
     },
     // Configurações para evitar problemas de MIME type
     rollupOptions: {
       output: {
         manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select', '@radix-ui/react-tabs'],
-          'vendor-utils': ['lodash', 'date-fns', 'clsx', 'tailwind-merge'],
-          'analytics': ['./src/utils/analytics', './src/utils/facebookPixel'],
-          'charts': ['recharts'],
-          'animations': ['framer-motion'],
+          "vendor-react": ["react", "react-dom", "react-router-dom"],
+          "vendor-ui": [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tabs",
+          ],
+          "vendor-utils": ["lodash", "date-fns", "clsx", "tailwind-merge"],
+          analytics: ["./src/utils/analytics", "./src/utils/facebookPixel"],
+          charts: ["recharts"],
+          animations: ["framer-motion"],
         },
         chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
+          const facadeModuleId = chunkInfo.facadeModuleId
+            ? chunkInfo.facadeModuleId.split("/").pop()
+            : "chunk";
           return `assets/${facadeModuleId}-[hash].js`;
         },
         assetFileNames: (assetInfo) => {
-          const extType = assetInfo.name?.split('.').at(1);
-          if (/webp|png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || '')) {
+          const extType = assetInfo.name?.split(".").at(1);
+          if (/webp|png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType || "")) {
             return `assets/images/[name]-[hash][extname]`;
           }
-          if (/woff2?|ttf|otf|eot/i.test(extType || '')) {
+          if (/woff2?|ttf|otf|eot/i.test(extType || "")) {
             return `assets/fonts/[name]-[hash][extname]`;
           }
           return `assets/[name]-[hash][extname]`;
         },
-      }
+      },
     },
     cssCodeSplit: true,
     chunkSizeWarningLimit: 1000,
   },
-  
+
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom'],
-    exclude: ['@huggingface/transformers'],
+    include: ["react", "react-dom", "react-router-dom"],
+    exclude: ["@huggingface/transformers"],
   },
-  
+
   css: {
-    devSourcemap: mode === 'development',
+    devSourcemap: mode === "development",
   },
 
   // Lovable integration configuration (sem token)
