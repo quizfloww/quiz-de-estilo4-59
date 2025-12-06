@@ -2274,15 +2274,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   const renderStyleGuideProperties = () => (
     <>
       {renderScaleControl()}
-      <div className="space-y-2">
-        <Label htmlFor="guideImageUrl">URL da Imagem do Guia</Label>
-        <Input
-          id="guideImageUrl"
-          value={block.content.imageUrl || ""}
-          onChange={(e) => updateContent("imageUrl", e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
+      <ImageFieldWithUpload
+        label="Imagem do Guia"
+        value={block.content.imageUrl || ""}
+        onChange={(url) => updateContent("imageUrl", url)}
+        thumbnailSize="lg"
+      />
       <div className="space-y-2">
         <Label>Tamanho da Imagem</Label>
         <Select
