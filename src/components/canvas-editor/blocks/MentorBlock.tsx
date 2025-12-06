@@ -1,23 +1,24 @@
 import React from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
-import { UserCircle, Award, BookOpen, Star } from "lucide-react";
+import { Card } from "@/components/ui/card";
 
 interface MentorBlockProps {
   content: CanvasBlockContent;
   isPreview?: boolean;
 }
 
-const defaultCredentials = [
-  "Especialista em Análise de Estilo",
-  "Consultora de Imagem Certificada",
-  "Mais de 5.000 mulheres transformadas",
-  "Especialista em coloração pessoal com Certificação internacional",
-];
-
 // Imagem original da mentora Gisele Galvão
 const DEFAULT_MENTOR_IMAGE =
   "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp";
 
+/**
+ * MentorBlock - Design igual ao MentorSection.tsx real
+ * - Card branco com border elegante
+ * - Grid 2 colunas
+ * - Decorative corners douradas
+ * - Imagem com hover:scale-105
+ * - Background blur decorativo
+ */
 export const MentorBlock: React.FC<MentorBlockProps> = ({
   content,
   isPreview,
@@ -25,65 +26,43 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
   const name = content.mentorName || "Gisele Galvão";
   const title =
     content.mentorTitle ||
-    "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal e Especialista em coloração pessoal com Certificação internacional";
+    "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal e Especialista em coloração pessoal com Certificação internacional.";
   const description =
     content.mentorDescription ||
     "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal.";
   const imageUrl = content.mentorImageUrl || DEFAULT_MENTOR_IMAGE;
-  const credentials = content.mentorCredentials || defaultCredentials;
 
   return (
-    <div className="w-full py-8 px-4 bg-gradient-to-br from-[#432818] to-[#5a3a28] rounded-xl">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <UserCircle className="w-5 h-5 text-[#B89B7A]" />
-            <span className="text-sm font-medium uppercase tracking-wide text-[#B89B7A]">
-              Sua Mentora
-            </span>
-          </div>
+    <Card className="p-6 mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden relative">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#B89B7A]/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[#aa6b5d]/5 rounded-full blur-3xl"></div>
+
+      <div className="grid md:grid-cols-2 gap-8 items-center relative z-10">
+        <div>
+          <h2 className="text-2xl font-playfair text-[#aa6b5d] mb-4">
+            Conheça Sua Mentora
+          </h2>
+          <p className="text-[#432818] mb-4">
+            <strong>{name}</strong> — {title}
+          </p>
+          <p className="text-[#432818] mb-4">{description}</p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          {/* Imagem da Mentora */}
-          <div className="flex-shrink-0">
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={name}
-                className="w-48 h-48 rounded-full object-cover border-4 border-[#B89B7A]/30 shadow-xl"
-              />
-            ) : (
-              <div className="w-48 h-48 rounded-full bg-[#B89B7A]/20 flex items-center justify-center">
-                <UserCircle className="w-24 h-24 text-[#B89B7A]/50" />
-              </div>
-            )}
+        <div className="relative">
+          <div className="flex justify-center mb-6">
+            <img
+              src={imageUrl}
+              alt={`${name} - Consultora de Imagem e Estilo`}
+              className="w-full max-w-[300px] h-auto rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
+              loading="lazy"
+            />
           </div>
-
-          {/* Conteúdo */}
-          <div className="flex-1 text-center md:text-left">
-            <h3 className="text-2xl md:text-3xl font-playfair font-bold text-white mb-1">
-              {name}
-            </h3>
-            <p className="text-[#B89B7A] font-medium mb-4">{title}</p>
-
-            <p className="text-gray-300 leading-relaxed mb-6">{description}</p>
-
-            {/* Credenciais */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-3">
-              {credentials.slice(0, 4).map((credential, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-full"
-                >
-                  <Award className="w-4 h-4 text-[#B89B7A]" />
-                  <span className="text-sm text-white">{credential}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Elegant decorative corner */}
+          <div className="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
+          <div className="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
