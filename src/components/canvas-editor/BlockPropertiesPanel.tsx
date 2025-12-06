@@ -253,15 +253,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         />
       </div>
       {block.content.showLogo && (
-        <div className="space-y-2">
-          <Label htmlFor="logoUrl">URL do Logo</Label>
-          <Input
-            id="logoUrl"
-            value={block.content.logoUrl || ""}
-            onChange={(e) => updateContent("logoUrl", e.target.value)}
-            placeholder="https://..."
-          />
-        </div>
+        <ImageFieldWithUpload
+          label="Logo"
+          value={block.content.logoUrl || ""}
+          onChange={(url) => updateContent("logoUrl", url)}
+          thumbnailSize="sm"
+        />
       )}
       <div className="flex items-center justify-between">
         <Label htmlFor="showProgress">Mostrar Progresso</Label>
