@@ -1439,6 +1439,31 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           placeholder="Além do Guia Principal..."
         />
       </div>
+
+      {/* Mobile Layout Controls */}
+      <div className="space-y-2 pt-3 border-t">
+        <Label className="text-xs font-semibold text-muted-foreground uppercase">
+          Layout Mobile
+        </Label>
+        <Select
+          value={block.content.mobileLayout || "stacked"}
+          onValueChange={(value) => updateContent("mobileLayout", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
+            <SelectItem value="side-by-side">
+              Lado a lado (2 colunas)
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          Como os bônus aparecem em celulares
+        </p>
+      </div>
+
       <p className="text-xs text-muted-foreground">
         {block.content.bonusItems?.length || 3} bônus configurados
       </p>
@@ -1472,6 +1497,31 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
+      {/* Mobile Layout Controls */}
+      <div className="space-y-2 pt-3 border-t">
+        <Label className="text-xs font-semibold text-muted-foreground uppercase">
+          Layout Mobile
+        </Label>
+        <Select
+          value={block.content.mobileLayout || "stacked"}
+          onValueChange={(value) => updateContent("mobileLayout", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="stacked">Empilhado (1 coluna)</SelectItem>
+            <SelectItem value="side-by-side">
+              Lado a lado (2+ colunas)
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">
+          Como os depoimentos aparecem em celulares
+        </p>
+      </div>
+
       <p className="text-xs text-muted-foreground">
         {block.content.testimonials?.length || 3} depoimentos configurados
       </p>
@@ -1517,6 +1567,48 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           placeholder="https://..."
         />
       </div>
+
+      {/* Mobile Layout Controls */}
+      <div className="space-y-2 pt-3 border-t">
+        <Label className="text-xs font-semibold text-muted-foreground uppercase">
+          Layout Mobile
+        </Label>
+        <Select
+          value={block.content.mobileLayout || "stacked"}
+          onValueChange={(value) => updateContent("mobileLayout", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="stacked">Empilhado</SelectItem>
+            <SelectItem value="side-by-side">Lado a lado</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {block.content.mobileLayout !== "side-by-side" && (
+        <div className="space-y-2">
+          <Label>Posição da Foto (Mobile)</Label>
+          <Select
+            value={block.content.mentorImagePosition || "top"}
+            onValueChange={(value) =>
+              updateContent("mentorImagePosition", value)
+            }
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="top">Foto em cima</SelectItem>
+              <SelectItem value="bottom">Foto embaixo</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Ordem da foto e texto no modo empilhado
+          </p>
+        </div>
+      )}
     </>
   );
 
