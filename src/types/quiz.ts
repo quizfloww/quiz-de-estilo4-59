@@ -1,6 +1,13 @@
-
 export interface StyleResult {
-  category: 'Natural' | 'Clássico' | 'Contemporâneo' | 'Elegante' | 'Romântico' | 'Sexy' | 'Dramático' | 'Criativo';
+  category:
+    | "Natural"
+    | "Clássico"
+    | "Contemporâneo"
+    | "Elegante"
+    | "Romântico"
+    | "Sexy"
+    | "Dramático"
+    | "Criativo";
   score: number;
   percentage: number;
 }
@@ -58,7 +65,7 @@ export interface UserResponse {
 export interface QuizQuestion {
   id: string;
   title: string;
-  type: 'image' | 'text' | 'both'; // Added 'both' to the union
+  type: "image" | "text" | "both"; // Added 'both' to the union
   options: QuizOption[];
   multiSelect: number;
   imageUrl?: string;
@@ -69,5 +76,6 @@ export interface QuizOption {
   text: string;
   styleCategory: string;
   imageUrl?: string;
+  image_url?: string; // Suporte para snake_case do banco de dados
   points?: number;
 }

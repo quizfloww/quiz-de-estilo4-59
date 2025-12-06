@@ -112,8 +112,9 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
 
   const optionBlock = blocks.find((block) => block.type === "options");
   const optionItems = optionBlock?.content?.options || [];
+  // Suporta tanto imageUrl quanto image_url (snake_case do banco)
   const optionWarnings = optionItems.some(
-    (option: any) => !option.text && !option.imageUrl
+    (option: any) => !option.text && !option.imageUrl && !option.image_url
   );
 
   return (

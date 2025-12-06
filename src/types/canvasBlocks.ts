@@ -34,6 +34,7 @@ export interface CanvasOption {
   id: string;
   text: string;
   imageUrl?: string;
+  image_url?: string; // Suporte para snake_case do banco de dados
   styleCategory?: string;
   points?: number;
 }
