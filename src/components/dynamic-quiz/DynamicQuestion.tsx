@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { FunnelStage } from '@/hooks/usePublicFunnel';
-import { DynamicQuizOption } from './DynamicQuizOption';
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { FunnelStage } from "@/hooks/usePublicFunnel";
+import { DynamicQuizOption } from "./DynamicQuizOption";
+import { cn } from "@/lib/utils";
 
 interface DynamicQuestionProps {
   stage: FunnelStage;
@@ -19,12 +20,17 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
   const [selected, setSelected] = useState<string[]>(currentAnswers || []);
   const config = stage.config || {};
 
+  // Detecta se é questão estratégica
+  const isStrategicQuestion = stage.type === "strategic";
+
   const questionText = config.questionText || stage.title;
-  const displayType = config.displayType || 'text';
+  const displayType = config.displayType || "text";
   const multiSelect = config.multiSelect || false;
   const requiredSelections = config.requiredSelections || (multiSelect ? 3 : 1);
-  const autoAdvance = config.autoAdvance !== false && !multiSelect;
-  const buttonText = config.buttonText || 'Continuar';
+  const autoAdvance =
+    config.autoAdvance !== false && !multiSelect && !isStrategicQuestion;
+  const buttonText =
+    config.buttonText || (isStrategicQuestion ? "Próximo" : "Continuar");
 
   useEffect(() => {
     setSelected(currentAnswers || []);
@@ -35,7 +41,7 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
 
     if (multiSelect) {
       if (selected.includes(optionId)) {
-        newSelected = selected.filter(id => id !== optionId);
+        newSelected = selected.filter((id) => id !== optionId);
       } else if (selected.length < requiredSelections) {
         newSelected = [...selected, optionId];
       } else {
@@ -56,32 +62,51 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
     }
   };
 
-  const canContinue = multiSelect 
-    ? selected.length === requiredSelections 
+  const canContinue = multiSelect
+    ? selected.length === requiredSelections
     : selected.length > 0;
 
   // Determine grid layout based on display type
   const getGridClasses = () => {
-    if (displayType === 'text') {
-      return 'flex flex-col gap-2';
+    if (displayType === "text") {
+      return "flex flex-col gap-2";
     }
     // Image or both - use grid
-    return 'grid grid-cols-2 gap-3';
+    return "grid grid-cols-2 gap-3";
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full max-w-2xl mx-auto">
-      <h1 className="text-2xl md:text-3xl font-bold text-center mb-4">
+    <div
+      className={cn(
+        "flex flex-col gap-4 w-full max-w-2xl mx-auto",
+        isStrategicQuestion && "max-w-3xl"
+      )}
+    >
+      <h1
+        className={cn(
+          "text-2xl md:text-3xl font-bold text-center mb-4",
+          isStrategicQuestion &&
+            "text-xl md:text-2xl font-playfair text-[#432818]"
+        )}
+      >
         {questionText}
       </h1>
 
       {multiSelect && (
         <p className="text-center text-muted-foreground text-sm mb-2">
-          Selecione {requiredSelections} opções ({selected.length}/{requiredSelections})
+          Selecione {requiredSelections} opções ({selected.length}/
+          {requiredSelections})
         </p>
       )}
 
-      <div className={getGridClasses()}>
+      {/* Instrução para questões estratégicas single-select */}
+      {isStrategicQuestion && !multiSelect && (
+        <p className="text-center text-muted-foreground text-sm mb-2">
+          Selecione 1 opção para avançar
+        </p>
+      )}
+
+      <div className={cn(getGridClasses(), isStrategicQuestion && "gap-4")}>
         {stage.options.map((option) => (
           <DynamicQuizOption
             key={option.id}
@@ -93,9 +118,14 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
         ))}
       </div>
 
-      {(multiSelect || !autoAdvance) && (
+      {(multiSelect || !autoAdvance || isStrategicQuestion) && (
         <Button
-          className="w-full h-14 mt-4"
+          className={cn(
+            "w-full h-14 mt-4",
+            isStrategicQuestion &&
+              canContinue &&
+              "bg-[#B89B7A] hover:bg-[#B89B7A]/90"
+          )}
           disabled={!canContinue}
           onClick={onContinue}
         >
