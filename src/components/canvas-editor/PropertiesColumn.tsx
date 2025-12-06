@@ -522,114 +522,24 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   };
   const stageSpecificConfigContent = renderStageSpecificConfig();
 
+  // Quando um bloco está selecionado, mostrar ele primeiro e em destaque
+  const hasSelectedBlock = selectedBlock && selectedBlock.type !== "header";
+
   return (
     <ScrollArea className="h-full">
       <div className="p-4 space-y-4">
-        {/* Card 1: Título da Etapa */}
-        <Card>
-          <CardHeader className="pb-2">
-            <p className="text-sm text-muted-foreground">Título da Etapa</p>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Label htmlFor="stepName">Nome da Etapa</Label>
-              <Input
-                id="stepName"
-                value={activeStage.title}
-                onChange={(e) => onUpdateStage({ title: e.target.value })}
-                placeholder="Digite aqui..."
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {stageSpecificConfigContent && (
-          <Card>
-            <CardHeader className="pb-2 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                Configurações da etapa
-              </p>
-              {onApplyStageConfigToAll && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs gap-1"
-                  onClick={() => onApplyStageConfigToAll(activeStage)}
-                >
-                  <Copy className="h-3 w-3" />
-                  Aplicar ao mesmo tipo
-                </Button>
-              )}
-            </CardHeader>
-            {stageSpecificConfigContent}
-          </Card>
-        )}
-
-        {/* Card 2: Configurações de Header */}
-        {headerBlock && (
-          <Card>
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <p className="text-sm text-muted-foreground">Header</p>
-              {onApplyHeaderToAll && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 text-xs gap-1"
-                  onClick={() => onApplyHeaderToAll(headerBlock)}
-                >
-                  <Copy className="h-3 w-3" />
-                  Aplicar a todas
-                </Button>
-              )}
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="show-logo" className="text-sm">
-                  Mostrar Logo
-                </Label>
-                <Switch
-                  id="show-logo"
-                  checked={headerBlock.content.showLogo}
-                  onCheckedChange={(checked) =>
-                    updateHeaderContent("showLogo", checked)
-                  }
-                />
+        {/* BLOCO SELECIONADO - Aparece primeiro quando selecionado */}
+        {hasSelectedBlock && (
+          <Card className="border-primary/50 shadow-md">
+            <CardHeader className="pb-2 flex flex-row items-center justify-between bg-primary/5 rounded-t-lg">
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                  Editando
+                </p>
+                <p className="text-sm font-medium text-primary">
+                  {BLOCK_TYPE_LABELS[selectedBlock.type]}
+                </p>
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="show-progress" className="text-sm">
-                  Mostrar Progresso
-                </Label>
-                <Switch
-                  id="show-progress"
-                  checked={headerBlock.content.showProgress}
-                  onCheckedChange={(checked) =>
-                    updateHeaderContent("showProgress", checked)
-                  }
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="allow-return" className="text-sm">
-                  Permitir Voltar
-                </Label>
-                <Switch
-                  id="allow-return"
-                  checked={headerBlock.content.showBackButton}
-                  onCheckedChange={(checked) =>
-                    updateHeaderContent("showBackButton", checked)
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Card 3: Propriedades do Bloco Selecionado */}
-        {selectedBlock && selectedBlock.type !== "header" && (
-          <Card>
-            <CardHeader className="pb-2 flex flex-row items-center justify-between">
-              <p className="text-sm text-muted-foreground">
-                {BLOCK_TYPE_LABELS[selectedBlock.type]}
-              </p>
               {onApplyBlockToAll && similarBlocksCount > 0 && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -668,7 +578,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 </DropdownMenu>
               )}
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-4">
               <BlockPropertiesPanel
                 block={selectedBlock}
                 onUpdateBlock={onUpdateBlock}
@@ -678,6 +588,124 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
             </CardContent>
           </Card>
         )}
+
+        {/* Mensagem quando nenhum bloco está selecionado */}
+        {!hasSelectedBlock && (
+          <div className="p-4 text-center text-muted-foreground bg-muted/30 rounded-lg border border-dashed">
+            <p className="text-sm">
+              👆 Clique em um bloco para editar suas propriedades
+            </p>
+          </div>
+        )}
+
+        {/* SEÇÕES SECUNDÁRIAS - Aparecem abaixo e mais discretas */}
+        <details
+          className={hasSelectedBlock ? "group" : "group open"}
+          open={!hasSelectedBlock}
+        >
+          <summary className="cursor-pointer text-xs font-medium text-muted-foreground uppercase tracking-wide py-2 hover:text-foreground transition-colors">
+            ⚙️ Configurações da Etapa
+          </summary>
+          <div className="space-y-4 pt-2">
+            {/* Card: Título da Etapa */}
+            <Card>
+              <CardHeader className="pb-2">
+                <p className="text-sm text-muted-foreground">Título da Etapa</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <Label htmlFor="stepName">Nome da Etapa</Label>
+                  <Input
+                    id="stepName"
+                    value={activeStage.title}
+                    onChange={(e) => onUpdateStage({ title: e.target.value })}
+                    placeholder="Digite aqui..."
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {stageSpecificConfigContent && (
+              <Card>
+                <CardHeader className="pb-2 flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    Configurações da etapa
+                  </p>
+                  {onApplyStageConfigToAll && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs gap-1"
+                      onClick={() => onApplyStageConfigToAll(activeStage)}
+                    >
+                      <Copy className="h-3 w-3" />
+                      Aplicar ao mesmo tipo
+                    </Button>
+                  )}
+                </CardHeader>
+                {stageSpecificConfigContent}
+              </Card>
+            )}
+
+            {/* Header Config */}
+            {headerBlock && (
+              <Card>
+                <CardHeader className="pb-2 flex flex-row items-center justify-between">
+                  <p className="text-sm text-muted-foreground">Header</p>
+                  {onApplyHeaderToAll && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-7 text-xs gap-1"
+                      onClick={() => onApplyHeaderToAll(headerBlock)}
+                    >
+                      <Copy className="h-3 w-3" />
+                      Aplicar a todas
+                    </Button>
+                  )}
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="show-logo" className="text-sm">
+                      Mostrar Logo
+                    </Label>
+                    <Switch
+                      id="show-logo"
+                      checked={headerBlock.content.showLogo}
+                      onCheckedChange={(checked) =>
+                        updateHeaderContent("showLogo", checked)
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="show-progress" className="text-sm">
+                      Mostrar Progresso
+                    </Label>
+                    <Switch
+                      id="show-progress"
+                      checked={headerBlock.content.showProgress}
+                      onCheckedChange={(checked) =>
+                        updateHeaderContent("showProgress", checked)
+                      }
+                    />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="allow-return" className="text-sm">
+                      Permitir Voltar
+                    </Label>
+                    <Switch
+                      id="allow-return"
+                      checked={headerBlock.content.showBackButton}
+                      onCheckedChange={(checked) =>
+                        updateHeaderContent("showBackButton", checked)
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </details>
 
         {/* Espaçador para visual */}
         <div className="py-4" />
