@@ -82,10 +82,10 @@ export const convertStageToBlocks = (
       type: "styleResult",
       order: order++,
       content: {
-        showPercentage: true,
-        showDescription: true,
-        layout: "stacked",
-        styleImageSize: "lg",
+        showPercentage: config.showPercentage !== false,
+        showDescription: config.showDescription !== false,
+        layout: config.styleLayout || "stacked",
+        styleImageSize: config.styleImageSize || "lg",
       },
     });
 
@@ -94,8 +94,8 @@ export const convertStageToBlocks = (
       type: "secondaryStyles",
       order: order++,
       content: {
-        maxSecondaryStyles: 3,
-        showSecondaryPercentage: true,
+        maxSecondaryStyles: config.maxSecondaryStyles ?? 3,
+        showSecondaryPercentage: config.showSecondaryPercentage !== false,
       },
     });
 
@@ -135,7 +135,11 @@ export const convertStageToBlocks = (
       type: "guarantee",
       order: order++,
       content: {
-        guaranteeDays: 7,
+        guaranteeDays: config.guaranteeDays ?? 7,
+        guaranteeTitle:
+          config.guaranteeTitle || "7 Dias de Garantia Incondicional",
+        guaranteeDescription: config.guaranteeDescription || "",
+        guaranteeImageUrl: config.guaranteeImageUrl || "",
       },
     });
 
@@ -236,9 +240,13 @@ export const convertStageToBlocks = (
       type: "options",
       order: order++,
       content: {
-        displayType: hasImages ? "both" : "text",
+        displayType: config.displayType || (hasImages ? "both" : "text"),
         multiSelect: config.multiSelect || 1,
         autoAdvance: config.autoAdvance !== false,
+        columns: config.columns ?? (hasImages ? 2 : 1),
+        optionTextSize: config.optionTextSize || "base",
+        optionImageSize: config.optionImageSize || "md",
+        showCheckIcon: config.showCheckIcon !== false,
         options: config.options.map((opt: any) => ({
           id: opt.id,
           text: opt.text,
@@ -246,7 +254,6 @@ export const convertStageToBlocks = (
           styleCategory: opt.styleCategory,
           points: opt.points || 1,
         })),
-        columns: hasImages ? 2 : 1,
       },
     });
   }
