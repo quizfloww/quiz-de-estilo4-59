@@ -37,9 +37,6 @@ import {
   type BlockCategory,
 } from "./blockPaletteConfig";
 
-// Re-export para compatibilidade
-export { DEFAULT_BLOCK_CATEGORIES, type BlockCategory };
-
 // ============================================
 // Tipos
 // ============================================
@@ -293,7 +290,9 @@ export const BlockPalette: React.FC<BlockPaletteProps> = ({
         >
           {filteredCategories.map((category) => {
             const CategoryIcon = category.icon
-              ? (Icons as any)[category.icon]
+              ? (Icons[
+                  category.icon as keyof typeof Icons
+                ] as React.ComponentType<{ className?: string }>)
               : Icons.Folder;
 
             return (
