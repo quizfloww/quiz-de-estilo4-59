@@ -20,6 +20,10 @@ import { DynamicIntro } from "@/components/dynamic-quiz/DynamicIntro";
 import { DynamicQuestion } from "@/components/dynamic-quiz/DynamicQuestion";
 import { DynamicTransition } from "@/components/dynamic-quiz/DynamicTransition";
 import { AnimatedStageWrapper } from "@/components/dynamic-quiz/AnimatedStageWrapper";
+import {
+  EnchantedBackground,
+  MorphingProgress,
+} from "@/components/effects/EnchantedEffects";
 import { Loader2 } from "lucide-react";
 import {
   trackQuizStart,
@@ -342,10 +346,54 @@ const DynamicQuizPage: React.FC = () => {
 
   const stageConfig = (currentStage.config || {}) as Record<string, unknown>;
 
+  // Configurações de efeitos do globalConfig
+  const effectsConfig = globalConfig.effects || {};
+  const enableFloatingEmojis = effectsConfig.enableFloatingEmojis ?? false;
+  const effectsIntensity = effectsConfig.effectsIntensity ?? 0.5;
+  const progressStyle = effectsConfig.progressStyle ?? "simple";
+  const showProgressShimmer = effectsConfig.showProgressShimmer ?? false;
+  const progressColors = effectsConfig.progressColors;
+
+  // Determinar fase atual para os efeitos
+  const isIntro = currentStage.type === "intro";
+  const isStrategic = currentStage.type === "strategic";
+  const effectPhase = isIntro ? "intro" : isStrategic ? "strategic" : "quiz";
+  const progressPhase = isStrategic ? "strategic" : "normal";
+
+  // Progresso em porcentagem
+  const progressPercentage =
+    stages.length > 0 ? ((currentStageIndex + 1) / stages.length) * 100 : 0;
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Efeitos de Fundo Configuráveis */}
+      {enableFloatingEmojis && !isIntro && (
+        <EnchantedBackground
+          phase={effectPhase}
+          intensity={effectsIntensity}
+          customEmojis={{
+            intro: effectsConfig.customIntroEmojis,
+            quiz: effectsConfig.customQuizEmojis,
+            strategic: effectsConfig.customStrategicEmojis,
+            results: effectsConfig.customResultEmojis,
+          }}
+          enabled={enableFloatingEmojis}
+        />
+      )}
+
       <div className="flex flex-col gap-4 md:gap-6 h-full justify-between p-3 md:p-5 pb-10">
         <div className="grid gap-4">
+          {/* Barra de Progresso Morphing (se não for intro) */}
+          {!isIntro && progressStyle !== "simple" && (
+            <MorphingProgress
+              progress={progressPercentage}
+              phase={progressPhase}
+              showShimmer={showProgressShimmer}
+              style={progressStyle}
+              customColors={progressColors}
+            />
+          )}
+
           <DynamicQuizHeader
             logoUrl={globalConfig.logoUrl}
             showLogo={stageConfig.showLogo !== false}
