@@ -2856,19 +2856,22 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                     rows={3}
                   />
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input
-                      value={item.imageUrl || ""}
-                      onChange={(e) => {
-                        const newItems = [...testimonials];
-                        newItems[idx] = {
-                          ...newItems[idx],
-                          imageUrl: e.target.value,
-                        };
-                        updateContent("testimonials", newItems);
-                      }}
-                      placeholder="URL da foto"
-                    />
+                  <ImageFieldWithUpload
+                    label="Foto"
+                    value={item.imageUrl || ""}
+                    onChange={(url) => {
+                      const newItems = [...testimonials];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        imageUrl: url,
+                      };
+                      updateContent("testimonials", newItems);
+                    }}
+                    thumbnailSize="sm"
+                  />
+
+                  <div className="space-y-2">
+                    <Label>Avaliação</Label>
                     <Select
                       value={String(item.rating || 5)}
                       onValueChange={(value) => {
