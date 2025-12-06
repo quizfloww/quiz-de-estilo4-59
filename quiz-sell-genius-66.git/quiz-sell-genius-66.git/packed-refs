@@ -1,7 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-93032f8a70ad1804fb2778229fc705d5cf025fe7 refs/heads/5f3309d
-7800f4653b9857f57a524d96f8dbd6c746a46a0d refs/heads/fix/revert-quiz-state
-76bc534e6bfaf26d8699ccd1bd73ca2cf97486fe refs/heads/gh-pages
-62907c1ed506d3f5248638c13a725375f55f07e6 refs/heads/main
-27a84120b09ce221615c78b8cbc7c19151063c03 refs/heads/minha-branch
-c6d849447f4fa1baa9293d106cd7fd27aef319ef refs/pull/1/head

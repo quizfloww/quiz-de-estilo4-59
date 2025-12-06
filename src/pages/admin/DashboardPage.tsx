@@ -1,18 +1,16 @@
-
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { AdminSidebar } from '../../components/admin/AdminSidebar';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import React, { Suspense, lazy } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { AdminSidebar } from "../../components/admin/AdminSidebar";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 // Lazy loading das páginas do dashboard
-const DashboardOverview = lazy(() => import('./OverviewPage'));
-const QuizPage = lazy(() => import('./QuizPage'));
-const ABTestPage = lazy(() => import('./ABTestPage'));
-const SettingsPage = lazy(() => import('./SettingsPage'));
-const CreativesPage = lazy(() => import('./CreativesPage'));
-const AnalyticsPage = lazy(() => import('./AnalyticsPage'));
-const EditorPage = lazy(() => import('./EditorPage'));
-const FunnelsPage = lazy(() => import('./FunnelsPage'));
+const DashboardOverview = lazy(() => import("./OverviewPage"));
+const QuizPage = lazy(() => import("./QuizPage"));
+const ABTestPage = lazy(() => import("./ABTestPage"));
+const SettingsPage = lazy(() => import("./SettingsPage"));
+const CreativesPage = lazy(() => import("./CreativesPage"));
+const AnalyticsPage = lazy(() => import("./AnalyticsPage"));
+const FunnelsPage = lazy(() => import("./FunnelsPage"));
 
 // Componente de loading
 const LoadingFallback = () => (
@@ -29,7 +27,7 @@ const DashboardPage: React.FC = () => {
     <div className="min-h-screen flex bg-[#FAF9F7]">
       {/* Sidebar */}
       <AdminSidebar />
-      
+
       {/* Conteúdo principal */}
       <div className="flex-1 overflow-hidden">
         <main className="h-full overflow-y-auto">
@@ -37,16 +35,15 @@ const DashboardPage: React.FC = () => {
             <Routes>
               {/* Rota principal - Overview */}
               <Route index element={<DashboardOverview />} />
-              
+
               {/* Rotas do dashboard conforme solicitado */}
               <Route path="quiz" element={<QuizPage />} />
               <Route path="ab-tests" element={<ABTestPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="criativos" element={<CreativesPage />} />
               <Route path="analytics" element={<AnalyticsPage />} />
-              <Route path="editor" element={<EditorPage />} />
               <Route path="funnels" element={<FunnelsPage />} />
-              
+
               {/* Redirecionamento para rota não encontrada */}
               <Route path="*" element={<Navigate to="/admin" replace />} />
             </Routes>
