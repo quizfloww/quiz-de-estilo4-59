@@ -1,24 +1,35 @@
-import React, { useState, useEffect } from 'react';
-import { Settings, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { FunnelConfig, EMPTY_FUNNEL_CONFIG } from '@/types/funnelConfig';
-import { GeneralSettings } from './settings/GeneralSettings';
-import { SeoSettings } from './settings/SeoSettings';
-import { PixelSettings } from './settings/PixelSettings';
-import { UtmSettings } from './settings/UtmSettings';
-import { BrandingSettings } from './settings/BrandingSettings';
-import { AnalyticsSettings } from './settings/AnalyticsSettings';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import { Settings, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { FunnelConfig, EMPTY_FUNNEL_CONFIG } from "@/types/funnelConfig";
+import { GeneralSettings } from "./settings/GeneralSettings";
+import { SeoSettings } from "./settings/SeoSettings";
+import { PixelSettings } from "./settings/PixelSettings";
+import { UtmSettings } from "./settings/UtmSettings";
+import { BrandingSettings } from "./settings/BrandingSettings";
+import { AnalyticsSettings } from "./settings/AnalyticsSettings";
+import { EffectsSettings } from "./settings/EffectsSettings";
+import { toast } from "sonner";
 
 interface FunnelSettingsPanelProps {
   funnelId: string;
   funnelName: string;
   funnelSlug: string;
   globalConfig?: FunnelConfig | null;
-  onSave: (updates: { name?: string; slug?: string; global_config?: FunnelConfig }) => void;
+  onSave: (updates: {
+    name?: string;
+    slug?: string;
+    global_config?: FunnelConfig;
+  }) => void;
 }
 
 export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
@@ -32,7 +43,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   const [name, setName] = useState(funnelName);
   const [slug, setSlug] = useState(funnelSlug);
   const [config, setConfig] = useState<FunnelConfig>(() => {
-    if (globalConfig && typeof globalConfig === 'object') {
+    if (globalConfig && typeof globalConfig === "object") {
       return { ...EMPTY_FUNNEL_CONFIG, ...globalConfig };
     }
     return EMPTY_FUNNEL_CONFIG;
@@ -41,16 +52,16 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   useEffect(() => {
     setName(funnelName);
     setSlug(funnelSlug);
-    if (globalConfig && typeof globalConfig === 'object') {
+    if (globalConfig && typeof globalConfig === "object") {
       setConfig({ ...EMPTY_FUNNEL_CONFIG, ...globalConfig });
     }
   }, [funnelName, funnelSlug, globalConfig]);
 
   const handleGeneralChange = (field: string, value: string) => {
-    if (field === 'name') setName(value);
-    if (field === 'slug') setSlug(value);
-    if (field === 'customDomain') {
-      setConfig(prev => ({ ...prev, customDomain: value }));
+    if (field === "name") setName(value);
+    if (field === "slug") setSlug(value);
+    if (field === "customDomain") {
+      setConfig((prev) => ({ ...prev, customDomain: value }));
     }
   };
 
@@ -60,7 +71,7 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
       slug,
       global_config: config,
     });
-    toast.success('Configurações salvas!');
+    toast.success("Configurações salvas!");
     setOpen(false);
   };
 
@@ -79,15 +90,33 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
             Configurações do Funil
           </SheetTitle>
         </SheetHeader>
-        
-        <Tabs defaultValue="general" className="flex flex-col h-[calc(100vh-140px)]">
-          <TabsList className="grid grid-cols-6 mx-4 mt-4">
-            <TabsTrigger value="general" className="text-xs">Geral</TabsTrigger>
-            <TabsTrigger value="seo" className="text-xs">SEO</TabsTrigger>
-            <TabsTrigger value="pixel" className="text-xs">Pixel</TabsTrigger>
-            <TabsTrigger value="utm" className="text-xs">UTM</TabsTrigger>
-            <TabsTrigger value="branding" className="text-xs">Visual</TabsTrigger>
-            <TabsTrigger value="analytics" className="text-xs">Analytics</TabsTrigger>
+
+        <Tabs
+          defaultValue="general"
+          className="flex flex-col h-[calc(100vh-140px)]"
+        >
+          <TabsList className="grid grid-cols-7 mx-4 mt-4">
+            <TabsTrigger value="general" className="text-xs">
+              Geral
+            </TabsTrigger>
+            <TabsTrigger value="seo" className="text-xs">
+              SEO
+            </TabsTrigger>
+            <TabsTrigger value="pixel" className="text-xs">
+              Pixel
+            </TabsTrigger>
+            <TabsTrigger value="utm" className="text-xs">
+              UTM
+            </TabsTrigger>
+            <TabsTrigger value="branding" className="text-xs">
+              Visual
+            </TabsTrigger>
+            <TabsTrigger value="effects" className="text-xs">
+              Efeitos
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="text-xs">
+              Analytics
+            </TabsTrigger>
           </TabsList>
 
           <ScrollArea className="flex-1 px-4 py-4">
@@ -103,35 +132,48 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
             <TabsContent value="seo" className="mt-0">
               <SeoSettings
                 config={config.seo}
-                onChange={(seo) => setConfig(prev => ({ ...prev, seo }))}
+                onChange={(seo) => setConfig((prev) => ({ ...prev, seo }))}
               />
             </TabsContent>
 
             <TabsContent value="pixel" className="mt-0">
               <PixelSettings
                 config={config.pixel}
-                onChange={(pixel) => setConfig(prev => ({ ...prev, pixel }))}
+                onChange={(pixel) => setConfig((prev) => ({ ...prev, pixel }))}
               />
             </TabsContent>
 
             <TabsContent value="utm" className="mt-0">
               <UtmSettings
                 config={config.utm}
-                onChange={(utm) => setConfig(prev => ({ ...prev, utm }))}
+                onChange={(utm) => setConfig((prev) => ({ ...prev, utm }))}
               />
             </TabsContent>
 
             <TabsContent value="branding" className="mt-0">
               <BrandingSettings
                 config={config.branding}
-                onChange={(branding) => setConfig(prev => ({ ...prev, branding }))}
+                onChange={(branding) =>
+                  setConfig((prev) => ({ ...prev, branding }))
+                }
+              />
+            </TabsContent>
+
+            <TabsContent value="effects" className="mt-0">
+              <EffectsSettings
+                config={config.effects}
+                onChange={(effects) =>
+                  setConfig((prev) => ({ ...prev, effects }))
+                }
               />
             </TabsContent>
 
             <TabsContent value="analytics" className="mt-0">
               <AnalyticsSettings
                 config={config.analytics}
-                onChange={(analytics) => setConfig(prev => ({ ...prev, analytics }))}
+                onChange={(analytics) =>
+                  setConfig((prev) => ({ ...prev, analytics }))
+                }
               />
             </TabsContent>
           </ScrollArea>
