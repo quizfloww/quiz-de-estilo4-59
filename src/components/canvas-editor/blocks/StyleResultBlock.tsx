@@ -1,7 +1,7 @@
 import React from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
 import { Card } from "@/components/ui/card";
-import { styleConfig, styleImages } from "@/config/styleConfig";
+import { styleConfig } from "@/config/styleConfig";
 import { StyleCategory } from "@/types/quiz";
 
 interface StyleResultBlockProps {
@@ -36,7 +36,6 @@ export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
   // Tenta usar categoria do content para dados dinâmicos
   const category = content.styleCategory as StyleCategory;
   const config = category ? styleConfig[category] : null;
-  const styleImage = category ? styleImages[category] : null;
 
   // Usa dados dinâmicos ou fallback
   const styleName = category || PREVIEW_STYLE.name;
@@ -46,7 +45,7 @@ export const StyleResultBlock: React.FC<StyleResultBlockProps> = ({
     config?.description ||
     PREVIEW_STYLE.description;
   const imageUrl =
-    content.styleImageUrl || styleImage || PREVIEW_STYLE.imageUrl;
+    content.styleImageUrl || config?.image || PREVIEW_STYLE.imageUrl;
 
   return (
     <Card className="p-4 sm:p-6 md:p-8 bg-white shadow-sm border border-[#B89B7A]/20 mb-8 md:mb-12">
