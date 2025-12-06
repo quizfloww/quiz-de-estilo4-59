@@ -1123,6 +1123,62 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+
+      {/* Formato da Moldura */}
+      <div className="space-y-2">
+        <Label>Formato da Moldura</Label>
+        <Select
+          value={block.content.imageFrame || "rounded"}
+          onValueChange={(value) => updateContent("imageFrame", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="none">Sem Moldura</SelectItem>
+            <SelectItem value="circle">Círculo</SelectItem>
+            <SelectItem value="rounded">Arredondado</SelectItem>
+            <SelectItem value="rounded-lg">Muito Arredondado</SelectItem>
+            <SelectItem value="square">Quadrado</SelectItem>
+            <SelectItem value="soft-square">Quadrado Suave</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Borda da Imagem */}
+      <div className="space-y-2">
+        <Label>
+          Espessura da Borda: {block.content.imageBorderWidth || 0}px
+        </Label>
+        <Slider
+          value={[block.content.imageBorderWidth || 0]}
+          min={0}
+          max={10}
+          step={1}
+          onValueChange={([value]) => updateContent("imageBorderWidth", value)}
+        />
+      </div>
+
+      {(block.content.imageBorderWidth || 0) > 0 && (
+        <div className="space-y-2">
+          <Label>Cor da Borda</Label>
+          <div className="flex gap-2">
+            <Input
+              type="color"
+              value={block.content.imageBorderColor || "#B89B7A"}
+              onChange={(e) => updateContent("imageBorderColor", e.target.value)}
+              className="w-12 h-10 p-1 cursor-pointer"
+            />
+            <Input
+              value={block.content.imageBorderColor || "#B89B7A"}
+              onChange={(e) => updateContent("imageBorderColor", e.target.value)}
+              placeholder="#B89B7A"
+              className="flex-1"
+            />
+          </div>
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label>Tamanho da Imagem</Label>
         <Select
