@@ -525,7 +525,28 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
       showExclusiveBadge: true,
     },
     beforeAfter: {
-      beforeAfterItems: [],
+      beforeAfterItems: [
+        {
+          id: "transformation-adriana",
+          beforeImage:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
+          afterImage:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
+          name: "Adriana",
+          description:
+            "De básico para elegante, mantendo o conforto e autenticidade",
+        },
+        {
+          id: "transformation-mariangela",
+          beforeImage:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
+          afterImage:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
+          name: "Mariangela",
+          description:
+            "Do casual ao sofisticado, valorizando seu tipo de corpo",
+        },
+      ],
       beforeAfterLayout: "side-by-side",
       beforeAfterTitle: "Transformações Reais",
     },
@@ -542,16 +563,52 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
       bonusSubtitle: "",
     },
     testimonials: {
-      testimonials: [],
+      testimonials: [
+        {
+          id: "1",
+          name: "Sônia",
+          role: "Cliente",
+          text: "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
+          imageUrl:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_S%C3%94NIA_q0g9cq.png",
+          rating: 5,
+        },
+        {
+          id: "2",
+          name: "Patrícia",
+          role: "Cliente",
+          text: "O guia é muito completo! Finalmente entendi como valorizar meu corpo e personalidade.",
+          imageUrl:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_PATR%C3%8DCIA_x0mhud.png",
+          rating: 5,
+        },
+        {
+          id: "3",
+          name: "Mariangela",
+          role: "Cliente",
+          text: "Transformação incrível! Antes eu comprava por impulso, agora tenho direcionamento claro.",
+          imageUrl:
+            "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_MARIANGELA_sj7lki.png",
+          rating: 5,
+        },
+      ],
       testimonialsLayout: "grid",
       testimonialsTitle: "O Que Nossas Alunas Dizem",
     },
     mentor: {
       mentorName: "Gisele Galvão",
-      mentorTitle: "Consultora de Imagem & Estilo",
-      mentorDescription: "",
-      mentorImageUrl: "",
-      mentorCredentials: [],
+      mentorTitle:
+        "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal",
+      mentorDescription:
+        "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Com mais de 10 anos de experiência, já transformou a vida de milhares de mulheres através do poder do estilo pessoal.",
+      mentorImageUrl:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
+      mentorCredentials: [
+        "Especialista em Análise de Estilo",
+        "Consultora de Imagem Certificada",
+        "Mais de 5.000 mulheres transformadas",
+        "Especialista em coloração pessoal com Certificação internacional",
+      ],
     },
     securePurchase: {
       securityBadges: [],
