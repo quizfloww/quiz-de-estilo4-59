@@ -7,15 +7,6 @@ declare global {
     _fbq?: (...args: unknown[]) => void;
   }
 }
-// Extend Window interface for analytics globals
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-    fbq?: (...args: any[]) => void;
-    _fbq?: (...args: any[]) => void;
-    dataLayer?: any[];
-  }
-}
 
 // Function to track a generic event
 export const trackEvent = (event_name: string, params?: object) => {
