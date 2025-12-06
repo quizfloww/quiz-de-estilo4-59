@@ -1,0 +1,456 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link [ref=e6] [cursor=pointer]:
+          - /url: /admin/funnels
+          - img [ref=e7]
+        - generic [ref=e9]:
+          - generic [ref=e10]:
+            - heading "Quiz de Estilo Pessoal - Cópia" [level=1] [ref=e11]
+            - generic [ref=e12]:
+              - img [ref=e13]
+              - text: Rascunho
+          - generic [ref=e17]: /quiz-1765023075062
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - button "Desktop" [ref=e20] [cursor=pointer]
+          - button "Mobile" [ref=e21] [cursor=pointer]
+        - button "Configurações" [ref=e22] [cursor=pointer]:
+          - img [ref=e23]
+          - text: Configurações
+        - button "Testar" [ref=e26] [cursor=pointer]:
+          - img [ref=e27]
+          - text: Testar
+        - link "Preview" [ref=e29] [cursor=pointer]:
+          - /url: /quiz/quiz-1765023075062
+          - img [ref=e30]
+          - text: Preview
+        - button "Salvar" [ref=e33] [cursor=pointer]:
+          - img [ref=e34]
+          - text: Salvar
+        - button "Publicar" [ref=e39] [cursor=pointer]:
+          - img [ref=e40]
+          - text: Publicar
+    - generic [ref=e43]:
+      - generic [ref=e45]:
+        - generic [ref=e46]:
+          - generic [ref=e47]: Etapas
+          - combobox [ref=e48] [cursor=pointer]:
+            - img [ref=e49]
+            - img [ref=e50]
+        - generic [ref=e55]:
+          - generic [ref=e56] [cursor=pointer]:
+            - button [ref=e57]:
+              - img [ref=e58]
+            - generic [ref=e65]:
+              - paragraph [ref=e66]: Introdução
+              - paragraph [ref=e67]: Introdução
+            - button [ref=e68]:
+              - img [ref=e69]
+          - generic [ref=e72] [cursor=pointer]:
+            - button [ref=e73]:
+              - img [ref=e74]
+            - generic [ref=e81]:
+              - paragraph [ref=e82]: Questão 1 - Tipo de Roupa
+              - paragraph [ref=e83]: Questão
+            - button [ref=e84]:
+              - img [ref=e85]
+          - generic [ref=e88] [cursor=pointer]:
+            - button [ref=e89]:
+              - img [ref=e90]
+            - generic [ref=e97]:
+              - paragraph [ref=e98]: Questão 2 - Personalidade
+              - paragraph [ref=e99]: Questão
+            - button [ref=e100]:
+              - img [ref=e101]
+          - generic [ref=e104] [cursor=pointer]:
+            - button [ref=e105]:
+              - img [ref=e106]
+            - generic [ref=e113]:
+              - paragraph [ref=e114]: Questão 3 - Visual
+              - paragraph [ref=e115]: Questão
+            - button [ref=e116]:
+              - img [ref=e117]
+          - generic [ref=e120] [cursor=pointer]:
+            - button [ref=e121]:
+              - img [ref=e122]
+            - generic [ref=e129]:
+              - paragraph [ref=e130]: Questão 4 - Estampas Favoritas
+              - paragraph [ref=e131]: Questão
+            - button [ref=e132]:
+              - img [ref=e133]
+          - generic [ref=e136] [cursor=pointer]:
+            - button [ref=e137]:
+              - img [ref=e138]
+            - generic [ref=e145]:
+              - paragraph [ref=e146]: Questão 5 - Estampas Identificação
+              - paragraph [ref=e147]: Questão
+            - button [ref=e148]:
+              - img [ref=e149]
+          - generic [ref=e152] [cursor=pointer]:
+            - button [ref=e153]:
+              - img [ref=e154]
+            - generic [ref=e161]:
+              - paragraph [ref=e162]: Questão 6 - Casacos
+              - paragraph [ref=e163]: Questão
+            - button [ref=e164]:
+              - img [ref=e165]
+          - generic [ref=e168] [cursor=pointer]:
+            - button [ref=e169]:
+              - img [ref=e170]
+            - generic [ref=e177]:
+              - paragraph [ref=e178]: Questão 7 - Calças
+              - paragraph [ref=e179]: Questão
+            - button [ref=e180]:
+              - img [ref=e181]
+          - generic [ref=e184] [cursor=pointer]:
+            - button [ref=e185]:
+              - img [ref=e186]
+            - generic [ref=e193]:
+              - paragraph [ref=e194]: Questão 8 - Sapatos
+              - paragraph [ref=e195]: Questão
+            - button [ref=e196]:
+              - img [ref=e197]
+          - generic [ref=e200] [cursor=pointer]:
+            - button [ref=e201]:
+              - img [ref=e202]
+            - generic [ref=e209]:
+              - paragraph [ref=e210]: Questão 9 - Acessórios
+              - paragraph [ref=e211]: Questão
+            - button [ref=e212]:
+              - img [ref=e213]
+          - generic [ref=e216] [cursor=pointer]:
+            - button [ref=e217]:
+              - img [ref=e218]
+            - generic [ref=e225]:
+              - paragraph [ref=e226]: Questão 10 - Tecidos
+              - paragraph [ref=e227]: Questão
+            - button [ref=e228]:
+              - img [ref=e229]
+          - generic [ref=e232] [cursor=pointer]:
+            - button [ref=e233]:
+              - img [ref=e234]
+            - generic [ref=e241]:
+              - paragraph [ref=e242]: Transição
+              - paragraph [ref=e243]: Transição
+            - button [ref=e244]:
+              - img [ref=e245]
+          - generic [ref=e248] [cursor=pointer]:
+            - button [ref=e249]:
+              - img [ref=e250]
+            - generic [ref=e257]:
+              - paragraph [ref=e258]: Estratégica 1 - Autopercepção
+              - paragraph [ref=e259]: Estratégica
+            - button [ref=e260]:
+              - img [ref=e261]
+          - generic [ref=e264] [cursor=pointer]:
+            - button [ref=e265]:
+              - img [ref=e266]
+            - generic [ref=e273]:
+              - paragraph [ref=e274]: Estratégica 2 - Desafios
+              - paragraph [ref=e275]: Estratégica
+            - button [ref=e276]:
+              - img [ref=e277]
+          - generic [ref=e280] [cursor=pointer]:
+            - button [ref=e281]:
+              - img [ref=e282]
+            - generic [ref=e289]:
+              - paragraph [ref=e290]: Estratégica 3 - Experiência
+              - paragraph [ref=e291]: Estratégica
+            - button [ref=e292]:
+              - img [ref=e293]
+          - generic [ref=e296] [cursor=pointer]:
+            - button [ref=e297]:
+              - img [ref=e298]
+            - generic [ref=e305]:
+              - paragraph [ref=e306]: Estratégica 4 - Motivação
+              - paragraph [ref=e307]: Estratégica
+            - button [ref=e308]:
+              - img [ref=e309]
+          - generic [ref=e312] [cursor=pointer]:
+            - button [ref=e313]:
+              - img [ref=e314]
+            - generic [ref=e321]:
+              - paragraph [ref=e322]: Estratégica 5 - Gastos
+              - paragraph [ref=e323]: Estratégica
+            - button [ref=e324]:
+              - img [ref=e325]
+          - generic [ref=e328] [cursor=pointer]:
+            - button [ref=e329]:
+              - img [ref=e330]
+            - generic [ref=e337]:
+              - paragraph [ref=e338]: Estratégica 6 - Investimento
+              - paragraph [ref=e339]: Estratégica
+            - button [ref=e340]:
+              - img [ref=e341]
+          - generic [ref=e344] [cursor=pointer]:
+            - button [ref=e345]:
+              - img [ref=e346]
+            - generic [ref=e353]:
+              - paragraph [ref=e354]: Estratégica 7 - Resultados
+              - paragraph [ref=e355]: Estratégica
+            - button [ref=e356]:
+              - img [ref=e357]
+          - generic [ref=e360] [cursor=pointer]:
+            - button [ref=e361]:
+              - img [ref=e362]
+            - generic [ref=e369]:
+              - paragraph [ref=e370]: Resultado
+              - paragraph [ref=e371]: Resultado
+            - button [ref=e372]:
+              - img [ref=e373]
+          - status [ref=e376]
+      - separator [ref=e377]
+      - generic [ref=e379]:
+        - generic [ref=e380]: Blocos
+        - generic [ref=e384]:
+          - generic [ref=e385]:
+            - paragraph [ref=e386]: Estrutura
+            - generic [ref=e387]:
+              - button "Cabeçalho" [ref=e388] [cursor=pointer]:
+                - img [ref=e389]
+                - generic [ref=e391]: Cabeçalho
+              - button "Espaçador" [ref=e392] [cursor=pointer]:
+                - img [ref=e393]
+                - generic [ref=e398]: Espaçador
+              - button "Divisor" [ref=e399] [cursor=pointer]:
+                - img [ref=e400]
+                - generic [ref=e401]: Divisor
+          - generic [ref=e402]:
+            - paragraph [ref=e403]: Conteúdo
+            - generic [ref=e404]:
+              - button "Título" [ref=e405] [cursor=pointer]:
+                - img [ref=e406]
+                - generic [ref=e408]: Título
+              - button "Texto" [ref=e409] [cursor=pointer]:
+                - img [ref=e410]
+                - generic [ref=e411]: Texto
+              - button "Imagem" [ref=e412] [cursor=pointer]:
+                - img [ref=e413]
+                - generic [ref=e417]: Imagem
+          - generic [ref=e418]:
+            - paragraph [ref=e419]: Interação
+            - generic [ref=e420]:
+              - button "Campo de Entrada" [ref=e421] [cursor=pointer]:
+                - img [ref=e422]
+                - generic [ref=e426]: Campo de Entrada
+              - button "Opções" [ref=e427] [cursor=pointer]:
+                - img [ref=e428]
+                - generic [ref=e429]: Opções
+              - button "Botão" [ref=e430] [cursor=pointer]:
+                - img [ref=e431]
+                - generic [ref=e434]: Botão
+          - generic [ref=e435]:
+            - paragraph [ref=e436]: Resultado
+            - generic [ref=e437]:
+              - button "Resultado do Estilo" [ref=e438] [cursor=pointer]:
+                - img [ref=e439]
+                - generic [ref=e442]: Resultado do Estilo
+              - button "Estilos Secundários" [ref=e443] [cursor=pointer]:
+                - img [ref=e444]
+                - generic [ref=e446]: Estilos Secundários
+              - button "Progresso dos Estilos" [ref=e447] [cursor=pointer]:
+                - img [ref=e448]
+                - generic [ref=e451]: Progresso dos Estilos
+              - button "Gancho Personalizado" [ref=e452] [cursor=pointer]:
+                - img [ref=e453]
+                - generic [ref=e455]: Gancho Personalizado
+              - button "Guia de Estilo" [ref=e456] [cursor=pointer]:
+                - img [ref=e457]
+                - generic [ref=e459]: Guia de Estilo
+              - button "Antes e Depois" [ref=e460] [cursor=pointer]:
+                - img [ref=e461]
+                - generic [ref=e464]: Antes e Depois
+          - generic [ref=e465]:
+            - paragraph [ref=e466]: Vendas
+            - generic [ref=e467]:
+              - button "Seção Motivacional" [ref=e468] [cursor=pointer]:
+                - img [ref=e469]
+                - generic [ref=e471]: Seção Motivacional
+              - button "Seção de Bônus" [ref=e472] [cursor=pointer]:
+                - img [ref=e473]
+                - generic [ref=e477]: Seção de Bônus
+              - button "Depoimentos (Múltiplos)" [ref=e478] [cursor=pointer]:
+                - img [ref=e479]
+                - generic [ref=e481]: Depoimentos (Múltiplos)
+              - button "Seção da Mentora" [ref=e482] [cursor=pointer]:
+                - img [ref=e483]
+                - generic [ref=e487]: Seção da Mentora
+          - generic [ref=e488]:
+            - paragraph [ref=e489]: Oferta
+            - generic [ref=e490]:
+              - button "Ancoragem de Preço" [ref=e491] [cursor=pointer]:
+                - img [ref=e492]
+                - generic [ref=e494]: Ancoragem de Preço
+              - button "Contador Regressivo" [ref=e495] [cursor=pointer]:
+                - img [ref=e496]
+                - generic [ref=e499]: Contador Regressivo
+              - button "CTA de Oferta" [ref=e500] [cursor=pointer]:
+                - img [ref=e501]
+                - generic [ref=e505]: CTA de Oferta
+              - button "Garantia" [ref=e506] [cursor=pointer]:
+                - img [ref=e507]
+                - generic [ref=e509]: Garantia
+              - button "Compra Segura" [ref=e510] [cursor=pointer]:
+                - img [ref=e511]
+                - generic [ref=e514]: Compra Segura
+              - button "Depoimento" [ref=e515] [cursor=pointer]:
+                - img [ref=e516]
+                - generic [ref=e519]: Depoimento
+              - button "Lista de Benefícios" [ref=e520] [cursor=pointer]:
+                - img [ref=e521]
+                - generic [ref=e524]: Lista de Benefícios
+              - button "Perguntas Frequentes" [ref=e525] [cursor=pointer]:
+                - img [ref=e526]
+                - generic [ref=e529]: Perguntas Frequentes
+              - button "Prova Social" [ref=e530] [cursor=pointer]:
+                - img [ref=e531]
+                - generic [ref=e536]: Prova Social
+      - separator [ref=e537]
+      - generic [ref=e545]:
+        - generic [ref=e546]:
+          - generic [ref=e547] [cursor=pointer]:
+            - generic [ref=e548]:
+              - generic [ref=e549]:
+                - button [ref=e550]:
+                  - img [ref=e551]
+                - generic [ref=e558]: Cabeçalho
+              - generic [ref=e559]:
+                - button [ref=e560]:
+                  - img [ref=e561]
+                - button [ref=e564]:
+                  - img [ref=e565]
+            - generic [ref=e570]:
+              - img "Logo" [ref=e571]
+              - progressbar [ref=e572]
+          - generic [ref=e574] [cursor=pointer]:
+            - generic [ref=e575]:
+              - generic [ref=e576]:
+                - button [ref=e577]:
+                  - img [ref=e578]
+                - generic [ref=e585]: Título
+              - generic [ref=e586]:
+                - button [ref=e587]:
+                  - img [ref=e588]
+                - button [ref=e591]:
+                  - img [ref=e592]
+            - heading "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você." [level=1] [ref=e597]
+          - generic [ref=e598] [cursor=pointer]:
+            - generic [ref=e599]:
+              - generic [ref=e600]:
+                - button [ref=e601]:
+                  - img [ref=e602]
+                - generic [ref=e609]: Imagem
+              - generic [ref=e610]:
+                - button [ref=e611]:
+                  - img [ref=e612]
+                - button [ref=e615]:
+                  - img [ref=e616]
+            - img "Imagem" [ref=e621]
+          - generic [ref=e622] [cursor=pointer]:
+            - generic [ref=e623]:
+              - generic [ref=e624]:
+                - button [ref=e625]:
+                  - img [ref=e626]
+                - generic [ref=e633]: Texto
+              - generic [ref=e634]:
+                - button [ref=e635]:
+                  - img [ref=e636]
+                - button [ref=e639]:
+                  - img [ref=e640]
+            - paragraph [ref=e645]: Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.
+          - generic [ref=e646] [cursor=pointer]:
+            - generic [ref=e647]:
+              - generic [ref=e648]:
+                - button [ref=e649]:
+                  - img [ref=e650]
+                - generic [ref=e657]: Campo de Entrada
+              - generic [ref=e658]:
+                - button [ref=e659]:
+                  - img [ref=e660]
+                - button [ref=e663]:
+                  - img [ref=e664]
+            - generic [ref=e668]:
+              - generic [ref=e669]: NOME*
+              - textbox "Digite seu nome aqui..." [ref=e670]
+          - generic [ref=e671] [cursor=pointer]:
+            - generic [ref=e672]:
+              - generic [ref=e673]:
+                - button [ref=e674]:
+                  - img [ref=e675]
+                - generic [ref=e682]: Botão
+              - generic [ref=e683]:
+                - button [ref=e684]:
+                  - img [ref=e685]
+                - button [ref=e688]:
+                  - img [ref=e689]
+            - button "Continuar" [ref=e694]
+          - generic [ref=e695] [cursor=pointer]:
+            - generic [ref=e696]:
+              - generic [ref=e697]:
+                - button [ref=e698]:
+                  - img [ref=e699]
+                - generic [ref=e706]: Botão
+              - generic [ref=e707]:
+                - button [ref=e708]:
+                  - img [ref=e709]
+                - button [ref=e712]:
+                  - img [ref=e713]
+            - button "Continuar" [ref=e718]
+        - status [ref=e719]
+      - separator [ref=e720]
+      - generic [ref=e726]:
+        - generic [ref=e727]:
+          - generic [ref=e728]:
+            - generic [ref=e729]:
+              - paragraph [ref=e730]: Editando
+              - paragraph [ref=e731]: Botão
+            - button "Aplicar" [ref=e732] [cursor=pointer]:
+              - img [ref=e733]
+              - text: Aplicar
+              - img [ref=e736]
+          - generic [ref=e739]:
+            - generic [ref=e740]:
+              - text: Escala
+              - generic [ref=e741]:
+                - slider [ref=e746]
+                - generic [ref=e747]: 100%
+            - generic [ref=e748]:
+              - text: Texto do Botão
+              - textbox "Texto do Botão" [ref=e749]:
+                - /placeholder: Continuar
+                - text: Continuar
+            - generic [ref=e750]:
+              - text: Estilo
+              - combobox [ref=e751] [cursor=pointer]:
+                - generic: Primário
+                - img [ref=e752]
+            - generic [ref=e754]:
+              - generic [ref=e755]: Largura Total
+              - switch "Largura Total" [active] [ref=e756] [cursor=pointer]
+            - generic [ref=e757]:
+              - text: Estilos Avançados
+              - generic [ref=e758]:
+                - text: Cor de Fundo
+                - generic [ref=e759]:
+                  - textbox [ref=e760] [cursor=pointer]: "#000000"
+                  - textbox "transparent" [ref=e761]
+              - generic [ref=e762]:
+                - text: Cor do Texto
+                - generic [ref=e763]:
+                  - textbox [ref=e764] [cursor=pointer]: "#1a1a1a"
+                  - textbox "#1a1a1a" [ref=e765]
+              - generic [ref=e766]:
+                - text: Cor de Destaque
+                - generic [ref=e767]:
+                  - textbox [ref=e768] [cursor=pointer]: "#b89b7a"
+                  - textbox "#B89B7A" [ref=e769]
+        - group [ref=e770]:
+          - generic "⚙️ Configurações da Etapa" [ref=e771] [cursor=pointer]
+  - region "Notifications (F8)":
+    - list
+```
