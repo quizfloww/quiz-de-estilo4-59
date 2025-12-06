@@ -365,8 +365,10 @@ test.describe("FunnelEditor - Edição de Bloco Botão", () => {
   test("deve configurar largura total do botão", async ({ page }) => {
     // This test can skip if switch is not available
     const propertiesPanel = getPropertiesPanel(page);
-    const fullWidthSwitch = propertiesPanel.locator('button[role="switch"]').first();
-    
+    const fullWidthSwitch = propertiesPanel
+      .locator('button[role="switch"]')
+      .first();
+
     const switchCount = await fullWidthSwitch.count();
     if (switchCount === 0) {
       // No switch available - test passes as feature may not be present
