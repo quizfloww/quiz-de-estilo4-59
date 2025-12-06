@@ -36,8 +36,23 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
   const mobileLayout = content.mobileLayout || "stacked";
   const imagePosition = content.mentorImagePosition || "top";
 
-  // Background color
-  const blockBackgroundColor = content.backgroundColor;
+  // Style Configuration
+  const backgroundColor = content.backgroundColor || "#ffffff";
+  const textColor = content.textColor || "#432818";
+  const accentColor = content.accentColor || "#B89B7A";
+  const borderColor = content.borderColor || "#e5e5e5";
+  const borderRadiusStyle = content.borderRadiusStyle || "md";
+
+  // Border radius classes
+  const borderRadiusClasses =
+    {
+      none: "rounded-none",
+      sm: "rounded-sm",
+      md: "rounded-md",
+      lg: "rounded-lg",
+      xl: "rounded-xl",
+      full: "rounded-2xl",
+    }[borderRadiusStyle] || "rounded-md";
 
   // Classes baseadas na configuração de layout mobile
   const getGridClasses = () => {
@@ -67,12 +82,21 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
 
   return (
     <Card
-      className="w-full p-4 sm:p-6 md:p-8 mb-6 md:mb-10 shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden relative"
-      style={{ backgroundColor: blockBackgroundColor || "#ffffff" }}
+      className={`w-full p-4 sm:p-6 md:p-8 mb-6 md:mb-10 shadow-md card-elegant overflow-hidden relative ${borderRadiusClasses}`}
+      style={{
+        backgroundColor,
+        borderColor: `${accentColor}33`, // 20% opacity
+      }}
     >
       {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#B89B7A]/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[#aa6b5d]/5 rounded-full blur-3xl"></div>
+      <div
+        className="absolute top-0 right-0 w-1/2 h-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: `${accentColor}0D` }} // 5% opacity
+      />
+      <div
+        className="absolute bottom-0 left-0 w-1/2 h-1/2 rounded-full blur-3xl"
+        style={{ backgroundColor: `${accentColor}0D` }} // 5% opacity
+      />
 
       <div className={`${getGridClasses()} relative z-10`}>
         {/* Imagem - posição configurável */}
@@ -86,19 +110,34 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
             />
           </div>
           {/* Elegant decorative corner - hidden on mobile */}
-          <div className="hidden md:block absolute -top-2 -right-2 w-6 h-6 md:w-8 md:h-8 border-t-2 border-r-2 border-[#B89B7A]"></div>
-          <div className="hidden md:block absolute -bottom-2 -left-2 w-6 h-6 md:w-8 md:h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
+          <div
+            className="hidden md:block absolute -top-2 -right-2 w-6 h-6 md:w-8 md:h-8 border-t-2 border-r-2"
+            style={{ borderColor: accentColor }}
+          />
+          <div
+            className="hidden md:block absolute -bottom-2 -left-2 w-6 h-6 md:w-8 md:h-8 border-b-2 border-l-2"
+            style={{ borderColor: accentColor }}
+          />
         </div>
 
         {/* Texto - posição configurável */}
         <div className={`${getTextOrder()} text-center md:text-left`}>
-          <h2 className="text-xl sm:text-2xl font-playfair text-[#aa6b5d] mb-2 sm:mb-4">
+          <h2
+            className="text-xl sm:text-2xl font-playfair mb-2 sm:mb-4"
+            style={{ color: accentColor }}
+          >
             Conheça Sua Mentora
           </h2>
-          <p className="text-sm sm:text-base text-[#432818] mb-2 sm:mb-4">
+          <p
+            className="text-sm sm:text-base mb-2 sm:mb-4"
+            style={{ color: textColor }}
+          >
             <strong>{name}</strong> — {title}
           </p>
-          <p className="text-sm sm:text-base text-[#432818] mb-2 sm:mb-4">
+          <p
+            className="text-sm sm:text-base mb-2 sm:mb-4"
+            style={{ color: textColor }}
+          >
             {description}
           </p>
         </div>

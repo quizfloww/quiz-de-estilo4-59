@@ -3030,6 +3030,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
       {renderGlobalStyleControls({
         showBackground: true,
+        showText: true,
         showAccent: true,
         showBorder: true,
       })}
