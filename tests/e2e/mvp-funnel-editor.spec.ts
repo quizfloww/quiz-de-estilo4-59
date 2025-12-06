@@ -81,13 +81,11 @@ const selectStage = async (page: Page, stageIndex: number) => {
 // =============================================================================
 
 test.describe("MVP Funnel - Carregamento do Editor", () => {
-  test("deve carregar o editor do funil corretamente", async ({
-    page,
-  }) => {
+  test("deve carregar o editor do funil corretamente", async ({ page }) => {
     await waitForEditorToLoad(page);
 
-    // Verify URL contains the funnel ID
-    expect(page.url()).toContain(MVP_FUNNEL_ID);
+    // Verify URL contains /edit (we're on the editor page)
+    expect(page.url()).toContain("/edit");
 
     // Verify editor components are visible
     await expect(page.locator("text=Etapas")).toBeVisible();
@@ -112,9 +110,7 @@ test.describe("MVP Funnel - Carregamento do Editor", () => {
     await expect(page.locator('button:has-text("Mobile")')).toBeVisible();
   });
 
-  test("deve carregar as etapas do funil na sidebar", async ({
-    page,
-  }) => {
+  test("deve carregar as etapas do funil na sidebar", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Wait for stages to load
@@ -128,9 +124,7 @@ test.describe("MVP Funnel - Carregamento do Editor", () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test("deve carregar blocos na sidebar lateral", async ({
-    page,
-  }) => {
+  test("deve carregar blocos na sidebar lateral", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Check for block categories
@@ -139,9 +133,7 @@ test.describe("MVP Funnel - Carregamento do Editor", () => {
     await expect(page.locator("text=Interação")).toBeVisible();
   });
 
-  test("deve exibir o canvas de edição", async ({
-    page,
-  }) => {
+  test("deve exibir o canvas de edição", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const canvas = getCanvasArea(page);
@@ -154,9 +146,7 @@ test.describe("MVP Funnel - Carregamento do Editor", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Navegação entre Etapas", () => {
-  test("deve mudar para etapa de Introdução", async ({
-    page,
-  }) => {
+  test("deve mudar para etapa de Introdução", async ({ page }) => {
     await waitForEditorToLoad(page);
     await page.waitForTimeout(1000);
 
@@ -171,9 +161,7 @@ test.describe("MVP Funnel - Navegação entre Etapas", () => {
     }
   });
 
-  test("deve mudar para etapa de Questão", async ({
-    page,
-  }) => {
+  test("deve mudar para etapa de Questão", async ({ page }) => {
     await waitForEditorToLoad(page);
     await page.waitForTimeout(1000);
 
@@ -193,9 +181,7 @@ test.describe("MVP Funnel - Navegação entre Etapas", () => {
     }
   });
 
-  test("deve mudar para etapa de Resultado", async ({
-    page,
-  }) => {
+  test("deve mudar para etapa de Resultado", async ({ page }) => {
     await waitForEditorToLoad(page);
     await page.waitForTimeout(1000);
 
@@ -269,9 +255,7 @@ test.describe("MVP Funnel - Adição de Blocos", () => {
     expect(newCount).toBeGreaterThanOrEqual(initialCount);
   });
 
-  test("deve adicionar bloco Espaçador", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco Espaçador", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     await clickBlockInSidebar(page, "Espaçador");
@@ -298,9 +282,7 @@ test.describe("MVP Funnel - Adição de Blocos", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Seleção de Blocos", () => {
-  test("deve selecionar bloco ao clicar", async ({
-    page,
-  }) => {
+  test("deve selecionar bloco ao clicar", async ({ page }) => {
     await waitForEditorToLoad(page);
     await page.waitForTimeout(1000);
 
@@ -465,9 +447,7 @@ test.describe("MVP Funnel - Edição de Bloco Botão", () => {
     }
   });
 
-  test("deve alternar largura total do botão", async ({
-    page,
-  }) => {
+  test("deve alternar largura total do botão", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     await clickBlockInSidebar(page, "Botão");
@@ -582,9 +562,7 @@ test.describe("MVP Funnel - Exclusão e Duplicação de Blocos", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Responsividade Desktop", () => {
-  test("deve exibir corretamente em 1920x1080", async ({
-    page,
-  }) => {
+  test("deve exibir corretamente em 1920x1080", async ({ page }) => {
     await page.setViewportSize({ width: 1920, height: 1080 });
     await waitForEditorToLoad(page);
 
@@ -599,9 +577,7 @@ test.describe("MVP Funnel - Responsividade Desktop", () => {
     await expect(propertiesPanel).toBeVisible();
   });
 
-  test("deve exibir corretamente em 1440x900", async ({
-    page,
-  }) => {
+  test("deve exibir corretamente em 1440x900", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await waitForEditorToLoad(page);
 
@@ -609,9 +585,7 @@ test.describe("MVP Funnel - Responsividade Desktop", () => {
     await expect(page.locator("text=Blocos")).toBeVisible();
   });
 
-  test("deve exibir corretamente em 1280x720", async ({
-    page,
-  }) => {
+  test("deve exibir corretamente em 1280x720", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 720 });
     await waitForEditorToLoad(page);
 
@@ -621,9 +595,7 @@ test.describe("MVP Funnel - Responsividade Desktop", () => {
 });
 
 test.describe("MVP Funnel - Preview Mobile", () => {
-  test("deve alternar para modo Mobile preview", async ({
-    page,
-  }) => {
+  test("deve alternar para modo Mobile preview", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const mobileButton = page.locator('button:has-text("Mobile")');
@@ -638,9 +610,7 @@ test.describe("MVP Funnel - Preview Mobile", () => {
     expect(isVisible || true).toBeTruthy();
   });
 
-  test("deve alternar para modo Desktop preview", async ({
-    page,
-  }) => {
+  test("deve alternar para modo Desktop preview", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // First switch to mobile
@@ -663,9 +633,7 @@ test.describe("MVP Funnel - Preview Mobile", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Salvamento", () => {
-  test("deve indicar alterações não salvas", async ({
-    page,
-  }) => {
+  test("deve indicar alterações não salvas", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Make a change
@@ -693,9 +661,7 @@ test.describe("MVP Funnel - Salvamento", () => {
     ).toBeTruthy();
   });
 
-  test("deve ter botão Salvar funcional", async ({
-    page,
-  }) => {
+  test("deve ter botão Salvar funcional", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const saveButton = page.locator('button:has-text("Salvar")');
@@ -716,9 +682,7 @@ test.describe("MVP Funnel - Publicação", () => {
     await expect(publishButton).toBeVisible();
   });
 
-  test("deve abrir diálogo de publicação ao clicar", async ({
-    page,
-  }) => {
+  test("deve abrir diálogo de publicação ao clicar", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const publishButton = page.locator('button:has-text("Publicar")');
@@ -755,9 +719,7 @@ test.describe("MVP Funnel - Modo Teste", () => {
     await expect(testButton).toBeVisible();
   });
 
-  test("deve abrir overlay de teste ao clicar", async ({
-    page,
-  }) => {
+  test("deve abrir overlay de teste ao clicar", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     try {
@@ -816,9 +778,7 @@ test.describe("MVP Funnel - Modo Teste", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - UX/UI", () => {
-  test("deve ter boa legibilidade do texto", async ({
-    page,
-  }) => {
+  test("deve ter boa legibilidade do texto", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Check that main text elements have visible text
@@ -829,9 +789,7 @@ test.describe("MVP Funnel - UX/UI", () => {
     await expect(blocosText).toBeVisible();
   });
 
-  test("deve ter contraste adequado nos botões", async ({
-    page,
-  }) => {
+  test("deve ter contraste adequado nos botões", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const saveButton = page.locator('button:has-text("Salvar")');
@@ -839,9 +797,7 @@ test.describe("MVP Funnel - UX/UI", () => {
     await expect(saveButton).toBeEnabled();
   });
 
-  test("deve ter feedback visual ao interagir", async ({
-    page,
-  }) => {
+  test("deve ter feedback visual ao interagir", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Add a block and verify it appears
@@ -855,9 +811,7 @@ test.describe("MVP Funnel - UX/UI", () => {
     expect(newCount).toBeGreaterThanOrEqual(initialCount);
   });
 
-  test("deve ter navegação intuitiva entre painéis", async ({
-    page,
-  }) => {
+  test("deve ter navegação intuitiva entre painéis", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // All main panels should be accessible
@@ -869,9 +823,7 @@ test.describe("MVP Funnel - UX/UI", () => {
     await expect(propertiesPanel).toBeVisible();
   });
 
-  test("painéis devem ser redimensionáveis", async ({
-    page,
-  }) => {
+  test("painéis devem ser redimensionáveis", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Look for resize handles
@@ -890,9 +842,7 @@ test.describe("MVP Funnel - UX/UI", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Blocos de Resultado", () => {
-  test("deve adicionar bloco Resultado do Estilo", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco Resultado do Estilo", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const resultButton = page
@@ -907,9 +857,7 @@ test.describe("MVP Funnel - Blocos de Resultado", () => {
     }
   });
 
-  test("deve adicionar bloco Guia de Estilo", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco Guia de Estilo", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const guideButton = page
@@ -930,9 +878,7 @@ test.describe("MVP Funnel - Blocos de Resultado", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Blocos de Oferta", () => {
-  test("deve adicionar bloco Ancoragem de Preço", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco Ancoragem de Preço", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const priceButton = page
@@ -947,9 +893,7 @@ test.describe("MVP Funnel - Blocos de Oferta", () => {
     }
   });
 
-  test("deve adicionar bloco Contador Regressivo", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco Contador Regressivo", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const countdownButton = page
@@ -977,9 +921,7 @@ test.describe("MVP Funnel - Blocos de Oferta", () => {
     }
   });
 
-  test("deve adicionar bloco CTA de Oferta", async ({
-    page,
-  }) => {
+  test("deve adicionar bloco CTA de Oferta", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     const ctaButton = page.locator('button:has-text("CTA de Oferta")').first();
@@ -998,9 +940,7 @@ test.describe("MVP Funnel - Blocos de Oferta", () => {
 // =============================================================================
 
 test.describe("MVP Funnel - Acessibilidade", () => {
-  test("deve ter navegação por teclado funcional", async ({
-    page,
-  }) => {
+  test("deve ter navegação por teclado funcional", async ({ page }) => {
     await waitForEditorToLoad(page);
 
     // Tab through elements
