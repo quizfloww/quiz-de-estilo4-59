@@ -83,6 +83,22 @@ export interface BeforeAfterItem {
 }
 
 export interface CanvasBlockContent {
+  // ======== PROPRIEDADES GLOBAIS ========
+  // Cores
+  backgroundColor?: string;
+  textColor?: string;
+  accentColor?: string;
+  borderColor?: string;
+
+  // Fontes
+  fontFamily?: "default" | "playfair" | "inter" | "roboto" | "poppins";
+  lineHeight?: "tight" | "normal" | "relaxed" | "loose";
+
+  // Bordas e Espaçamentos
+  borderRadiusStyle?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "full";
+  paddingSize?: "none" | "sm" | "md" | "lg" | "xl";
+  marginSize?: "none" | "sm" | "md" | "lg" | "xl";
+
   // Header
   showLogo?: boolean;
   logoUrl?: string;
