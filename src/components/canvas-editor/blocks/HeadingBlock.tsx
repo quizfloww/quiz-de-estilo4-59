@@ -37,7 +37,7 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({
   const blockBackgroundColor = content.backgroundColor;
 
   return (
-    <div 
+    <div
       className="w-full p-2 rounded-lg"
       style={{ backgroundColor: blockBackgroundColor }}
     >

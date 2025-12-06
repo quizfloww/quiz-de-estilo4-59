@@ -1,19 +1,22 @@
-import React from 'react';
-import { CanvasBlockContent } from '@/types/canvasBlocks';
-import { ArrowLeft } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
+import React from "react";
+import { CanvasBlockContent } from "@/types/canvasBlocks";
+import { ArrowLeft } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 interface HeaderBlockProps {
   content: CanvasBlockContent;
   isPreview?: boolean;
 }
 
-export const HeaderBlock: React.FC<HeaderBlockProps> = ({ content, isPreview }) => {
+export const HeaderBlock: React.FC<HeaderBlockProps> = ({
+  content,
+  isPreview,
+}) => {
   // Background color
   const blockBackgroundColor = content.backgroundColor;
 
   return (
-    <div 
+    <div
       className="flex flex-row w-full h-auto justify-center relative p-2 rounded-lg"
       style={{ backgroundColor: blockBackgroundColor }}
     >
@@ -22,21 +25,21 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({ content, isPreview }) 
           <ArrowLeft className="h-4 w-4" />
         </button>
       )}
-      
+
       <div className="flex flex-col w-full max-w-md justify-start items-center gap-4">
         {content.showLogo && content.logoUrl && (
-          <img 
-            src={content.logoUrl} 
-            alt="Logo" 
+          <img
+            src={content.logoUrl}
+            alt="Logo"
             className="max-w-24 h-auto object-cover"
             width={96}
             height={96}
           />
         )}
-        
+
         {content.showProgress && (
-          <Progress 
-            value={content.progress || 0} 
+          <Progress
+            value={content.progress || 0}
             className="w-full h-2 bg-zinc-300"
           />
         )}
