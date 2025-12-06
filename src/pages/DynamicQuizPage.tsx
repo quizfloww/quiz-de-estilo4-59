@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   usePublicFunnel,
@@ -26,20 +26,62 @@ const DynamicQuizPage: React.FC = () => {
   const [userName, setUserName] = useState("");
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [isCalculating, setIsCalculating] = useState(false);
+  const [navigationDirection, setNavigationDirection] = useState<
+    "forward" | "backward"
+  >("forward");
 
-  // Get enabled stages only
-  const stages = funnel?.stages || [];
+  // Get enabled stages only - memoized to prevent infinite loops
+  const stages = useMemo(() => funnel?.stages || [], [funnel?.stages]);
   const currentStage = stages[currentStageIndex];
-  const globalConfig = funnel?.global_config || {};
+  const globalConfig = useMemo(
+    () => funnel?.global_config || {},
+    [funnel?.global_config]
+  );
 
-  // Reset state when funnel changes
+  // Progress persistence key
+  const progressKey = slug ? `quiz-progress-${slug}` : null;
+
+  // Restore progress from localStorage
   useEffect(() => {
-    if (funnel) {
-      setCurrentStageIndex(0);
-      setAnswers({});
-      setUserName("");
+    if (!progressKey || !funnel) return;
+
+    const saved = localStorage.getItem(progressKey);
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        // Check if not expired (24h)
+        if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+          // Only restore if same funnel
+          if (data.funnelId === funnel.id) {
+            setCurrentStageIndex(data.currentStageIndex || 0);
+            setUserName(data.userName || "");
+            setAnswers(data.answers || {});
+          }
+        } else {
+          // Expired - clear
+          localStorage.removeItem(progressKey);
+        }
+      } catch {
+        localStorage.removeItem(progressKey);
+      }
     }
-  }, [funnel?.id]);
+  }, [progressKey, funnel]);
+
+  // Save progress on each change
+  useEffect(() => {
+    if (!progressKey || !funnel) return;
+
+    localStorage.setItem(
+      progressKey,
+      JSON.stringify({
+        funnelId: funnel.id,
+        currentStageIndex,
+        userName,
+        answers,
+        timestamp: Date.now(),
+      })
+    );
+  }, [progressKey, currentStageIndex, userName, answers, funnel]);
 
   const handleIntroComplete = (name: string) => {
     setUserName(name);
@@ -54,22 +96,14 @@ const DynamicQuizPage: React.FC = () => {
     }));
   };
 
-  const goToNextStage = () => {
-    if (currentStageIndex < stages.length - 1) {
-      setCurrentStageIndex((prev) => prev + 1);
-    } else {
-      // Quiz completed - calculate results
-      handleQuizComplete();
-    }
-  };
-
-  const goToPreviousStage = () => {
+  const goToPreviousStage = useCallback(() => {
+    setNavigationDirection("backward");
     if (currentStageIndex > 0) {
       setCurrentStageIndex((prev) => prev - 1);
     }
-  };
+  }, [currentStageIndex]);
 
-  const handleQuizComplete = async () => {
+  const handleQuizComplete = useCallback(async () => {
     if (!funnel) return;
 
     setIsCalculating(true);
@@ -111,16 +145,37 @@ const DynamicQuizPage: React.FC = () => {
         })
       );
 
+      // Clear progress after completion
+      if (progressKey) {
+        localStorage.removeItem(progressKey);
+      }
+
+      // Get result URL from result stage config or use default
+      const resultStage = stages.find((s) => s.type === "result");
+      const resultUrl =
+        ((resultStage?.config as Record<string, unknown>)
+          ?.resultUrl as string) || "/resultado";
+
       // Navigate to result page
       setTimeout(() => {
-        navigate("/resultado");
+        navigate(resultUrl);
       }, 1500);
     } catch (err) {
       console.error("Error saving quiz response:", err);
       // Still navigate to result even if save fails
       navigate("/resultado");
     }
-  };
+  }, [funnel, stages, answers, userName, saveResponse, progressKey, navigate]);
+
+  const goToNextStage = useCallback(() => {
+    setNavigationDirection("forward");
+    if (currentStageIndex < stages.length - 1) {
+      setCurrentStageIndex((prev) => prev + 1);
+    } else {
+      // Quiz completed - calculate results
+      handleQuizComplete();
+    }
+  }, [currentStageIndex, stages.length, handleQuizComplete]);
 
   const renderStage = (stage: FunnelStage) => {
     const stageConfig = stage.config || {};
@@ -209,7 +264,7 @@ const DynamicQuizPage: React.FC = () => {
     );
   }
 
-  const stageConfig = currentStage.config || {};
+  const stageConfig = (currentStage.config || {}) as Record<string, unknown>;
 
   return (
     <div className="min-h-screen bg-background">
@@ -227,7 +282,12 @@ const DynamicQuizPage: React.FC = () => {
         </div>
 
         <div className="main-content w-full relative mx-auto max-w-2xl h-full py-8">
-          {renderStage(currentStage)}
+          <AnimatedStageWrapper
+            stageKey={currentStage.id}
+            direction={navigationDirection}
+          >
+            {renderStage(currentStage)}
+          </AnimatedStageWrapper>
         </div>
 
         <div className="pt-10 md:pt-24" />
