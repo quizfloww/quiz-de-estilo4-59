@@ -84,14 +84,32 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-type StageType = Database["public"]["Enums"]["stage_type"];
+// Stage types agora são strings livres para máxima flexibilidade
+type StageType = string;
 
-const stageTypeLabels: Record<StageType, string> = {
+// Tipos padrão sugeridos (mas qualquer string é válida)
+const DEFAULT_STAGE_TYPES = {
+  intro: "intro",
+  question: "question",
+  strategic: "strategic",
+  transition: "transition",
+  result: "result",
+  offer: "offer",
+  upsell: "upsell",
+  thankyou: "thankyou",
+} as const;
+
+const stageTypeLabels: Record<string, string> = {
   intro: "Introdução",
   question: "Questão",
   strategic: "Estratégica",
   transition: "Transição",
   result: "Resultado",
+  offer: "Oferta",
+  upsell: "Upsell",
+  thankyou: "Obrigado",
+  page: "Página",
+  custom: "Personalizada",
 };
 
 interface SortableStageItemProps {
@@ -145,7 +163,7 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium truncate">{stage.title}</p>
         <p className="text-xs text-muted-foreground">
-          {stageTypeLabels[stage.type]}
+          {stageTypeLabels[stage.type] || stage.type}
         </p>
       </div>
       <Button
@@ -359,13 +377,15 @@ export default function FunnelEditorPage() {
     }
   };
 
-  const handleAddStage = async (type: StageType) => {
+  const handleAddStage = async (type: string) => {
     if (!id) return;
     const nextOrder = localStages.length;
+    const label = stageTypeLabels[type] || type;
     await createStage.mutateAsync({
       funnel_id: id,
       type,
-      title: `${stageTypeLabels[type]} ${nextOrder + 1}`,
+      type_category: type, // Preservar categoria para filtros futuros
+      title: `${label} ${nextOrder + 1}`,
       order_index: nextOrder,
       is_enabled: true,
       config: {},
@@ -676,10 +696,9 @@ export default function FunnelEditorPage() {
     }
 
     setStageBlocks(newStageBlocks);
+    const label = stageTypeLabels[sourceStage.type] || sourceStage.type;
     toast.success(
-      `Configurações aplicadas a ${count} etapas do tipo "${
-        stageTypeLabels[sourceStage.type]
-      }"`
+      `Configurações aplicadas a ${count} etapas do tipo "${label}"`
     );
   };
 
@@ -902,6 +921,10 @@ export default function FunnelEditorPage() {
                   <SelectItem value="strategic">Estratégica</SelectItem>
                   <SelectItem value="transition">Transição</SelectItem>
                   <SelectItem value="result">Resultado</SelectItem>
+                  <SelectItem value="offer">Oferta</SelectItem>
+                  <SelectItem value="upsell">Upsell</SelectItem>
+                  <SelectItem value="thankyou">Obrigado</SelectItem>
+                  <SelectItem value="page">Página Customizada</SelectItem>
                 </SelectContent>
               </Select>
             </div>

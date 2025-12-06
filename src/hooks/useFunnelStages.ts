@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
 
-type StageType = Database["public"]["Enums"]["stage_type"];
+// Stage types agora são strings livres para máxima flexibilidade
+type StageType = string;
 
 export interface FunnelStage {
   id: string;

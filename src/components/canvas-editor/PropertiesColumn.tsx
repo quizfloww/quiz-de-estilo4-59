@@ -729,19 +729,46 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
     </CardContent>
   );
 
+  // Detecta categoria da stage baseado no type (flexível)
+  const getStageCategory = (type: string): string => {
+    // Mapeia tipos para categorias de renderização
+    const categoryMap: Record<string, string> = {
+      intro: "intro",
+      question: "question",
+      strategic: "question", // Usa mesmo renderer de question
+      transition: "transition",
+      result: "result",
+      offer: "result", // Oferta usa mesmo renderer de resultado
+      upsell: "result", // Upsell também
+      thankyou: "result", // Thank you page
+    };
+    return categoryMap[type] || "question"; // Default: question (mais genérico)
+  };
+
   const renderStageSpecificConfig = () => {
-    switch (activeStage.type) {
+    const category = getStageCategory(activeStage.type);
+
+    switch (category) {
       case "intro":
         return renderIntroConfig();
       case "question":
-      case "strategic":
         return renderQuestionConfig();
       case "transition":
         return renderTransitionConfig();
       case "result":
         return renderResultConfig();
       default:
-        return null;
+        // Para tipos customizados, mostra config genérico
+        return (
+          <CardContent className="space-y-3">
+            <p className="text-sm text-muted-foreground">
+              Tipo: <span className="font-mono">{activeStage.type}</span>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Configure esta etapa usando os blocos no canvas.
+            </p>
+          </CardContent>
+        );
     }
   };
   const stageSpecificConfigContent = renderStageSpecificConfig();

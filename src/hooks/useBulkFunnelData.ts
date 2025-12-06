@@ -1,9 +1,10 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import type { Database } from '@/integrations/supabase/types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import type { Database } from "@/integrations/supabase/types";
 
-type StageType = Database['public']['Enums']['stage_type'];
+// Stage types agora são strings livres
+type StageType = string;
 
 interface StageToInsert {
   funnel_id: string;
@@ -25,8 +26,8 @@ interface OptionToInsert {
 
 interface BulkInsertData {
   funnelId: string;
-  stages: Omit<StageToInsert, 'funnel_id'>[];
-  optionsMap: Map<number, Omit<OptionToInsert, 'stage_id'>[]>; // key = order_index
+  stages: Omit<StageToInsert, "funnel_id">[];
+  optionsMap: Map<number, Omit<OptionToInsert, "stage_id">[]>; // key = order_index
 }
 
 export const useBulkInsertFunnelData = () => {
@@ -35,26 +36,26 @@ export const useBulkInsertFunnelData = () => {
   return useMutation({
     mutationFn: async ({ funnelId, stages, optionsMap }: BulkInsertData) => {
       // 1. Insert all stages
-      const stagesToInsert: StageToInsert[] = stages.map(stage => ({
+      const stagesToInsert: StageToInsert[] = stages.map((stage) => ({
         ...stage,
         funnel_id: funnelId,
       }));
 
       const { data: insertedStages, error: stagesError } = await supabase
-        .from('funnel_stages')
+        .from("funnel_stages")
         .insert(stagesToInsert)
-        .select('id, order_index');
+        .select("id, order_index");
 
       if (stagesError) throw stagesError;
-      if (!insertedStages) throw new Error('No stages returned');
+      if (!insertedStages) throw new Error("No stages returned");
 
       // 2. Build options with correct stage_ids
       const allOptions: OptionToInsert[] = [];
-      
+
       for (const stage of insertedStages) {
         const stageOptions = optionsMap.get(stage.order_index);
         if (stageOptions && stageOptions.length > 0) {
-          stageOptions.forEach(option => {
+          stageOptions.forEach((option) => {
             allOptions.push({
               ...option,
               stage_id: stage.id,
@@ -66,21 +67,29 @@ export const useBulkInsertFunnelData = () => {
       // 3. Insert all options if any
       if (allOptions.length > 0) {
         const { error: optionsError } = await supabase
-          .from('stage_options')
+          .from("stage_options")
           .insert(allOptions);
 
         if (optionsError) throw optionsError;
       }
 
-      return { funnelId, stagesCount: insertedStages.length, optionsCount: allOptions.length };
+      return {
+        funnelId,
+        stagesCount: insertedStages.length,
+        optionsCount: allOptions.length,
+      };
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['funnel-stages', data.funnelId] });
-      toast.success(`Funil criado com ${data.stagesCount} etapas e ${data.optionsCount} opções!`);
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages", data.funnelId],
+      });
+      toast.success(
+        `Funil criado com ${data.stagesCount} etapas e ${data.optionsCount} opções!`
+      );
     },
     onError: (error) => {
-      console.error('Bulk insert error:', error);
-      toast.error('Erro ao criar etapas do funil: ' + error.message);
+      console.error("Bulk insert error:", error);
+      toast.error("Erro ao criar etapas do funil: " + error.message);
     },
   });
 };
