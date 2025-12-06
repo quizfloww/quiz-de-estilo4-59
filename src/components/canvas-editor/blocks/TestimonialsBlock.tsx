@@ -57,7 +57,7 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   const mobileLayout = content.mobileLayout || "stacked";
   const mobileColumns = content.mobileColumns || 1;
 
-  // Classes dinâmicas baseadas na configuração mobile
+  // Classes dinâmicas baseadas na configuração mobile - máximo 2 colunas para responsividade
   const getGridClasses = () => {
     if (layout === "carousel") {
       return "flex overflow-x-auto gap-4 snap-x snap-mandatory";
@@ -65,20 +65,17 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
     if (layout === "list") {
       return "space-y-4";
     }
-    // Grid layout com opções mobile
-    if (mobileLayout === "side-by-side") {
-      return "grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
+    // Grid layout com opções mobile - limitado a 2 colunas
+    if (mobileLayout === "side-by-side" || mobileColumns === 2) {
+      return "grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-6";
     }
-    if (mobileColumns === 2) {
-      return "grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
-    }
-    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+    return "grid grid-cols-1 md:grid-cols-2 gap-6";
   };
 
   // Manter para compatibilidade, mas usar getGridClasses()
   const layoutClasses = {
     carousel: "flex overflow-x-auto gap-4 snap-x snap-mandatory",
-    grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
+    grid: "grid grid-cols-1 md:grid-cols-2 gap-6",
     list: "space-y-4",
   };
 

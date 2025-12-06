@@ -660,7 +660,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       <div className="space-y-2">
         <Label htmlFor="columns">Colunas</Label>
         <Select
-          value={String(block.content.columns || 1)}
+          value={String(Math.min(block.content.columns || 1, 2))}
           onValueChange={(value) => updateContent("columns", parseInt(value))}
         >
           <SelectTrigger>
@@ -669,10 +669,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <SelectContent>
             <SelectItem value="1">1 Coluna</SelectItem>
             <SelectItem value="2">2 Colunas</SelectItem>
-            <SelectItem value="3">3 Colunas</SelectItem>
-            <SelectItem value="4">4 Colunas</SelectItem>
           </SelectContent>
         </Select>
+        <p className="text-xs text-muted-foreground">Máximo 2 colunas para melhor responsividade</p>
       </div>
 
       <div className="space-y-2">
@@ -1771,7 +1770,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           <div className="space-y-2">
             <Label>Colunas</Label>
             <Select
-              value={String(block.content.benefitsColumns || 2)}
+              value={String(Math.min(block.content.benefitsColumns || 2, 2))}
               onValueChange={(value) =>
                 updateContent("benefitsColumns", parseInt(value))
               }
@@ -1782,9 +1781,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
               <SelectContent>
                 <SelectItem value="1">1 Coluna</SelectItem>
                 <SelectItem value="2">2 Colunas</SelectItem>
-                <SelectItem value="3">3 Colunas</SelectItem>
               </SelectContent>
             </Select>
+            <p className="text-xs text-muted-foreground">Máximo 2 colunas para melhor responsividade</p>
           </div>
         )}
         <div className="flex items-center justify-between">

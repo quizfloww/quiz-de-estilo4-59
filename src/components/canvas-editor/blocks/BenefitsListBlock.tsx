@@ -25,7 +25,8 @@ const ICON_MAP: Record<string, React.ElementType> = {
 export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({ content, isPreview }) => {
   const benefits = content.benefits?.length ? content.benefits : DEFAULT_BENEFITS;
   const layout = content.benefitsLayout || 'list';
-  const columns = content.benefitsColumns || 1;
+  // Limitar colunas a máximo 2 para melhor responsividade
+  const columns = Math.min(content.benefitsColumns || 1, 2);
   const showIcons = content.showBenefitIcons !== false;
 
   if (layout === 'grid') {
@@ -33,8 +34,7 @@ export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({ content, i
       <div 
         className={cn(
           'w-full grid gap-4',
-          columns === 2 && 'grid-cols-1 md:grid-cols-2',
-          columns === 3 && 'grid-cols-1 md:grid-cols-3'
+          columns === 2 && 'grid-cols-1 sm:grid-cols-2'
         )}
       >
         {benefits.map((benefit) => (
