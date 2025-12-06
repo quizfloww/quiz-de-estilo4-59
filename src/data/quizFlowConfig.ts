@@ -32,6 +32,66 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         footerText: "© 2025 Gisele Galvão - Todos os direitos reservados",
       },
     },
+    // ==================== OFERTA ====================
+    {
+      id: "offer",
+      type: "result",
+      order: 20,
+      title: "Oferta",
+      isEnabled: true,
+      config: {
+        showLogo: true,
+        showProgress: false,
+        allowBack: true,
+        // Hero
+        heroImage:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp",
+        heroImage2:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921536/Sem_nome_1080_x_1000_px_z0chuv.webp",
+        // Products
+        products: [
+          {
+            url: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp",
+            alt: "Guia de Estilo - 3 Revistas",
+          },
+          {
+            url: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp",
+            alt: "Todos os produtos e bônus",
+          },
+        ],
+        // Pricing
+        finalPrice: 39,
+        totalOriginal: 175,
+        currency: "R$",
+        ctaText: "Quero meu guia + bônus",
+        ctaUrl:
+          "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+        urgencyText: "Oferta por tempo limitado!",
+        // Benefits / Testimonials / Guarantee / Mentor
+        benefits: [
+          "Descubra seu estilo com precisão",
+          "Aprenda a criar looks autênticos",
+          "Economize tempo e dinheiro",
+        ],
+        testimonials: [
+          {
+            id: "t-1",
+            name: "Sônia",
+            role: "Cliente",
+            text: "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial1.jpg",
+            rating: 5,
+          },
+        ],
+        guaranteeDays: 7,
+        guaranteeTitle: "Garantia de 7 dias",
+        guaranteeDescription: "Devolução sem burocracia nos primeiros 7 dias",
+        mentorName: "Gisele Galvão",
+        mentorImageUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
+      },
+    },
 
     // ==================== Q1 - TIPO DE ROUPA ====================
     {
@@ -1047,7 +1107,90 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         resultLayout: "modern",
         showPercentages: true,
         ctaText: "Quero Descobrir Meu Estilo Completo",
-        ctaUrl: "/oferta",
+        ctaUrl:
+          "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+          resultUrl: "/resultado",
+        // Offer / Pricing
+        finalPrice: 39,
+        totalOriginal: 175,
+        currency: "R$",
+        priceItems: [
+          {
+            title: "Guia Digital",
+            description: "Guia completo com técnicas e exemplos",
+          },
+          { title: "Vídeos Tutoriais", description: "Aulas práticas em vídeo" },
+        ],
+        // Offer Hero
+        heroImage:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp",
+        heroImage2:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921536/Sem_nome_1080_x_1000_px_z0chuv.webp",
+        // Offer Products
+        products: [
+          {
+            url: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp",
+            alt: "Guia de Estilo - 3 Revistas",
+          },
+          {
+            url: "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp",
+            alt: "Todos os produtos e bônus",
+          },
+        ],
+        // Benefits
+        benefits: [
+          "Descubra seu estilo com precisão",
+          "Aprenda a criar looks autênticos",
+          "Economize tempo e dinheiro",
+          "Ganhe confiança na sua imagem",
+        ],
+        // Testimonials
+        testimonials: [
+          {
+            id: "t-1",
+            name: "Sônia",
+            role: "Cliente",
+            text: "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial1.jpg",
+            rating: 5,
+          },
+          {
+            id: "t-2",
+            name: "Patrícia",
+            role: "Cliente",
+            text: "O guia é muito completo! Finalmente entendi como valorizar meu corpo e personalidade.",
+            imageUrl:
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial2.jpg",
+            rating: 5,
+          },
+        ],
+        // Guarantee
+        guaranteeDays: 7,
+        guaranteeTitle: "Garantia de 7 dias",
+        guaranteeDescription:
+          "Se você não ficar 100% satisfeita com o conteúdo nos primeiros 7 dias, devolvemos seu dinheiro integralmente, sem burocracia.",
+        // Mentor
+        mentorName: "Gisele Galvão",
+        mentorTitle: "Consultora de Imagem e Estilo",
+        mentorImageUrl:
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
+        mentorDescription:
+          "Consultora de imagem e estilo com vasta experiência em transformação de guarda-roupas e identidade visual.",
+        // CTA / UX
+        ctaVariant: "green",
+        showCtaIcon: true,
+        urgencyText: "Oferta por tempo limitado!",
+        securityBadges: ["Hotmart", "Compra Segura"],
+        paymentMethods: ["Cartão de Crédito", "Pix"],
+        secureText: "Pagamento seguro com garantia Hotmart",
+        // Style Result presentation
+        showPercentage: true,
+        showDescription: true,
+        styleLayout: "stacked",
+        styleImageSize: "lg",
+        maxSecondaryStyles: 3,
+        showSecondaryPercentage: true,
       },
     },
   ],
