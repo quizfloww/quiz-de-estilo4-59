@@ -12,6 +12,20 @@ interface StageOption {
   order_index: number;
 }
 
+interface RawOptionItem {
+  text?: string;
+  imageUrl?: string;
+  image_url?: string;
+  styleCategory?: string;
+  style_category?: string;
+  points?: number;
+}
+
+interface FunnelStage {
+  id: string;
+  config?: Record<string, unknown>;
+}
+
 /**
  * Extracts options from an options block
  * Suporta tanto imageUrl (camelCase) quanto image_url (snake_case do banco)
@@ -24,7 +38,7 @@ function extractOptionsFromBlock(
 
   const options = block.content?.options || [];
 
-  return options.map((opt: any, index: number) => ({
+  return options.map((opt: RawOptionItem, index: number) => ({
     stage_id: stageId,
     text: opt.text || `Opção ${index + 1}`,
     image_url: opt.imageUrl || opt.image_url || null,
@@ -39,7 +53,7 @@ function extractOptionsFromBlock(
  */
 export async function syncBlocksToDatabase(
   funnelId: string,
-  stages: any[],
+  stages: FunnelStage[],
   stageBlocks: Record<string, CanvasBlock[]>
 ): Promise<void> {
   // Process each stage

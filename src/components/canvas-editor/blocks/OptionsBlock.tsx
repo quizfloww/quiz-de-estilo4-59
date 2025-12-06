@@ -2,6 +2,14 @@ import React, { useState } from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
 import { QuizOption, QuizOptionItem } from "@/components/shared/QuizOption";
 
+interface RawOptionItem {
+  id: string;
+  text?: string;
+  imageUrl?: string;
+  image_url?: string;
+  styleCategory?: string;
+}
+
 interface OptionsBlockProps {
   content: CanvasBlockContent;
   isPreview?: boolean;
@@ -52,7 +60,7 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
 
   // Converter opções para o formato do QuizOption
   // Suporta tanto imageUrl (camelCase) quanto image_url (snake_case do banco)
-  const quizOptions: QuizOptionItem[] = options.map((opt: any) => ({
+  const quizOptions: QuizOptionItem[] = options.map((opt: RawOptionItem) => ({
     id: opt.id,
     text: opt.text,
     imageUrl: opt.imageUrl || opt.image_url,
