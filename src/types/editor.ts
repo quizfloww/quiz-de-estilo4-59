@@ -1,5 +1,3 @@
-
-
 export interface Block {
   id: string;
   type: string;
@@ -9,20 +7,37 @@ export interface Block {
   [key: string]: any;
 }
 
-export type BlockType = 
-  | 'heading'
-  | 'paragraph'
-  | 'image'
-  | 'button'
-  | 'title'
-  | 'subtitle'
-  | 'text'
-  | 'styleResult'
-  | 'cta'
-  | 'testimonial'
-  | 'carousel'
-  | 'bonus'
-  | 'guarantee'
+export type BlockType =
+  | "heading"
+  | "paragraph"
+  | "image"
+  | "button"
+  | "title"
+  | "subtitle"
+  | "text"
+  | "styleResult"
+  | "cta"
+  | "testimonial"
+  | "carousel"
+  | "bonus"
+  | "guarantee"
+  // Novos blocos de Resultado
+  | "personalizedHook"
+  | "styleGuide"
+  | "beforeAfter"
+  | "secondaryStyles"
+  | "styleProgress"
+  // Novos blocos de Vendas
+  | "priceAnchor"
+  | "countdown"
+  | "testimonials"
+  | "benefitsList"
+  | "ctaOffer"
+  | "faq"
+  | "socialProof"
+  | "motivation"
+  | "mentor"
+  | "securePurchase"
   | string;
 
 // Add missing EditorBlock type which was imported across many files
