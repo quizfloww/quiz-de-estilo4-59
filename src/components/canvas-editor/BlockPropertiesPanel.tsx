@@ -1200,6 +1200,55 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderPersonalizedHookProperties = () => (
     <>
+      {/* Configuração de Saudação Personalizada */}
+      <div className="space-y-2 pb-3 mb-3 border-b border-muted">
+        <Label className="text-muted-foreground text-xs uppercase">
+          Saudação
+        </Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="showGreeting">Exibir saudação com nome</Label>
+          <Switch
+            id="showGreeting"
+            checked={block.content.showGreeting !== false}
+            onCheckedChange={(checked) =>
+              updateContent("showGreeting", checked)
+            }
+          />
+        </div>
+        {block.content.showGreeting !== false && (
+          <>
+            <div className="space-y-1">
+              <Label htmlFor="greetingTemplate">Modelo de saudação</Label>
+              <Input
+                id="greetingTemplate"
+                value={block.content.greetingTemplate || "Olá, {nome}!"}
+                onChange={(e) =>
+                  updateContent("greetingTemplate", e.target.value)
+                }
+                placeholder="Olá, {nome}!"
+              />
+              <p className="text-xs text-muted-foreground">
+                Use {"{nome}"} para inserir o nome do usuário
+              </p>
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="greetingSubtitle">Subtítulo da saudação</Label>
+              <Input
+                id="greetingSubtitle"
+                value={
+                  block.content.greetingSubtitle || "Seu Estilo Predominante é:"
+                }
+                onChange={(e) =>
+                  updateContent("greetingSubtitle", e.target.value)
+                }
+                placeholder="Seu Estilo Predominante é:"
+              />
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Configuração do Gancho */}
       <div className="space-y-2">
         <Label htmlFor="hookTitle">Título do Gancho</Label>
         <Textarea
