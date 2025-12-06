@@ -5,6 +5,10 @@ on:
   push:
     branches: [main]
 
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,29 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
-
       - name: Install Vercel CLI
         run: npm i -g vercel@latest
 
-      - name: Pull Vercel env and link project
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
-          vercel link --token "$VERCEL_TOKEN" --project ${{ secrets.VERCEL_PROJECT_ID }} || true
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Build (prebuilt artifact for deploy)
-        run: |
-          vercel build --prod --token "${{ secrets.VERCEL_TOKEN }}"
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: Deploy prebuilt to Vercel (Production on main)
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN" --confirm
-          else
-            vercel deploy --prebuilt --token "$VERCEL_TOKEN" --confirm
-          fi
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
