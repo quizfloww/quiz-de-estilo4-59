@@ -51,10 +51,12 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
   };
 
   // Converter opções para o formato do QuizOption
+  // Suporta tanto imageUrl (camelCase) quanto image_url (snake_case do banco)
   const quizOptions: QuizOptionItem[] = options.map((opt: any) => ({
     id: opt.id,
     text: opt.text,
-    imageUrl: opt.imageUrl,
+    imageUrl: opt.imageUrl || opt.image_url,
+    image_url: opt.image_url || opt.imageUrl,
     styleCategory: opt.styleCategory,
   }));
 

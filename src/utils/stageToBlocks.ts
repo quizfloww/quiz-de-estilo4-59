@@ -429,8 +429,10 @@ export const convertStageToBlocks = (
 
   // 7. Options Block (para questões)
   if (config.options && config.options.length > 0) {
+    // Suporta tanto imageUrl (camelCase) quanto image_url (snake_case do banco)
     const hasImages = config.options.some(
-      (opt: { imageUrl?: string }) => opt.imageUrl
+      (opt: { imageUrl?: string; image_url?: string }) =>
+        opt.imageUrl || opt.image_url
     );
 
     blocks.push({
@@ -450,11 +452,14 @@ export const convertStageToBlocks = (
             id: string;
             text: string;
             imageUrl?: string;
+            image_url?: string;
             styleCategory?: string;
+            points?: number;
           }) => ({
             id: opt.id,
             text: opt.text,
-            imageUrl: opt.imageUrl,
+            imageUrl: opt.imageUrl || opt.image_url, // Suporta ambos os formatos
+            image_url: opt.image_url || opt.imageUrl, // Mantém ambos para compatibilidade
             styleCategory: opt.styleCategory,
             points: opt.points || 1,
           })
