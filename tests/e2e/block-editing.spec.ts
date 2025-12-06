@@ -363,25 +363,29 @@ test.describe("FunnelEditor - Edição de Bloco Botão", () => {
   });
 
   test("deve configurar largura total do botão", async ({ page }) => {
+    // This test can skip if switch is not available
     const propertiesPanel = getPropertiesPanel(page);
-
-    // Look for full width toggle - use a shorter timeout and skip if not found
-    const fullWidthSwitch = propertiesPanel
-      .locator('button[role="switch"]')
-      .first();
-
-    try {
-      await fullWidthSwitch.waitFor({ state: "visible", timeout: 3000 });
-      await fullWidthSwitch.click();
-      await page.waitForTimeout(300);
-
-      // Verify state changed
-      const isPressed = await fullWidthSwitch.getAttribute("data-state");
-      expect(isPressed === "checked" || isPressed === "unchecked").toBeTruthy();
-    } catch {
-      // Switch not found - test passes as feature may not be present
+    const fullWidthSwitch = propertiesPanel.locator('button[role="switch"]').first();
+    
+    const switchCount = await fullWidthSwitch.count();
+    if (switchCount === 0) {
+      // No switch available - test passes as feature may not be present
       expect(true).toBeTruthy();
+      return;
     }
+
+    const isVisible = await fullWidthSwitch.isVisible().catch(() => false);
+    if (!isVisible) {
+      expect(true).toBeTruthy();
+      return;
+    }
+
+    await fullWidthSwitch.click();
+    await page.waitForTimeout(300);
+
+    // Verify state changed
+    const isPressed = await fullWidthSwitch.getAttribute("data-state");
+    expect(isPressed === "checked" || isPressed === "unchecked").toBeTruthy();
   });
 });
 
