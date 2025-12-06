@@ -130,6 +130,12 @@ export interface CanvasBlockContent {
   // Spacer
   height?: string;
 
+  // Divider
+  dividerStyle?: "solid" | "dashed" | "dotted" | "elegant";
+  dividerColor?: string;
+  dividerThickness?: number;
+  dividerWidth?: number;
+
   // Global - Escala
   scale?: number;
 

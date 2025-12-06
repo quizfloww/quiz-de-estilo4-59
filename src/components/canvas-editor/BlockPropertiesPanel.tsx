@@ -736,6 +736,66 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
+  const renderDividerProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label>Estilo</Label>
+        <Select
+          value={block.content.dividerStyle || "solid"}
+          onValueChange={(value) => updateContent("dividerStyle", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="solid">Sólido</SelectItem>
+            <SelectItem value="dashed">Tracejado</SelectItem>
+            <SelectItem value="dotted">Pontilhado</SelectItem>
+            <SelectItem value="elegant">Elegante (gradiente)</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="dividerColor">Cor</Label>
+        <div className="flex gap-2">
+          <Input
+            id="dividerColor"
+            type="color"
+            value={block.content.dividerColor || "#B89B7A"}
+            onChange={(e) => updateContent("dividerColor", e.target.value)}
+            className="w-12 h-10 p-1 cursor-pointer"
+          />
+          <Input
+            value={block.content.dividerColor || "#B89B7A"}
+            onChange={(e) => updateContent("dividerColor", e.target.value)}
+            placeholder="#B89B7A"
+            className="flex-1"
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label>Espessura: {block.content.dividerThickness || 1}px</Label>
+        <Slider
+          value={[block.content.dividerThickness || 1]}
+          min={1}
+          max={10}
+          step={1}
+          onValueChange={([value]) => updateContent("dividerThickness", value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Largura: {block.content.dividerWidth || 100}%</Label>
+        <Slider
+          value={[block.content.dividerWidth || 100]}
+          min={10}
+          max={100}
+          step={5}
+          onValueChange={([value]) => updateContent("dividerWidth", value)}
+        />
+      </div>
+    </>
+  );
+
   const renderStyleResultProperties = () => (
     <>
       <div className="flex items-center justify-between">
@@ -1649,11 +1709,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       case "spacer":
         return renderSpacerProperties();
       case "divider":
-        return (
-          <p className="text-sm text-muted-foreground">
-            Sem propriedades configuráveis
-          </p>
-        );
+        return renderDividerProperties();
       // Blocos de Resultado
       case "styleResult":
         return renderStyleResultProperties();
