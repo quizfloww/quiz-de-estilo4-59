@@ -289,7 +289,9 @@ export default function FunnelEditorPage() {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
-  // Keyboard shortcuts for Undo/Redo
+  // Keyboard shortcuts for Undo/Redo (handleSave é chamado via ref para evitar dependência circular)
+  const handleSaveRef = React.useRef<() => Promise<void>>();
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
@@ -306,13 +308,13 @@ export default function FunnelEditorPage() {
       // Ctrl+S to save
       if ((e.ctrlKey || e.metaKey) && e.key === "s") {
         e.preventDefault();
-        handleSave();
+        handleSaveRef.current?.();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [undo, redo, handleSave]);
+  }, [undo, redo]);
 
   const activeStage = localStages.find((s) => s.id === activeStageId);
   const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
