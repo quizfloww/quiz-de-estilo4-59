@@ -1,0 +1,53 @@
+-- =====================================================
+-- ALTERNATIVE: API Key based security for admin operations
+-- =====================================================
+-- Use this migration INSTEAD of the authenticated-based one if you
+-- don't have Supabase Auth configured. This uses a secret API key
+-- stored in the database to validate admin operations.
+--
+-- HOW TO USE:
+-- 1. Run this migration
+-- 2. Insert your secret admin key: 
+--    INSERT INTO admin_settings (key, value) VALUES ('api_key', 'your-secret-key');
+-- 3. Pass the key in requests via RPC or custom header
+-- =====================================================
+
+-- Skip this file if using authentication-based policies
+-- To use this approach, rename this file to remove the .skip extension
+
+-- Create admin settings table
+CREATE TABLE IF NOT EXISTS public.admin_settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Enable RLS
+ALTER TABLE public.admin_settings ENABLE ROW LEVEL SECURITY;
+
+-- Only service role can access admin settings
+CREATE POLICY "Service role only" ON public.admin_settings
+FOR ALL
+TO service_role
+USING (true)
+WITH CHECK (true);
+
+-- Function to validate admin operations via RPC
+CREATE OR REPLACE FUNCTION public.validate_admin_key(provided_key TEXT)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+    stored_key TEXT;
+BEGIN
+    SELECT value INTO stored_key
+    FROM public.admin_settings
+    WHERE key = 'api_key';
+    
+    RETURN stored_key IS NOT NULL AND stored_key = provided_key;
+END;
+$$;
+
+-- Usage example for admin operations:
+-- SELECT * FROM funnels WHERE validate_admin_key('your-key');
