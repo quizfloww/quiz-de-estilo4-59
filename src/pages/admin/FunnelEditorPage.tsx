@@ -551,30 +551,38 @@ export default function FunnelEditorPage() {
         // Import stages and blocks
         const newStageBlocks: Record<string, CanvasBlock[]> = {};
         const updatedStages: FunnelStage[] = [];
+        const processedOrderIndexes = new Set<number>();
 
+        // Process imported stages
         for (const importedStage of importedData.stages) {
-          // Find matching stage by order or create
+          const orderIndex =
+            importedStage.order_index ??
+            importedData.stages.indexOf(importedStage);
+          processedOrderIndexes.add(orderIndex);
+
+          // Find matching stage by order_index
           const existingStage = localStages.find(
-            (s) => s.order_index === importedStage.order_index
+            (s) => s.order_index === orderIndex
           );
 
           if (existingStage) {
-            // Update existing stage
+            // UPDATE existing stage
             await updateStage.mutateAsync({
               id: existingStage.id,
-              title: importedStage.title,
-              type: importedStage.type || existingStage.type,
-              config: importedStage.config,
+              title: importedStage.title || existingStage.title,
+              type: importedStage.type || existingStage.type || "page",
+              config: importedStage.config || {},
               is_enabled: importedStage.is_enabled ?? true,
             });
 
-            updatedStages.push({
+            const updatedStageData = {
               ...existingStage,
-              title: importedStage.title,
-              type: importedStage.type || existingStage.type,
-              config: importedStage.config,
+              title: importedStage.title || existingStage.title,
+              type: importedStage.type || existingStage.type || "page",
+              config: importedStage.config || {},
               is_enabled: importedStage.is_enabled ?? true,
-            });
+            };
+            updatedStages.push(updatedStageData);
 
             // Import blocks for this stage
             if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
@@ -583,15 +591,15 @@ export default function FunnelEditorPage() {
               await saveStageBocks(
                 existingStage.id,
                 importedStage.blocks,
-                importedStage.type || existingStage.type
+                updatedStageData.type
               );
-            } else {
+            } else if (importedStage.config) {
               // Se não tem blocos no JSON, converter do config
               const stageIndex = localStages.findIndex(
                 (s) => s.id === existingStage.id
               );
               const convertedBlocks = convertStageToBlocks(
-                { ...existingStage, config: importedStage.config },
+                updatedStageData,
                 localStages.length,
                 stageIndex
               );
@@ -599,11 +607,50 @@ export default function FunnelEditorPage() {
               await saveStageBocks(
                 existingStage.id,
                 convertedBlocks,
-                importedStage.type || existingStage.type
+                updatedStageData.type
               );
+            }
+          } else {
+            // CREATE new stage (JSON tem mais stages que o funil atual)
+            const newStage = await createStage.mutateAsync({
+              funnel_id: id!,
+              type: importedStage.type || "page",
+              title: importedStage.title || `Etapa ${orderIndex + 1}`,
+              order_index: orderIndex,
+              is_enabled: importedStage.is_enabled ?? true,
+              config: importedStage.config || {},
+              type_category: importedStage.type || "page",
+            });
+
+            updatedStages.push(newStage);
+
+            // Import blocks for new stage
+            if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
+              newStageBlocks[newStage.id] = importedStage.blocks;
+              await saveStageBocks(
+                newStage.id,
+                importedStage.blocks,
+                newStage.type
+              );
+            } else if (importedStage.config) {
+              const convertedBlocks = convertStageToBlocks(
+                newStage,
+                importedData.stages.length,
+                orderIndex
+              );
+              newStageBlocks[newStage.id] = convertedBlocks;
+              await saveStageBocks(newStage.id, convertedBlocks, newStage.type);
             }
           }
         }
+
+        // OPTIONAL: Delete stages not in imported JSON
+        // (Comentado por segurança - descomente se quiser sync completo)
+        // for (const existingStage of localStages) {
+        //   if (!processedOrderIndexes.has(existingStage.order_index)) {
+        //     await deleteStage.mutate({ id: existingStage.id, funnelId: id! });
+        //   }
+        // }
 
         // Update local state with imported stages
         setLocalStages((prev) =>
