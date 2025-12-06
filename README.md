@@ -81,8 +81,53 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 
 ## Segurança
 
+### Headers HTTP
+
 - CSP, HSTS e cabeçalhos comuns no `vercel.json`.
-- Recomendado: RLS no Supabase, auditoria de dependências (`npm audit`).
+
+### Row Level Security (RLS) no Supabase
+
+- Todas as tabelas têm RLS habilitado.
+- Políticas seguras: usuários públicos só podem ler funis publicados.
+- Administradores (autenticados) têm acesso completo.
+- Migration de correção: `supabase/migrations/20251206000000_fix_security_policies.sql`
+
+### Rotação de Chaves (IMPORTANTE!)
+
+Se suas credenciais foram expostas (ex: commitadas no Git), siga estes passos:
+
+1. **Supabase - Rotacionar Anon Key:**
+
+   - Acesse: https://supabase.com/dashboard/project/mrymyxayqqtlxearvqkz/settings/api
+   - Clique em "Regenerate" na seção "anon public" key
+   - Atualize `VITE_SUPABASE_ANON_KEY` na Vercel e no `.env` local
+
+2. **Supabase - Rotacionar Service Key (se exposta):**
+
+   - Na mesma página, regenere a "service_role" key
+   - Esta chave NUNCA deve estar no frontend
+
+3. **Vercel Token:**
+
+   - Acesse: https://vercel.com/account/tokens
+   - Revogue o token antigo e crie um novo
+   - Atualize o secret `VERCEL_TOKEN` no GitHub
+
+4. **GitHub Secrets:**
+   - Acesse: https://github.com/giselegal/quiz-de-estilo4-58/settings/secrets/actions
+   - Atualize todos os secrets afetados
+
+### Auditoria de Dependências
+
+- Execute `npm audit` regularmente
+- Use `npm audit fix` para corrigir vulnerabilidades automáticas
+- Vulnerabilidades atuais: 3 moderadas (esbuild/vite - apenas dev server)
+
+### Boas Práticas
+
+- Nunca commite arquivos `.env` (já está no `.gitignore`)
+- Use `.env.example` como template sem valores reais
+- Variáveis sensíveis devem estar apenas na Vercel/hosting
 
 ## Versionamento
 
