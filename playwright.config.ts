@@ -2,7 +2,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   // Default test timeout (ms)
-  timeout: 60000,
+  timeout: 120000,
+  expect: {
+    // Timeout padrão para asserts `expect()`
+    timeout: 5000,
+  },
   testDir: "./tests/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

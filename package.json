@@ -18,6 +18,8 @@
     "test:headed": "playwright test --headed",
     "test:funnels": "playwright test funnels-page",
     "test:editor": "playwright test funnel-editor",
+    "test:editor-file": "playwright test tests/e2e/funnel-editor.spec.ts",
+    "test:funnels-file": "playwright test tests/e2e/funnels-page.spec.ts",
     "test:report": "playwright show-report"
   },
   "dependencies": {
