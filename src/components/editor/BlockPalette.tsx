@@ -31,18 +31,18 @@ import {
   BLOCK_TYPE_ICONS,
 } from "@/types/canvasBlocks";
 import { cn } from "@/lib/utils";
+import {
+  DEFAULT_BLOCK_CATEGORIES,
+  BLOCK_DESCRIPTIONS,
+  type BlockCategory,
+} from "./blockPaletteConfig";
+
+// Re-export para compatibilidade
+export { DEFAULT_BLOCK_CATEGORIES, type BlockCategory };
 
 // ============================================
 // Tipos
 // ============================================
-
-export interface BlockCategory {
-  id: string;
-  label: string;
-  icon?: string;
-  blocks: CanvasBlockType[];
-  description?: string;
-}
 
 export interface BlockPaletteProps {
   /** Categorias de blocos a exibir */
@@ -58,65 +58,6 @@ export interface BlockPaletteProps {
   /** Classe CSS adicional */
   className?: string;
 }
-
-// ============================================
-// Categorias Padrão
-// ============================================
-
-export const DEFAULT_BLOCK_CATEGORIES: BlockCategory[] = [
-  {
-    id: "basic",
-    label: "Elementos Básicos",
-    icon: "Layers",
-    description: "Componentes fundamentais de layout",
-    blocks: ["heading", "text", "image", "button", "spacer", "divider"],
-  },
-  {
-    id: "quiz",
-    label: "Quiz & Formulário",
-    icon: "ClipboardList",
-    description: "Elementos interativos para coleta de dados",
-    blocks: ["header", "input", "options"],
-  },
-  {
-    id: "result",
-    label: "Resultado",
-    icon: "Award",
-    description: "Exibição de resultados e análises",
-    blocks: [
-      "styleResult",
-      "secondaryStyles",
-      "styleProgress",
-      "personalizedHook",
-      "styleGuide",
-      "beforeAfter",
-    ],
-  },
-  {
-    id: "sales",
-    label: "Vendas & Conversão",
-    icon: "ShoppingCart",
-    description: "Elementos de persuasão e conversão",
-    blocks: [
-      "priceAnchor",
-      "countdown",
-      "testimonial",
-      "testimonials",
-      "benefitsList",
-      "guarantee",
-      "ctaOffer",
-      "faq",
-      "socialProof",
-    ],
-  },
-  {
-    id: "extra",
-    label: "Extras",
-    icon: "Sparkles",
-    description: "Elementos adicionais e especializados",
-    blocks: ["motivation", "bonus", "mentor", "securePurchase"],
-  },
-];
 
 // ============================================
 // Descrições dos Blocos
@@ -179,7 +120,10 @@ const DraggableBlockItem: React.FC<DraggableBlockItemProps> = ({
   });
 
   const iconName = BLOCK_TYPE_ICONS[type];
-  const IconComponent = (Icons as any)[iconName] || Icons.Square;
+  const IconComponent =
+    (Icons[iconName as keyof typeof Icons] as React.ComponentType<{
+      className?: string;
+    }>) || Icons.Square;
   const label = BLOCK_TYPE_LABELS[type];
   const description = BLOCK_DESCRIPTIONS[type];
 
