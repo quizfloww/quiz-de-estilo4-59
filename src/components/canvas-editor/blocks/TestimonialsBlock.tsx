@@ -1,6 +1,7 @@
 import React from "react";
 import { CanvasBlockContent, TestimonialItem } from "@/types/canvasBlocks";
 import { MessageSquare, Star, Quote } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface TestimonialsBlockProps {
   content: CanvasBlockContent;
@@ -38,6 +39,12 @@ const defaultTestimonials: TestimonialItem[] = [
   },
 ];
 
+/**
+ * TestimonialsBlock - Design igual ao TestimonialsSection.tsx real
+ * - Animações motion com staggered entrance
+ * - Background FAF9F7
+ * - Grid responsivo
+ */
 export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   content,
   isPreview,
@@ -53,9 +60,14 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   };
 
   return (
-    <div className="w-full py-8 px-4">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-8">
+    <section className="py-12 px-4 bg-[#FAF9F7]">
+      <div className="container mx-auto max-w-5xl">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8"
+        >
           <div className="inline-flex items-center gap-2 mb-4">
             <MessageSquare className="w-5 h-5 text-[#aa6b5d]" />
             <span className="text-sm font-medium uppercase tracking-wide text-[#aa6b5d]">
@@ -63,48 +75,47 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
             </span>
           </div>
 
-          <h3 className="text-2xl md:text-3xl font-playfair font-bold text-[#432818]">
+          <h2 className="text-2xl md:text-3xl font-playfair text-[#432818]">
             {title}
-          </h3>
-        </div>
+          </h2>
+        </motion.div>
 
         <div className={layoutClasses[layout]}>
           {testimonials.map((testimonial, index) => (
-            <div
+            <motion.div
               key={testimonial.id || index}
-              className={`bg-white rounded-xl p-6 border border-[#B89B7A]/20 shadow-sm ${
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: 0.1 * index,
+              }}
+              className={`bg-white rounded-lg p-6 shadow-sm space-y-4 ${
                 layout === "carousel" ? "min-w-[300px] snap-center" : ""
               }`}
             >
-              <Quote className="w-8 h-8 text-[#B89B7A]/30 mb-4" />
+              <Quote className="h-8 w-8 text-[#B89B7A]" />
 
-              <p className="text-[#432818] mb-4 italic">"{testimonial.text}"</p>
+              <p className="text-[#432818]">{testimonial.text}</p>
 
               <div className="flex items-center gap-3">
                 {testimonial.imageUrl ? (
                   <img
                     src={testimonial.imageUrl}
                     alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-[#B89B7A]/20"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center text-white font-bold">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#B89B7A] to-[#aa6b5d] flex items-center justify-center text-white font-bold">
                     {testimonial.name.charAt(0)}
                   </div>
                 )}
 
-                <div>
-                  <p className="font-semibold text-[#432818]">
-                    {testimonial.name}
-                  </p>
-                  {testimonial.role && (
-                    <p className="text-sm text-[#8F7A6A]">{testimonial.role}</p>
-                  )}
-                </div>
+                <p className="font-medium text-[#8F7A6A]">{testimonial.name}</p>
               </div>
 
               {testimonial.rating && (
-                <div className="flex gap-1 mt-3">
+                <div className="flex gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
@@ -117,10 +128,10 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
                   ))}
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
