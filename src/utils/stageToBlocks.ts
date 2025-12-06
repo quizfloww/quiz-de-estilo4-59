@@ -12,7 +12,7 @@ export const convertStageToBlocks = (
   currentIndex: number
 ): CanvasBlock[] => {
   const blocks: CanvasBlock[] = [];
-  const config = (stage.config as Record<string, any>) || {};
+  const config = (stage.config as Record<string, unknown>) || {};
   let order = 0;
 
   // Calcular progresso
@@ -429,7 +429,9 @@ export const convertStageToBlocks = (
 
   // 7. Options Block (para questões)
   if (config.options && config.options.length > 0) {
-    const hasImages = config.options.some((opt: any) => opt.imageUrl);
+    const hasImages = config.options.some(
+      (opt: { imageUrl?: string }) => opt.imageUrl
+    );
 
     blocks.push({
       id: `${stage.id}-options`,
@@ -443,13 +445,20 @@ export const convertStageToBlocks = (
         optionTextSize: config.optionTextSize || "base",
         optionImageSize: config.optionImageSize || "md",
         showCheckIcon: config.showCheckIcon !== false,
-        options: config.options.map((opt: any) => ({
-          id: opt.id,
-          text: opt.text,
-          imageUrl: opt.imageUrl,
-          styleCategory: opt.styleCategory,
-          points: opt.points || 1,
-        })),
+        options: config.options.map(
+          (opt: {
+            id: string;
+            text: string;
+            imageUrl?: string;
+            styleCategory?: string;
+          }) => ({
+            id: opt.id,
+            text: opt.text,
+            imageUrl: opt.imageUrl,
+            styleCategory: opt.styleCategory,
+            points: opt.points || 1,
+          })
+        ),
       },
     });
   }
@@ -691,8 +700,8 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
 
 export const blocksToStageConfig = (
   blocks: CanvasBlock[]
-): Record<string, any> => {
-  const config: Record<string, any> = {};
+): Record<string, unknown> => {
+  const config: Record<string, unknown> = {};
 
   blocks.forEach((block) => {
     switch (block.type) {
