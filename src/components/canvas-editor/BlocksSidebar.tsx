@@ -1,16 +1,16 @@
-import React from 'react';
-import { CanvasBlockType, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  Layout, 
-  Type, 
-  AlignLeft, 
-  Image, 
-  TextCursor, 
-  List, 
-  MousePointer, 
-  Maximize2, 
+import React from "react";
+import { CanvasBlockType, BLOCK_TYPE_LABELS } from "@/types/canvasBlocks";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Layout,
+  Type,
+  AlignLeft,
+  Image,
+  TextCursor,
+  List,
+  MousePointer,
+  Maximize2,
   Minus,
   Award,
   BarChart3,
@@ -23,7 +23,15 @@ import {
   ShoppingCart,
   HelpCircle,
   Users,
-} from 'lucide-react';
+  Sparkles,
+  BookOpen,
+  ArrowLeftRight,
+  Heart,
+  Gift,
+  MessageSquare,
+  UserCircle,
+  Lock,
+} from "lucide-react";
 
 interface BlocksSidebarProps {
   onAddBlock: (type: CanvasBlockType) => void;
@@ -43,37 +51,71 @@ const BLOCK_ICONS: Record<CanvasBlockType, React.ElementType> = {
   styleResult: Award,
   secondaryStyles: BarChart3,
   styleProgress: TrendingUp,
+  personalizedHook: Sparkles,
+  styleGuide: BookOpen,
+  beforeAfter: ArrowLeftRight,
   // Oferta
   priceAnchor: DollarSign,
   countdown: Clock,
   testimonial: Quote,
+  testimonials: MessageSquare,
   benefitsList: CheckCircle,
   guarantee: Shield,
   ctaOffer: ShoppingCart,
   faq: HelpCircle,
   socialProof: Users,
+  motivation: Heart,
+  bonus: Gift,
+  mentor: UserCircle,
+  securePurchase: Lock,
 };
 
 const BLOCK_CATEGORIES = [
   {
-    name: 'Estrutura',
-    blocks: ['header', 'spacer', 'divider'] as CanvasBlockType[],
+    name: "Estrutura",
+    blocks: ["header", "spacer", "divider"] as CanvasBlockType[],
   },
   {
-    name: 'Conteúdo',
-    blocks: ['heading', 'text', 'image'] as CanvasBlockType[],
+    name: "Conteúdo",
+    blocks: ["heading", "text", "image"] as CanvasBlockType[],
   },
   {
-    name: 'Interação',
-    blocks: ['input', 'options', 'button'] as CanvasBlockType[],
+    name: "Interação",
+    blocks: ["input", "options", "button"] as CanvasBlockType[],
   },
   {
-    name: 'Resultado',
-    blocks: ['styleResult', 'secondaryStyles', 'styleProgress'] as CanvasBlockType[],
+    name: "Resultado",
+    blocks: [
+      "styleResult",
+      "secondaryStyles",
+      "styleProgress",
+      "personalizedHook",
+      "styleGuide",
+      "beforeAfter",
+    ] as CanvasBlockType[],
   },
   {
-    name: 'Oferta',
-    blocks: ['priceAnchor', 'countdown', 'ctaOffer', 'testimonial', 'benefitsList', 'guarantee', 'faq', 'socialProof'] as CanvasBlockType[],
+    name: "Vendas",
+    blocks: [
+      "motivation",
+      "bonus",
+      "testimonials",
+      "mentor",
+    ] as CanvasBlockType[],
+  },
+  {
+    name: "Oferta",
+    blocks: [
+      "priceAnchor",
+      "countdown",
+      "ctaOffer",
+      "guarantee",
+      "securePurchase",
+      "testimonial",
+      "benefitsList",
+      "faq",
+      "socialProof",
+    ] as CanvasBlockType[],
   },
 ];
 
@@ -102,7 +144,9 @@ export const BlocksSidebar: React.FC<BlocksSidebarProps> = ({ onAddBlock }) => {
                       onClick={() => onAddBlock(blockType)}
                     >
                       <Icon className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-xs">{BLOCK_TYPE_LABELS[blockType]}</span>
+                      <span className="text-xs">
+                        {BLOCK_TYPE_LABELS[blockType]}
+                      </span>
                     </Button>
                   );
                 })}
