@@ -97,7 +97,7 @@ export const PersonalizedHookBlock: React.FC<PersonalizedHookBlockProps> = ({
   const ctaText = (content.ctaText as string) || messages.ctaText;
 
   return (
-    <div className="text-center p-0 bg-gradient-to-br from-[#fffaf7] to-[#f5ebe0] rounded-xl border border-[#B89B7A]/20 p-6">
+    <div className="text-center p-6 bg-gradient-to-br from-[#fffaf7] to-[#f5ebe0] rounded-xl border border-[#B89B7A]/20">
       {/* Saudação com Logo */}
       {showGreeting && (
         <div className="mb-6 pb-4 border-b border-[#B89B7A]/20">
