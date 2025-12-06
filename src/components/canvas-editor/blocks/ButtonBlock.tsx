@@ -1,6 +1,5 @@
 import React from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface ButtonBlockProps {
@@ -14,14 +13,26 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
 }) => {
   const variant = content.buttonVariant || "primary";
 
-  const variantClasses = {
-    primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-    outline:
-      "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+  // Cores do tema Gisele Galvão
+  const primaryColor = content.buttonColor || "#B89B7A";
+
+  const variantStyles: Record<string, React.CSSProperties> = {
+    primary: {
+      backgroundColor: primaryColor,
+      color: "#FFFFFF",
+    },
+    secondary: {
+      backgroundColor: "#432818",
+      color: "#FFFFFF",
+    },
+    outline: {
+      backgroundColor: "transparent",
+      border: `2px solid ${primaryColor}`,
+      color: primaryColor,
+    },
   };
 
-  // Background color
+  // Background color do container
   const blockBackgroundColor = content.backgroundColor;
 
   return (
@@ -29,16 +40,24 @@ export const ButtonBlock: React.FC<ButtonBlockProps> = ({
       className="w-full flex justify-center p-2 rounded-lg"
       style={{ backgroundColor: blockBackgroundColor }}
     >
-      <Button
+      <button
         className={cn(
-          "h-12 md:h-14 px-4 md:px-6 py-2 text-sm md:text-base font-medium",
+          "h-12 md:h-14 px-4 md:px-6 py-2 text-sm md:text-base font-semibold rounded-md",
+          "shadow-md transition-all duration-300",
+          "hover:shadow-lg hover:scale-[1.01]",
+          "focus:outline-none focus:ring-2 focus:ring-offset-2",
           content.fullWidth && "w-full",
-          variantClasses[variant]
+          isPreview && "cursor-default"
         )}
+        style={{
+          ...variantStyles[variant],
+          // @ts-ignore
+          "--tw-ring-color": primaryColor,
+        }}
         disabled={isPreview}
       >
         {content.buttonText || "Continuar"}
-      </Button>
+      </button>
     </div>
   );
 };
