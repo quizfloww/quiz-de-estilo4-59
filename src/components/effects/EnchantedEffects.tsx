@@ -148,37 +148,88 @@ export const EnchantedBackground: React.FC<EnchantedBackgroundProps> = ({
 interface MorphingProgressProps {
   progress: number;
   phase: "normal" | "strategic" | "complete";
+  showShimmer?: boolean;
+  style?: "simple" | "morphing" | "minimal";
+  customColors?: {
+    normal?: string;
+    strategic?: string;
+    complete?: string;
+  };
 }
 
 export const MorphingProgress: React.FC<MorphingProgressProps> = ({
   progress,
   phase,
+  showShimmer = true,
+  style = "morphing",
+  customColors,
 }) => {
-  const phaseColors = {
-    normal: "from-[#B89B7A] to-[#A1835D]", // Cores da marca: bege principal para bege escuro
-    strategic: "from-[#aa6b5d] to-[#B89B7A]", // Cores da marca: terracota para bege
-    complete: "from-[#B89B7A] to-[#D4B79F]", // Cores da marca: bege principal para bege claro
+  // Cores padrão da marca
+  const defaultColors = {
+    normal: "#B89B7A",
+    strategic: "#aa6b5d",
+    complete: "#B89B7A",
   };
 
+  const colors = {
+    normal: customColors?.normal || defaultColors.normal,
+    strategic: customColors?.strategic || defaultColors.strategic,
+    complete: customColors?.complete || defaultColors.complete,
+  };
+
+  // Estilo minimalista - barra simples
+  if (style === "minimal") {
+    return (
+      <div className="relative w-full h-1 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full transition-all duration-300"
+          style={{
+            width: `${progress}%`,
+            backgroundColor: colors[phase],
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Estilo simples - sem animações
+  if (style === "simple") {
+    return (
+      <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className="h-full transition-all duration-500 ease-out"
+          style={{
+            width: `${progress}%`,
+            backgroundColor: colors[phase],
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Estilo morphing - com animações completas
   return (
     <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
       <motion.div
-        className={`h-full bg-gradient-to-r ${phaseColors[phase]} relative`}
+        className="h-full relative"
+        style={{ backgroundColor: colors[phase] }}
         initial={{ width: 0 }}
         animate={{ width: `${progress}%` }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         {/* Shimmer effect */}
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
-          animate={{ x: [-100, 200] }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-          style={{ width: "100px" }}
-        />
+        {showShimmer && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
+            animate={{ x: [-100, 200] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            style={{ width: "100px" }}
+          />
+        )}
 
         {/* Pulse on strategic questions */}
         {phase === "strategic" && (
