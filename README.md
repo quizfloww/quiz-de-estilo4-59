@@ -95,4 +95,17 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 ## Deploy via GitHub Actions (Vercel)
 
 - Workflow opcional: `.github/workflows/vercel-deploy.yml`.
-- Requer secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
+- Requer secrets: `VERCEL_TOKEN`, `VERCEL_PROJECT_ID` (opcional `VERCEL_SCOPE`).
+
+## Guia de Setup Vercel (passo a passo)
+
+- Instale a CLI: `npm i -g vercel` e faça login: `vercel login`.
+- Na Vercel, importe o repositório do GitHub e selecione framework "Vite".
+- Configure Environment Variables (Production/Preview):
+  - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_ENV` (ex: `production`), `VITE_SENTRY_DSN` (opcional).
+- Build & Output:
+  - Build: `npm run build` | Output: `dist` | Node 20.
+- Secrets no GitHub (para workflow):
+  - `VERCEL_TOKEN` (Account Settings → Tokens) e `VERCEL_PROJECT_ID` (Project Settings → General).
+- Teste o deploy:
+  - Preview: `vercel deploy` | Produção: `vercel deploy --prod`.
