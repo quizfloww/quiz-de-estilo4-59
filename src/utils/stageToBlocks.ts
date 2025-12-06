@@ -425,9 +425,42 @@ export const blocksToStageConfig = (
         config.displayType = block.content.displayType;
         config.multiSelect = block.content.multiSelect;
         config.autoAdvance = block.content.autoAdvance;
+        config.columns = block.content.columns;
+        config.optionTextSize = block.content.optionTextSize;
+        config.optionImageSize = block.content.optionImageSize;
+        config.showCheckIcon = block.content.showCheckIcon;
         break;
       case "button":
         config.buttonText = block.content.buttonText;
+        break;
+      case "styleResult":
+        config.showPercentage = block.content.showPercentage;
+        config.showDescription = block.content.showDescription;
+        config.styleLayout = block.content.layout;
+        config.styleImageSize = block.content.styleImageSize;
+        break;
+      case "secondaryStyles":
+        config.maxSecondaryStyles = block.content.maxSecondaryStyles;
+        config.showSecondaryPercentage = block.content.showSecondaryPercentage;
+        break;
+      case "priceAnchor":
+        config.finalPrice = block.content.finalPrice;
+        config.totalOriginal = block.content.totalOriginal;
+        config.currency = block.content.currency;
+        config.priceItems = block.content.priceItems;
+        break;
+      case "ctaOffer":
+        config.ctaText = block.content.ctaText;
+        config.ctaUrl = block.content.ctaUrl;
+        config.ctaVariant = block.content.ctaVariant;
+        config.showCtaIcon = block.content.showCtaIcon;
+        config.urgencyText = block.content.urgencyText;
+        break;
+      case "guarantee":
+        config.guaranteeDays = block.content.guaranteeDays;
+        config.guaranteeTitle = block.content.guaranteeTitle;
+        config.guaranteeDescription = block.content.guaranteeDescription;
+        config.guaranteeImageUrl = block.content.guaranteeImageUrl;
         break;
     }
   });
