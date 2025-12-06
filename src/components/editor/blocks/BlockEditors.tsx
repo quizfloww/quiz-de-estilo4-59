@@ -19,10 +19,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CanvasBlock, CanvasBlockContent } from "@/types/canvasBlocks";
-import { Plus, Trash2, GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type {
+  FontSize,
+  FontWeight,
+  TextAlign,
+  ImageSize,
+  ImageAlignment,
+  BorderRadiusStyle,
+  ButtonVariant,
+  DividerStyle,
+  CtaVariant,
+  CountdownVariant,
+} from "./blockEditorConfig";
 
 // ============================================
 // Tipos
@@ -59,7 +69,6 @@ const useContentUpdater = (
 export const HeadingEditor: React.FC<BlockEditorProps> = ({
   block,
   onChange,
-  onClose,
 }) => {
   const updateContent = useContentUpdater(block, onChange);
 
@@ -81,7 +90,9 @@ export const HeadingEditor: React.FC<BlockEditorProps> = ({
           <Label>Tamanho</Label>
           <Select
             value={block.content.fontSize || "xl"}
-            onValueChange={(value) => updateContent({ fontSize: value as any })}
+            onValueChange={(value: FontSize) =>
+              updateContent({ fontSize: value })
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -100,8 +111,8 @@ export const HeadingEditor: React.FC<BlockEditorProps> = ({
           <Label>Peso</Label>
           <Select
             value={block.content.fontWeight || "bold"}
-            onValueChange={(value) =>
-              updateContent({ fontWeight: value as any })
+            onValueChange={(value: FontWeight) =>
+              updateContent({ fontWeight: value })
             }
           >
             <SelectTrigger>
