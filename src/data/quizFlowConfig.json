@@ -1035,56 +1035,6 @@
         "maxSecondaryStyles": 3,
         "showSecondaryPercentage": true
       }
-    },
-    {
-      "id": "offer",
-      "type": "result",
-      "order": 20,
-      "title": "Oferta",
-      "isEnabled": true,
-      "config": {
-        "showLogo": true,
-        "showProgress": false,
-        "allowBack": true,
-        "heroImage": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/Espanhol_Portugu%C3%AAs_8_cgrhuw.webp",
-        "heroImage2": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744921536/Sem_nome_1080_x_1000_px_z0chuv.webp",
-        "products": [
-          {
-            "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_14_oxegnd.webp",
-            "alt": "Guia de Estilo - 3 Revistas"
-          },
-          {
-            "url": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911682/C%C3%B3pia_de_MOCKUPS_13_znzbks.webp",
-            "alt": "Todos os produtos e bônus"
-          }
-        ],
-        "finalPrice": 39,
-        "totalOriginal": 175,
-        "currency": "R$",
-        "ctaText": "Quero meu guia + bônus",
-        "ctaUrl": "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-        "urgencyText": "Oferta por tempo limitado!",
-        "benefits": [
-          "Descubra seu estilo com precisão",
-          "Aprenda a criar looks autênticos",
-          "Economize tempo e dinheiro"
-        ],
-        "testimonials": [
-          {
-            "id": "t-1",
-            "name": "Sônia",
-            "role": "Cliente",
-            "text": "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
-            "imageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial1.jpg",
-            "rating": 5
-          }
-        ],
-        "guaranteeDays": 7,
-        "guaranteeTitle": "Garantia de 7 dias",
-        "guaranteeDescription": "Devolução sem burocracia nos primeiros 7 dias",
-        "mentorName": "Gisele Galvão",
-        "mentorImageUrl": "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp"
-      }
     }
   ],
   "globalConfig": {
