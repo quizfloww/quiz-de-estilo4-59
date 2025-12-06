@@ -502,6 +502,230 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
           />
         </div>
       </div>
+
+      {/* Hero Images */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Imagens Hero</h4>
+        <div className="space-y-1">
+          <Label>URL da imagem hero 1</Label>
+          <Input
+            value={getConfigValue("heroImage", "")}
+            onChange={(event) =>
+              updateStageConfig("heroImage", event.target.value)
+            }
+            placeholder="https://..."
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>URL da imagem hero 2</Label>
+          <Input
+            value={getConfigValue("heroImage2", "")}
+            onChange={(event) =>
+              updateStageConfig("heroImage2", event.target.value)
+            }
+            placeholder="https://..."
+          />
+        </div>
+      </div>
+
+      {/* Mentor */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Mentor/Instrutor</h4>
+        <div className="space-y-1">
+          <Label>Nome do mentor</Label>
+          <Input
+            value={getConfigValue("mentorName", "")}
+            onChange={(event) =>
+              updateStageConfig("mentorName", event.target.value)
+            }
+            placeholder="Nome completo"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Título/Cargo do mentor</Label>
+          <Input
+            value={getConfigValue("mentorTitle", "")}
+            onChange={(event) =>
+              updateStageConfig("mentorTitle", event.target.value)
+            }
+            placeholder="Ex: Consultora de Imagem e Estilo"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>URL da foto do mentor</Label>
+          <Input
+            value={getConfigValue("mentorImageUrl", "")}
+            onChange={(event) =>
+              updateStageConfig("mentorImageUrl", event.target.value)
+            }
+            placeholder="https://..."
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Descrição do mentor</Label>
+          <Textarea
+            value={getConfigValue("mentorDescription", "")}
+            onChange={(event) =>
+              updateStageConfig("mentorDescription", event.target.value)
+            }
+            placeholder="Bio curta sobre experiência e credenciais"
+          />
+        </div>
+      </div>
+
+      {/* Result URL */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <div className="space-y-1">
+          <Label>URL da página de resultado</Label>
+          <Input
+            value={getConfigValue("resultUrl", "/resultado")}
+            onChange={(event) =>
+              updateStageConfig("resultUrl", event.target.value)
+            }
+            placeholder="/resultado"
+          />
+        </div>
+      </div>
+
+      {/* Security & Payment Info */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Pagamento e Segurança</h4>
+        <div className="space-y-1">
+          <Label>Texto de segurança</Label>
+          <Input
+            value={getConfigValue("secureText", "")}
+            onChange={(event) =>
+              updateStageConfig("secureText", event.target.value)
+            }
+            placeholder="Ex: Pagamento seguro com garantia Hotmart"
+          />
+        </div>
+      </div>
+
+      {/* Products Array */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Produtos (JSON)</h4>
+        <div className="space-y-1">
+          <Label>
+            Array de produtos (formato: [{"{"}"url":"...", "alt":"..."{"}"},
+            ...])
+          </Label>
+          <Textarea
+            value={JSON.stringify(getConfigValue("products", []), null, 2)}
+            onChange={(event) => {
+              try {
+                const parsed = JSON.parse(event.target.value);
+                updateStageConfig("products", parsed);
+              } catch {
+                // Invalid JSON, don't update
+              }
+            }}
+            placeholder='[{"url": "https://...", "alt": "Descrição"}]'
+            rows={4}
+            className="font-mono text-xs"
+          />
+        </div>
+      </div>
+
+      {/* Benefits Array */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Benefícios</h4>
+        <div className="space-y-1">
+          <Label>Lista de benefícios (um por linha)</Label>
+          <Textarea
+            value={(getConfigValue("benefits", []) as string[]).join("\n")}
+            onChange={(event) => {
+              const benefits = event.target.value
+                .split("\n")
+                .filter((b) => b.trim());
+              updateStageConfig("benefits", benefits);
+            }}
+            placeholder="Descubra seu estilo com precisão&#10;Aprenda a criar looks autênticos&#10;Economize tempo e dinheiro"
+            rows={6}
+          />
+        </div>
+      </div>
+
+      {/* Testimonials Array */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Depoimentos (JSON)</h4>
+        <div className="space-y-1">
+          <Label>Array de depoimentos</Label>
+          <Textarea
+            value={JSON.stringify(getConfigValue("testimonials", []), null, 2)}
+            onChange={(event) => {
+              try {
+                const parsed = JSON.parse(event.target.value);
+                updateStageConfig("testimonials", parsed);
+              } catch {
+                // Invalid JSON, don't update
+              }
+            }}
+            placeholder='[{"id": "t1", "name": "Nome", "role": "Cliente", "text": "Depoimento...", "rating": 5}]'
+            rows={6}
+            className="font-mono text-xs"
+          />
+        </div>
+      </div>
+
+      {/* Price Items Array */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Itens do preço (JSON)</h4>
+        <div className="space-y-1">
+          <Label>O que está incluso no preço</Label>
+          <Textarea
+            value={JSON.stringify(getConfigValue("priceItems", []), null, 2)}
+            onChange={(event) => {
+              try {
+                const parsed = JSON.parse(event.target.value);
+                updateStageConfig("priceItems", parsed);
+              } catch {
+                // Invalid JSON, don't update
+              }
+            }}
+            placeholder='[{"title": "Guia Digital", "description": "Completo"}]'
+            rows={4}
+            className="font-mono text-xs"
+          />
+        </div>
+      </div>
+
+      {/* Security Badges & Payment Methods */}
+      <div className="pt-4 border-t border-muted/50 space-y-3">
+        <h4 className="text-sm font-medium">Badges e Métodos</h4>
+        <div className="space-y-1">
+          <Label>Badges de segurança (um por linha)</Label>
+          <Textarea
+            value={(getConfigValue("securityBadges", []) as string[]).join(
+              "\n"
+            )}
+            onChange={(event) => {
+              const badges = event.target.value
+                .split("\n")
+                .filter((b) => b.trim());
+              updateStageConfig("securityBadges", badges);
+            }}
+            placeholder="Hotmart&#10;Compra Segura&#10;SSL"
+            rows={3}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Métodos de pagamento (um por linha)</Label>
+          <Textarea
+            value={(getConfigValue("paymentMethods", []) as string[]).join(
+              "\n"
+            )}
+            onChange={(event) => {
+              const methods = event.target.value
+                .split("\n")
+                .filter((m) => m.trim());
+              updateStageConfig("paymentMethods", methods);
+            }}
+            placeholder="Cartão de Crédito&#10;Pix&#10;Boleto"
+            rows={3}
+          />
+        </div>
+      </div>
     </CardContent>
   );
 
