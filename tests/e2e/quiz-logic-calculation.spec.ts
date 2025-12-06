@@ -15,9 +15,11 @@ test.describe("Lógica de Cálculo - Quiz de Estilo Pessoal", () => {
     page,
   }) => {
     // Página de contexto para executar a lógica de cálculo
+    // IMPORTANTE: Esta função replica EXATAMENTE a lógica de useQuizLogic.ts
     const calculateResults = await page.evaluateHandle(() => {
       return function (
-        answers: Record<string, { optionId: string; styleCategory: string }[]>
+        answers: Record<string, { optionId: string; styleCategory: string }[]>,
+        clickOrderInternal: string[] = []
       ) {
         const styleCounter: Record<string, number> = {
           Natural: 0,
@@ -32,6 +34,8 @@ test.describe("Lógica de Cálculo - Quiz de Estilo Pessoal", () => {
 
         let totalSelections = 0;
 
+        // Lógica simplificada pois já recebemos styleCategory diretamente
+        // Na produção, isso vem de question.options.find()
         Object.entries(answers).forEach(([_, options]) => {
           options.forEach((option) => {
             if (
@@ -56,7 +60,19 @@ test.describe("Lógica de Cálculo - Quiz de Estilo Pessoal", () => {
                 ? Math.round((score / totalSelections) * 100)
                 : 0,
           }))
-          .sort((a, b) => b.score - a.score);
+          .sort((a, b) => {
+            // Lógica de desempate usando clickOrder (igual ao useQuizLogic)
+            if (a.score === b.score && clickOrderInternal.length > 0) {
+              const indexA = clickOrderInternal.indexOf(a.category);
+              const indexB = clickOrderInternal.indexOf(b.category);
+              if (indexA !== -1 && indexB !== -1) {
+                return indexA - indexB;
+              }
+              if (indexA !== -1) return -1;
+              if (indexB !== -1) return 1;
+            }
+            return b.score - a.score;
+          });
 
         return {
           primaryStyle: styleResults[0] || null,
@@ -184,6 +200,29 @@ test.describe("Lógica de Cálculo - Quiz de Estilo Pessoal", () => {
     );
     expect(romanticoStyle.score).toBeGreaterThanOrEqual(6);
     expect(romanticoStyle.score).toBeLessThanOrEqual(8);
+
+    // Teste 4: Validar desempate com clickOrder (mesma lógica do useQuizLogic)
+    const result4 = await page.evaluate((calcFn) => {
+      const answers = {
+        q1: [
+          { optionId: "q1-1", styleCategory: "Natural" },
+          { optionId: "q1-2", styleCategory: "Clássico" },
+          { optionId: "q1-3", styleCategory: "Romântico" },
+        ],
+        q2: [
+          { optionId: "q2-1", styleCategory: "Natural" },
+          { optionId: "q2-2", styleCategory: "Clássico" },
+          { optionId: "q2-3", styleCategory: "Romântico" },
+        ],
+      };
+      // Clássico foi clicado primeiro, deve vencer o desempate
+      const clickOrder = ["Clássico", "Natural", "Romântico"];
+      return calcFn(answers, clickOrder);
+    }, calculateResults);
+
+    // Todos têm 2 pontos, mas Clássico deve ser o primário por causa do clickOrder
+    expect(result4.primaryStyle.category).toBe("Clássico");
+    expect(result4.primaryStyle.score).toBe(2);
   });
 
   test("deve validar cálculo de percentuais e arredondamento", async ({
