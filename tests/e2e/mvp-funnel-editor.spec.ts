@@ -70,40 +70,26 @@ const test = base.extend<{ authenticatedPage: Page }>({
 
     // Wait for funnels page to load
     await page
-      .waitForSelector(
-        "text=Gerenciar Funis, text=Seus Funis, text=Meus Funis, h1",
-        {
-          state: "visible",
-          timeout: 15000,
-        }
-      )
+      .waitForSelector('text=Seus Funis, h2, [class*="card"]', {
+        state: "visible",
+        timeout: 15000,
+      })
       .catch(() => {});
 
-    // Find and click on the "quiz" funnel (the MVP funnel)
-    // Look for a card/link that contains the slug "quiz" or title "Quiz de Estilo"
-    const quizFunnelLink = page
-      .locator(
-        `a[href*="/edit"]:has-text("quiz"), a[href*="/${MVP_FUNNEL_SLUG}/"], [data-slug="${MVP_FUNNEL_SLUG}"]`
-      )
-      .first();
+    // Wait for page to stabilize
+    await page.waitForTimeout(1500);
 
-    // If we can find the funnel in the list, click to edit it
-    const linkVisible = await quizFunnelLink
+    // Find and click on the first available edit link for any funnel
+    const editLink = page.locator('a[href*="/edit"]').first();
+
+    // If we can find an edit link, click it
+    const linkVisible = await editLink
       .isVisible({ timeout: 5000 })
       .catch(() => false);
 
     if (linkVisible) {
-      await quizFunnelLink.click();
-      await page.waitForTimeout(1000);
-    } else {
-      // Fallback: Try to find any funnel card and click edit
-      const editButton = page
-        .locator('a[href*="/edit"], button:has-text("Editar")')
-        .first();
-      if (await editButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await editButton.click();
-        await page.waitForTimeout(1000);
-      }
+      await editLink.click();
+      await page.waitForTimeout(2000);
     }
 
     await use(page);
