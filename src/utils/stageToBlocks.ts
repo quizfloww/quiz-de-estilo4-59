@@ -311,6 +311,9 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
       autoAdvance: true,
       options: [],
       columns: 1,
+      optionTextSize: "base",
+      optionImageSize: "md",
+      showCheckIcon: true,
     },
     button: {
       buttonText: "Continuar",
@@ -360,11 +363,15 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
     guarantee: {
       guaranteeDays: 7,
       guaranteeTitle: "7 Dias de Garantia Incondicional",
+      guaranteeDescription: "",
+      guaranteeImageUrl: "",
     },
     ctaOffer: {
       ctaText: "GARANTIR MEU GUIA AGORA",
       ctaVariant: "green",
       showCtaIcon: true,
+      ctaUrl: "",
+      urgencyText: "",
     },
     faq: {
       faqStyle: "accordion",
