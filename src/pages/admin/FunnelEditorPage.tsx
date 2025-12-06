@@ -597,9 +597,18 @@ export default function FunnelEditorPage() {
               Preview
             </Link>
           </Button>
-          <Button size="sm" onClick={handleSave}>
+          <Button
+            size="sm"
+            onClick={handleSave}
+            className={
+              hasUnsavedChanges ? "bg-amber-600 hover:bg-amber-700" : ""
+            }
+          >
             <Save className="h-4 w-4 mr-2" />
             Salvar
+            {hasUnsavedChanges && (
+              <span className="ml-1.5 w-2 h-2 rounded-full bg-white animate-pulse" />
+            )}
           </Button>
           {funnel.status === "published" ? (
             <Button
