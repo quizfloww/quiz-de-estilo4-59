@@ -7,24 +7,25 @@ interface BeforeAfterBlockProps {
   isPreview?: boolean;
 }
 
+// Transformações reais de clientes com URLs originais (imagens combinadas antes/depois)
 const defaultItems: BeforeAfterItem[] = [
   {
-    id: "1",
+    id: "transformation-adriana",
     beforeImage:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1745459978/before-1.webp",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
     afterImage:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1745459978/after-1.webp",
-    name: "Maria",
-    description: "Descobriu seu estilo Natural",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
+    name: "Adriana",
+    description: "De básico para elegante, mantendo o conforto e autenticidade",
   },
   {
-    id: "2",
+    id: "transformation-mariangela",
     beforeImage:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1745459978/before-2.webp",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
     afterImage:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1745459978/after-2.webp",
-    name: "Ana",
-    description: "Transformação com estilo Elegante",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
+    name: "Mariangela",
+    description: "Do casual ao sofisticado, valorizando seu tipo de corpo",
   },
 ];
 

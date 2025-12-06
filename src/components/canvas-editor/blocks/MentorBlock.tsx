@@ -8,24 +8,28 @@ interface MentorBlockProps {
 }
 
 const defaultCredentials = [
+  "Especialista em Análise de Estilo",
   "Consultora de Imagem Certificada",
-  "+3.000 mulheres transformadas",
-  "Especialista em Estilo Pessoal",
-  "Autora do Método Gisele Galvão",
+  "Mais de 5.000 mulheres transformadas",
+  "Especialista em coloração pessoal com Certificação internacional",
 ];
+
+// Imagem original da mentora Gisele Galvão
+const DEFAULT_MENTOR_IMAGE =
+  "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp";
 
 export const MentorBlock: React.FC<MentorBlockProps> = ({
   content,
   isPreview,
 }) => {
   const name = content.mentorName || "Gisele Galvão";
-  const title = content.mentorTitle || "Consultora de Imagem & Estilo";
+  const title =
+    content.mentorTitle ||
+    "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal";
   const description =
     content.mentorDescription ||
-    "Há mais de 10 anos ajudo mulheres a descobrirem seu estilo pessoal e se vestirem com autenticidade. Minha missão é mostrar que cada mulher pode ser elegante ao seu próprio modo, sem seguir regras rígidas ou tendências passageiras.";
-  const imageUrl =
-    content.mentorImageUrl ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp";
+    "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Com mais de 10 anos de experiência, já transformou a vida de milhares de mulheres através do poder do estilo pessoal.";
+  const imageUrl = content.mentorImageUrl || DEFAULT_MENTOR_IMAGE;
   const credentials = content.mentorCredentials || defaultCredentials;
 
   return (

@@ -7,32 +7,33 @@ interface TestimonialsBlockProps {
   isPreview?: boolean;
 }
 
+// Depoimentos originais com imagens reais das clientes
 const defaultTestimonials: TestimonialItem[] = [
   {
     id: "1",
-    name: "Carla Mendes",
-    role: "Empresária",
-    text: "O guia mudou completamente minha forma de me vestir. Agora sei exatamente o que combina comigo e faço compras muito mais conscientes.",
+    name: "Sônia",
+    role: "Cliente",
+    text: "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
     imageUrl:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial1.webp",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_S%C3%94NIA_q0g9cq.png",
     rating: 5,
   },
   {
     id: "2",
-    name: "Ana Paula",
-    role: "Advogada",
-    text: "Finalmente entendi por que algumas roupas me deixavam insegura. Com o guia, descobri meu estilo e hoje me sinto confiante em qualquer ocasião.",
+    name: "Patrícia",
+    role: "Cliente",
+    text: "O guia é muito completo! Finalmente entendi como valorizar meu corpo e personalidade.",
     imageUrl:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial2.webp",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_PATR%C3%8DCIA_x0mhud.png",
     rating: 5,
   },
   {
     id: "3",
-    name: "Juliana Costa",
-    role: "Médica",
-    text: "Investimento que valeu cada centavo. O guia é prático, objetivo e realmente funciona. Recomendo para todas as mulheres.",
+    name: "Mariangela",
+    role: "Cliente",
+    text: "Transformação incrível! Antes eu comprava por impulso, agora tenho direcionamento claro.",
     imageUrl:
-      "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial3.webp",
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430304/DEPOIMENTO_COM_IMAGEM_-_MARIANGELA_sj7lki.png",
     rating: 5,
   },
 ];
