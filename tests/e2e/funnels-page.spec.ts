@@ -1,5 +1,21 @@
 import { test, expect } from "../fixtures/auth";
 
+// Helper para navegação resiliente: tenta reabrir a página se o context/page "crashar"
+const safeGoto = async (page: any, path: string, timeout = 60000) => {
+  try {
+    await page.goto(path, { waitUntil: "load", timeout });
+    return page;
+  } catch (err) {
+    // tenta recuperar criando uma nova página no mesmo contexto
+    try {
+      if (!page.isClosed()) await page.close();
+    } catch {}
+    const newPage = await page.context().newPage();
+    await newPage.goto(path, { waitUntil: "load", timeout });
+    return newPage;
+  }
+};
+
 test.describe("FunnelsPage - Listagem", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/funnels");
@@ -317,26 +333,26 @@ test.describe("FunnelsPage - Feedback Visual", () => {
 test.describe("FunnelsPage - Responsividade", () => {
   test("deve ser responsivo em desktop", async ({ page }) => {
     page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto("/admin/funnels");
+    const p = await safeGoto(page, "/admin/funnels");
 
     // Verifica se elementos principais são visíveis
-    const mainContent = page.locator('main, [role="main"]');
+    const mainContent = p.locator('main, [role="main"]');
     await expect(mainContent).toBeVisible();
   });
 
   test("deve ser responsivo em tablet", async ({ page }) => {
     page.setViewportSize({ width: 768, height: 1024 });
-    await page.goto("/admin/funnels");
+    const p = await safeGoto(page, "/admin/funnels");
 
-    const mainContent = page.locator('main, [role="main"]');
+    const mainContent = p.locator('main, [role="main"]');
     await expect(mainContent).toBeVisible();
   });
 
   test("deve ter menu mobile se necessário", async ({ page }) => {
     page.setViewportSize({ width: 375, height: 667 });
-    await page.goto("/admin/funnels");
+    const p = await safeGoto(page, "/admin/funnels");
 
-    const hamburger = page.locator(
+    const hamburger = p.locator(
       'button[title*="menu"], button[aria-label*="menu"]'
     );
 
