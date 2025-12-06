@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   DndContext,
   closestCenter,
@@ -21,7 +21,6 @@ import {
 import { CanvasBlock } from "@/types/canvasBlocks";
 import { SortableCanvasBlock } from "./SortableCanvasBlock";
 import { FunnelStage } from "@/hooks/useFunnelStages";
-import { convertStageToBlocks } from "@/utils/stageToBlocks";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
