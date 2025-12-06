@@ -70,7 +70,7 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
       <div className="flex items-center justify-between py-3 border-t-2 border-[#B89B7A]/30 mb-4">
         <span className="text-[#5A4A3A] font-semibold">Total:</span>
         <span className="text-[#8F7A6A] line-through text-lg">
-          {currency} {totalOriginal.toFixed(2)}
+          {currency} {safeTotalOriginal.toFixed(2)}
         </span>
       </div>
 
@@ -78,10 +78,10 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
       <div className="text-center py-4 bg-gradient-to-r from-[#B89B7A]/10 to-[#D4AF37]/10 rounded-lg">
         <p className="text-sm text-[#5A4A3A] mb-1">Por apenas</p>
         <p className="text-4xl md:text-5xl font-bold text-[#B89B7A]">
-          {currency} {finalPrice.toFixed(2)}
+          {currency} {safeFinalPrice.toFixed(2)}
         </p>
         <p className="text-sm text-[#8F7A6A] mt-2">
-          ou {installments.count}x de {currency} {installments.value.toFixed(2)}
+          ou {installments.count}x de {currency} {safeInstallmentValue.toFixed(2)}
         </p>
       </div>
     </div>
