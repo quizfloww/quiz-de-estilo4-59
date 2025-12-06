@@ -14,8 +14,9 @@ export const StyleGuideBlock: React.FC<StyleGuideBlockProps> = ({
   const imageSize = content.guideImageSize || "lg";
   const showBadge = content.showExclusiveBadge !== false;
   const showSecondary = content.showSecondaryGuides !== false;
+  const blockBackgroundColor = content.backgroundColor || "transparent";
 
-  const sizeClasses = {
+  const sizeClasses: Record<string, string> = {
     sm: "max-w-[200px]",
     md: "max-w-[300px]",
     lg: "max-w-[400px]",
@@ -28,7 +29,10 @@ export const StyleGuideBlock: React.FC<StyleGuideBlockProps> = ({
     "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/guia-natural.webp";
 
   return (
-    <div className="w-full flex flex-col items-center py-6">
+    <div
+      className="w-full flex flex-col items-center py-6 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 relative">
         {/* Imagem Principal do Guia */}
         <div className={`relative ${sizeClasses[imageSize]}`}>

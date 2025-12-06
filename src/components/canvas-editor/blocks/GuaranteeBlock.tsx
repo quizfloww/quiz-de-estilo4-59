@@ -22,9 +22,13 @@ export const GuaranteeBlock: React.FC<GuaranteeBlockProps> = ({
   const description =
     content.guaranteeDescription ||
     "Se por qualquer motivo você não ficar 100% satisfeita, reembolsamos o valor integral sem perguntas.";
+  const blockBackgroundColor = content.backgroundColor || "#ffffff";
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-8 relative mt-16">
+    <div
+      className="rounded-2xl shadow-md p-8 relative mt-16"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       {/* Círculo animado no topo */}
       <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 w-28 h-28 md:w-36 md:h-36 bg-gradient-to-r from-[#fffaf7] to-[#f9f4ef] rounded-full flex items-center justify-center shadow-lg">
         <div className="relative w-24 h-24 md:w-32 md:h-32 bg-gradient-to-r from-[#B89B7A] to-[#aa6b5d] rounded-full flex items-center justify-center">

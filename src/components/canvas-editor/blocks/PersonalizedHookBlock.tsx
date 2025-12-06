@@ -95,9 +95,18 @@ export const PersonalizedHookBlock: React.FC<PersonalizedHookBlockProps> = ({
   const showStyleImage = content.showStyleImage !== false;
   const showCta = content.showCta !== false;
   const ctaText = (content.ctaText as string) || messages.ctaText;
+  const blockBackgroundColor = content.backgroundColor;
+
+  // Se tiver backgroundColor customizado, usa ele. Senão usa o gradiente padrão
+  const containerStyle = blockBackgroundColor
+    ? { backgroundColor: blockBackgroundColor }
+    : undefined;
+  const containerClass = blockBackgroundColor
+    ? "text-center p-6 rounded-xl border border-[#B89B7A]/20"
+    : "text-center p-6 bg-gradient-to-br from-[#fffaf7] to-[#f5ebe0] rounded-xl border border-[#B89B7A]/20";
 
   return (
-    <div className="text-center p-6 bg-gradient-to-br from-[#fffaf7] to-[#f5ebe0] rounded-xl border border-[#B89B7A]/20">
+    <div className={containerClass} style={containerStyle}>
       {/* Saudação com Logo */}
       {showGreeting && (
         <div className="mb-6 pb-4 border-b border-[#B89B7A]/20">

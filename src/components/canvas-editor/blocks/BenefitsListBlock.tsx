@@ -49,14 +49,16 @@ export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
   // Limitar colunas a máximo 2 para melhor responsividade
   const columns = Math.min(content.benefitsColumns || 1, 2);
   const showIcons = content.showBenefitIcons !== false;
+  const blockBackgroundColor = content.backgroundColor || "transparent";
 
   if (layout === "grid") {
     return (
       <div
         className={cn(
-          "w-full grid gap-4",
+          "w-full grid gap-4 p-4 rounded-lg",
           columns === 2 && "grid-cols-1 sm:grid-cols-2"
         )}
+        style={{ backgroundColor: blockBackgroundColor }}
       >
         {benefits.map((benefit) => (
           <div
@@ -82,7 +84,10 @@ export const BenefitsListBlock: React.FC<BenefitsListBlockProps> = ({
 
   // List layout (default)
   return (
-    <div className="w-full space-y-3">
+    <div
+      className="w-full space-y-3 p-4 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       {benefits.map((benefit) => (
         <div
           key={benefit.id}

@@ -72,6 +72,9 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
     return "grid grid-cols-1 md:grid-cols-2 gap-6";
   };
 
+  // Cor de fundo personalizada
+  const blockBackgroundColor = content.backgroundColor || "#FAF9F7";
+
   // Manter para compatibilidade, mas usar getGridClasses()
   const layoutClasses = {
     carousel: "flex overflow-x-auto gap-4 snap-x snap-mandatory",
@@ -80,7 +83,10 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   };
 
   return (
-    <section className="py-12 px-4 bg-[#FAF9F7]">
+    <section
+      className="py-12 px-4 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <div className="container mx-auto max-w-5xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -36,9 +36,13 @@ export const BeforeAfterBlock: React.FC<BeforeAfterBlockProps> = ({
   const layout = content.beforeAfterLayout || "side-by-side";
   const title = content.beforeAfterTitle || "Transformações Reais";
   const items = content.beforeAfterItems || defaultItems;
+  const blockBackgroundColor = content.backgroundColor || "transparent";
 
   return (
-    <div className="w-full py-8">
+    <div
+      className="w-full py-8 px-4 rounded-lg"
+      style={{ backgroundColor: blockBackgroundColor }}
+    >
       <div className="text-center mb-8">
         <h3 className="text-2xl font-playfair font-bold text-[#432818] mb-2">
           {title}
