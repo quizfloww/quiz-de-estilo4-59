@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   usePublicFunnel,
@@ -15,6 +21,12 @@ import { DynamicQuestion } from "@/components/dynamic-quiz/DynamicQuestion";
 import { DynamicTransition } from "@/components/dynamic-quiz/DynamicTransition";
 import { AnimatedStageWrapper } from "@/components/dynamic-quiz/AnimatedStageWrapper";
 import { Loader2 } from "lucide-react";
+import {
+  trackQuizStart,
+  trackQuizAnswer,
+  trackQuizComplete,
+  trackResultView,
+} from "@/utils/analytics";
 
 const DynamicQuizPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -29,6 +41,10 @@ const DynamicQuizPage: React.FC = () => {
   const [navigationDirection, setNavigationDirection] = useState<
     "forward" | "backward"
   >("forward");
+
+  // Analytics tracking refs
+  const quizStartTracked = useRef(false);
+  const answersTracked = useRef<Set<string>>(new Set());
 
   // Get enabled stages only - memoized to prevent infinite loops
   const stages = useMemo(() => funnel?.stages || [], [funnel?.stages]);
@@ -86,6 +102,13 @@ const DynamicQuizPage: React.FC = () => {
   const handleIntroComplete = (name: string) => {
     setUserName(name);
     localStorage.setItem("userName", name);
+
+    // Track quiz start
+    if (!quizStartTracked.current) {
+      trackQuizStart(name);
+      quizStartTracked.current = true;
+    }
+
     goToNextStage();
   };
 
@@ -94,6 +117,12 @@ const DynamicQuizPage: React.FC = () => {
       ...prev,
       [stageId]: selectedOptions,
     }));
+
+    // Track answer (only once per question to avoid spam)
+    if (!answersTracked.current.has(stageId) && selectedOptions.length > 0) {
+      trackQuizAnswer(stageId, selectedOptions.join(", "));
+      answersTracked.current.add(stageId);
+    }
   };
 
   const goToPreviousStage = useCallback(() => {
