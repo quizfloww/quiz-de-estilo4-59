@@ -54,6 +54,22 @@ export const BonusBlock: React.FC<BonusBlockProps> = ({
     "Além do guia principal, você receberá estas ferramentas complementares para potencializar sua jornada de transformação:";
   const bonuses = content.bonusItems || defaultBonuses;
 
+  // Mobile Layout Configuration
+  const mobileLayout = content.mobileLayout || "stacked";
+  const mobileColumns = content.mobileColumns || 1;
+
+  // Classes baseadas na configuração de layout mobile
+  const getGridClasses = () => {
+    if (mobileLayout === "side-by-side") {
+      return "grid grid-cols-2 gap-3 md:gap-6"; // Sempre 2 colunas
+    }
+    // stacked ou auto - configurável via mobileColumns
+    if (mobileColumns === 2) {
+      return "grid grid-cols-2 gap-3 md:gap-6";
+    }
+    return "grid grid-cols-1 md:grid-cols-2 gap-6"; // Padrão: 1 coluna mobile, 2 desktop
+  };
+
   return (
     <div className="w-full py-6 sm:py-8 md:py-10 px-2 sm:px-4">
       <h2 className="text-xl sm:text-2xl md:text-3xl font-playfair text-[#aa6b5d] text-center mb-2">
@@ -65,7 +81,7 @@ export const BonusBlock: React.FC<BonusBlockProps> = ({
       <div className="elegant-divider w-24 sm:w-32 mx-auto mt-0 mb-4 sm:mb-6"></div>
 
       <div className="max-w-4xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className={getGridClasses()}>
           {bonuses.map((bonus, index) => {
             const imageUrl =
               bonus.imageUrl ||

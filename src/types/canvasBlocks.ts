@@ -237,6 +237,18 @@ export interface CanvasBlockContent {
   securityBadges?: string[];
   paymentMethods?: string[];
   secureText?: string;
+
+  // Mobile Layout Options - Para blocos com elementos lado a lado
+  // "stacked" = empilha no mobile (padrão)
+  // "side-by-side" = mantém lado a lado mesmo no mobile
+  // "auto" = comportamento responsivo padrão do bloco
+  mobileLayout?: "stacked" | "side-by-side" | "auto";
+
+  // Mentor Block mobile options
+  mentorImagePosition?: "top" | "bottom"; // Posição da imagem no modo empilhado mobile
+
+  // Grid columns for mobile
+  mobileColumns?: 1 | 2;
 }
 
 export interface CanvasBlockStyle {

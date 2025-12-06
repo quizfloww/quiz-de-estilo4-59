@@ -53,6 +53,29 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   const title = content.testimonialsTitle || "O que dizem nossas clientes";
   const testimonials = content.testimonials || defaultTestimonials;
 
+  // Mobile Layout Configuration
+  const mobileLayout = content.mobileLayout || "stacked";
+  const mobileColumns = content.mobileColumns || 1;
+
+  // Classes dinâmicas baseadas na configuração mobile
+  const getGridClasses = () => {
+    if (layout === "carousel") {
+      return "flex overflow-x-auto gap-4 snap-x snap-mandatory";
+    }
+    if (layout === "list") {
+      return "space-y-4";
+    }
+    // Grid layout com opções mobile
+    if (mobileLayout === "side-by-side") {
+      return "grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
+    }
+    if (mobileColumns === 2) {
+      return "grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6";
+    }
+    return "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
+  };
+
+  // Manter para compatibilidade, mas usar getGridClasses()
   const layoutClasses = {
     carousel: "flex overflow-x-auto gap-4 snap-x snap-mandatory",
     grid: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6",
@@ -80,7 +103,7 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
           </h2>
         </motion.div>
 
-        <div className={layoutClasses[layout]}>
+        <div className={getGridClasses()}>
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id || index}

@@ -32,15 +32,45 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
     "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal.";
   const imageUrl = content.mentorImageUrl || DEFAULT_MENTOR_IMAGE;
 
+  // Mobile Layout Configuration
+  const mobileLayout = content.mobileLayout || "stacked";
+  const imagePosition = content.mentorImagePosition || "top";
+
+  // Classes baseadas na configuração de layout mobile
+  const getGridClasses = () => {
+    if (mobileLayout === "side-by-side") {
+      return "grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center";
+    }
+    // stacked ou auto - empilha no mobile
+    return "flex flex-col md:grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center";
+  };
+
+  const getImageOrder = () => {
+    if (mobileLayout === "side-by-side") {
+      return "order-2"; // Sempre direita quando lado a lado
+    }
+    // No modo empilhado, posição configurável
+    return imagePosition === "top" ? "order-1 md:order-2" : "order-2";
+  };
+
+  const getTextOrder = () => {
+    if (mobileLayout === "side-by-side") {
+      return "order-1"; // Sempre esquerda quando lado a lado
+    }
+    return imagePosition === "top"
+      ? "order-2 md:order-1"
+      : "order-1 md:order-1";
+  };
+
   return (
     <Card className="w-full p-4 sm:p-6 md:p-8 mb-6 md:mb-10 bg-white shadow-md border border-[#B89B7A]/20 card-elegant overflow-hidden relative">
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-[#B89B7A]/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-[#aa6b5d]/5 rounded-full blur-3xl"></div>
 
-      <div className="flex flex-col md:grid md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 items-center relative z-10">
-        {/* Imagem primeiro no mobile para melhor UX */}
-        <div className="relative order-1 md:order-2 w-full">
+      <div className={`${getGridClasses()} relative z-10`}>
+        {/* Imagem - posição configurável */}
+        <div className={`relative ${getImageOrder()} w-full`}>
           <div className="flex justify-center mb-4 md:mb-6">
             <img
               src={imageUrl}
@@ -54,8 +84,8 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
           <div className="hidden md:block absolute -bottom-2 -left-2 w-6 h-6 md:w-8 md:h-8 border-b-2 border-l-2 border-[#B89B7A]"></div>
         </div>
 
-        {/* Texto */}
-        <div className="order-2 md:order-1 text-center md:text-left">
+        {/* Texto - posição configurável */}
+        <div className={`${getTextOrder()} text-center md:text-left`}>
           <h2 className="text-xl sm:text-2xl font-playfair text-[#aa6b5d] mb-2 sm:mb-4">
             Conheça Sua Mentora
           </h2>
