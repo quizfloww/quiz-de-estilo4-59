@@ -2982,15 +2982,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           rows={4}
         />
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="mentorImageUrl">URL da Foto</Label>
-        <Input
-          id="mentorImageUrl"
-          value={block.content.mentorImageUrl || ""}
-          onChange={(e) => updateContent("mentorImageUrl", e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
+      <ImageFieldWithUpload
+        label="Foto da Mentora"
+        value={block.content.mentorImageUrl || ""}
+        onChange={(url) => updateContent("mentorImageUrl", url)}
+        thumbnailSize="lg"
+      />
 
       {/* Mobile Layout Controls */}
       <div className="space-y-2 pt-3 border-t">
