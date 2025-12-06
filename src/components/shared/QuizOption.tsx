@@ -6,6 +6,7 @@ export interface QuizOptionItem {
   id: string;
   text: string;
   imageUrl?: string;
+  image_url?: string; // Suporte a snake_case do banco
   styleCategory?: string;
   points?: number;
 }
@@ -14,12 +15,34 @@ export interface QuizOptionProps {
   option: QuizOptionItem;
   isSelected: boolean;
   displayType: "text" | "image" | "both";
-  imageSize?: "sm" | "md" | "lg";
+  imageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  textSize?: "xs" | "sm" | "base" | "lg" | "xl";
   showCheckIcon?: boolean;
   disabled?: boolean;
   onClick: (optionId: string) => void;
   className?: string;
+  variant?: "default" | "brand"; // brand usa cores #b29670
 }
+
+// Constantes de tamanho
+const IMAGE_SIZE_PX: Record<string, number> = {
+  xs: 64,
+  sm: 80,
+  md: 112,
+  lg: 160,
+  xl: 208,
+  "2xl": 288,
+  "3xl": 384,
+  full: 480,
+};
+
+const TEXT_SIZE_CLASSES: Record<string, string> = {
+  xs: "text-xs",
+  sm: "text-sm",
+  base: "text-base",
+  lg: "text-lg",
+  xl: "text-xl",
+};
 
 /**
  * Unified QuizOption component used across:
@@ -32,80 +55,118 @@ export const QuizOption: React.FC<QuizOptionProps> = ({
   isSelected,
   displayType,
   imageSize = "md",
+  textSize = "base",
   showCheckIcon = true,
   disabled = false,
   onClick,
   className,
+  variant = "brand",
 }) => {
-  const showImage = displayType !== "text" && option.imageUrl;
-  const showText = displayType !== "image" || !option.imageUrl;
+  const imageUrl = option.imageUrl || option.image_url;
+  const showImage = displayType !== "text" && imageUrl;
+  const showText = displayType !== "image" || !imageUrl;
+  const imageSizePx = IMAGE_SIZE_PX[imageSize] || 112;
+  const textSizeClass = TEXT_SIZE_CLASSES[textSize] || "text-base";
 
-  const imageSizeClasses = {
-    sm: "h-20",
-    md: "h-32",
-    lg: "h-48",
-  };
+  // Estilos baseados na variante
+  const brandColor = "#b29670";
+  const selectedStyles =
+    variant === "brand"
+      ? {
+          borderColor: brandColor,
+          boxShadow: `0 4px 12px rgba(178, 150, 112, 0.3)`,
+        }
+      : {};
+  const hoverClasses =
+    variant === "brand"
+      ? "hover:border-[#B89B7A]/50 hover:bg-[#B89B7A]/5"
+      : "hover:border-primary/50 hover:bg-muted/50";
 
+  // Layout com imagem (grid)
+  if (showImage) {
+    return (
+      <button
+        type="button"
+        onClick={() => !disabled && onClick(option.id)}
+        disabled={disabled}
+        className={cn(
+          "relative flex flex-col items-center gap-2 p-3 rounded-lg border-2 bg-background transition-all duration-300",
+          "focus:outline-none focus:ring-2 focus:ring-offset-2",
+          variant === "brand" ? "focus:ring-[#b29670]" : "focus:ring-primary",
+          isSelected ? "border-[#b29670]" : `border-input ${hoverClasses}`,
+          disabled && "opacity-50 cursor-not-allowed",
+          !disabled && "cursor-pointer",
+          className
+        )}
+        style={isSelected ? selectedStyles : undefined}
+        aria-pressed={isSelected}
+        aria-label={option.text}
+      >
+        {/* Check Icon */}
+        {isSelected && showCheckIcon && (
+          <div className="absolute -top-0.5 -right-0.5 bg-[#b29670] rounded-bl-md p-0.5">
+            <Check className="h-3 w-3 text-white" strokeWidth={3} />
+          </div>
+        )}
+
+        {/* Image */}
+        <div
+          className="overflow-hidden rounded-md flex-shrink-0"
+          style={{ width: imageSizePx, height: imageSizePx }}
+        >
+          <img
+            src={imageUrl}
+            alt={option.text}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Text (only for 'both' mode) */}
+        {displayType === "both" && (
+          <span
+            className={cn(
+              "text-center font-medium line-clamp-2",
+              textSizeClass
+            )}
+          >
+            {option.text}
+          </span>
+        )}
+      </button>
+    );
+  }
+
+  // Layout texto apenas (lista)
   return (
     <button
       type="button"
       onClick={() => !disabled && onClick(option.id)}
       disabled={disabled}
       className={cn(
-        "relative w-full rounded-lg border-2 transition-all duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
-        isSelected
-          ? "border-primary bg-primary/5 shadow-md"
-          : "border-border hover:border-primary/50 hover:bg-muted/50",
+        "relative w-full whitespace-normal rounded-md font-medium ring-offset-background transition-all duration-300",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "border-2 bg-background min-w-full gap-2 flex py-4 px-4 flex-row items-center justify-start text-left",
+        textSizeClass,
+        isSelected ? "border-[#b29670]" : `border-input ${hoverClasses}`,
         disabled && "opacity-50 cursor-not-allowed",
         !disabled && "cursor-pointer",
         className
       )}
+      style={isSelected ? selectedStyles : undefined}
       aria-pressed={isSelected}
       aria-label={option.text}
     >
-      {/* Image */}
-      {showImage && (
-        <div
-          className={cn(
-            "w-full overflow-hidden rounded-t-lg",
-            imageSizeClasses[imageSize]
-          )}
-        >
-          <img
-            src={option.imageUrl}
-            alt={option.text}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
+      {/* Check Icon */}
+      {isSelected && showCheckIcon && (
+        <div className="absolute -top-0.5 -right-0.5 bg-[#b29670] rounded-bl-md p-0.5">
+          <Check className="h-3 w-3 text-white" strokeWidth={3} />
         </div>
       )}
 
-      {/* Text */}
-      {showText && (
-        <div
-          className={cn(
-            "p-3 text-sm text-center font-medium text-foreground",
-            showImage && "border-t"
-          )}
-        >
-          {option.text}
-        </div>
-      )}
-
-      {/* Selection Indicator */}
-      {showCheckIcon && isSelected && (
-        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-primary flex items-center justify-center shadow-md">
-          <Check className="w-4 h-4 text-primary-foreground" />
-        </div>
-      )}
-
-      {/* Category Badge (optional, for debugging) */}
-      {option.styleCategory && process.env.NODE_ENV === "development" && (
-        <div className="absolute bottom-1 left-1 text-[10px] px-1.5 py-0.5 bg-muted rounded text-muted-foreground">
-          {option.styleCategory}
-        </div>
-      )}
+      <div className="break-words w-full">
+        <p dangerouslySetInnerHTML={{ __html: option.text }} />
+      </div>
     </button>
   );
 };
