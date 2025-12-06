@@ -1561,6 +1561,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onCheckedChange={(checked) => updateContent("showCta", checked)}
         />
       </div>
+
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
@@ -1612,6 +1618,12 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           }
         />
       </div>
+
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showAccent: true,
+        showBorder: true,
+      })}
     </>
   );
 
