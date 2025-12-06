@@ -90,7 +90,9 @@ export const HeadingEditor: React.FC<BlockEditorProps> = ({
           <Label>Tamanho</Label>
           <Select
             value={block.content.fontSize || "xl"}
-            onValueChange={(value: FontSize) => updateContent({ fontSize: value })}
+            onValueChange={(value: FontSize) =>
+              updateContent({ fontSize: value })
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -129,14 +131,14 @@ export const HeadingEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-2">
         <Label>Alinhamento</Label>
         <div className="flex gap-2">
-          {["left", "center", "right"].map((align) => (
+          {(["left", "center", "right"] as TextAlign[]).map((align) => (
             <Button
               key={align}
               variant={
                 block.content.textAlign === align ? "default" : "outline"
               }
               size="sm"
-              onClick={() => updateContent({ textAlign: align as any })}
+              onClick={() => updateContent({ textAlign: align })}
               className="flex-1 capitalize"
             >
               {align === "left"
@@ -200,7 +202,9 @@ export const TextEditor: React.FC<BlockEditorProps> = ({
           <Label>Tamanho</Label>
           <Select
             value={block.content.fontSize || "base"}
-            onValueChange={(value) => updateContent({ fontSize: value as any })}
+            onValueChange={(value) =>
+              updateContent({ fontSize: value as FontSize })
+            }
           >
             <SelectTrigger>
               <SelectValue />
@@ -218,7 +222,7 @@ export const TextEditor: React.FC<BlockEditorProps> = ({
           <Select
             value={block.content.textAlign || "left"}
             onValueChange={(value) =>
-              updateContent({ textAlign: value as any })
+              updateContent({ textAlign: value as TextAlign })
             }
           >
             <SelectTrigger>
@@ -276,7 +280,7 @@ export const ImageEditor: React.FC<BlockEditorProps> = ({
           <Select
             value={block.content.imageSize || "md"}
             onValueChange={(value) =>
-              updateContent({ imageSize: value as any })
+              updateContent({ imageSize: value as ImageSize })
             }
           >
             <SelectTrigger>
@@ -298,7 +302,7 @@ export const ImageEditor: React.FC<BlockEditorProps> = ({
           <Select
             value={block.content.imageAlignment || "center"}
             onValueChange={(value) =>
-              updateContent({ imageAlignment: value as any })
+              updateContent({ imageAlignment: value as ImageAlignment })
             }
           >
             <SelectTrigger>
@@ -318,7 +322,7 @@ export const ImageEditor: React.FC<BlockEditorProps> = ({
         <Select
           value={block.content.borderRadiusStyle || "md"}
           onValueChange={(value) =>
-            updateContent({ borderRadiusStyle: value as any })
+            updateContent({ borderRadiusStyle: value as BorderRadiusStyle })
           }
         >
           <SelectTrigger>
@@ -375,12 +379,14 @@ export const ButtonEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-2">
         <Label>Estilo</Label>
         <div className="grid grid-cols-2 gap-2">
-          {[
-            { value: "primary", label: "Primário" },
-            { value: "secondary", label: "Secundário" },
-            { value: "outline", label: "Outline" },
-            { value: "cta", label: "CTA" },
-          ].map((style) => (
+          {(
+            [
+              { value: "primary", label: "Primário" },
+              { value: "secondary", label: "Secundário" },
+              { value: "outline", label: "Outline" },
+              { value: "cta", label: "CTA" },
+            ] as { value: ButtonVariant; label: string }[]
+          ).map((style) => (
             <Button
               key={style.value}
               variant={
@@ -389,9 +395,7 @@ export const ButtonEditor: React.FC<BlockEditorProps> = ({
                   : "outline"
               }
               size="sm"
-              onClick={() =>
-                updateContent({ buttonVariant: style.value as any })
-              }
+              onClick={() => updateContent({ buttonVariant: style.value })}
             >
               {style.label}
             </Button>
@@ -462,12 +466,14 @@ export const DividerEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-2">
         <Label>Estilo</Label>
         <div className="grid grid-cols-2 gap-2">
-          {[
-            { value: "solid", label: "Sólido" },
-            { value: "dashed", label: "Tracejado" },
-            { value: "dotted", label: "Pontilhado" },
-            { value: "elegant", label: "Elegante" },
-          ].map((style) => (
+          {(
+            [
+              { value: "solid", label: "Sólido" },
+              { value: "dashed", label: "Tracejado" },
+              { value: "dotted", label: "Pontilhado" },
+              { value: "elegant", label: "Elegante" },
+            ] as { value: DividerStyle; label: string }[]
+          ).map((style) => (
             <Button
               key={style.value}
               variant={
@@ -476,9 +482,7 @@ export const DividerEditor: React.FC<BlockEditorProps> = ({
                   : "outline"
               }
               size="sm"
-              onClick={() =>
-                updateContent({ dividerStyle: style.value as any })
-              }
+              onClick={() => updateContent({ dividerStyle: style.value })}
             >
               {style.label}
             </Button>
@@ -578,18 +582,20 @@ export const CtaOfferEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-2">
         <Label>Estilo do Botão</Label>
         <div className="grid grid-cols-3 gap-2">
-          {[
-            { value: "green", label: "Verde" },
-            { value: "brand", label: "Marca" },
-            { value: "gradient", label: "Gradiente" },
-          ].map((style) => (
+          {(
+            [
+              { value: "green", label: "Verde" },
+              { value: "brand", label: "Marca" },
+              { value: "gradient", label: "Gradiente" },
+            ] as { value: CtaVariant; label: string }[]
+          ).map((style) => (
             <Button
               key={style.value}
               variant={
                 block.content.ctaVariant === style.value ? "default" : "outline"
               }
               size="sm"
-              onClick={() => updateContent({ ctaVariant: style.value as any })}
+              onClick={() => updateContent({ ctaVariant: style.value })}
             >
               {style.label}
             </Button>
@@ -674,11 +680,13 @@ export const CountdownEditor: React.FC<BlockEditorProps> = ({
       <div className="space-y-2">
         <Label>Estilo</Label>
         <div className="grid grid-cols-3 gap-2">
-          {[
-            { value: "dramatic", label: "Dramático" },
-            { value: "simple", label: "Simples" },
-            { value: "minimal", label: "Minimal" },
-          ].map((style) => (
+          {(
+            [
+              { value: "dramatic", label: "Dramático" },
+              { value: "simple", label: "Simples" },
+              { value: "minimal", label: "Minimal" },
+            ] as { value: CountdownVariant; label: string }[]
+          ).map((style) => (
             <Button
               key={style.value}
               variant={
@@ -687,9 +695,7 @@ export const CountdownEditor: React.FC<BlockEditorProps> = ({
                   : "outline"
               }
               size="sm"
-              onClick={() =>
-                updateContent({ countdownVariant: style.value as any })
-              }
+              onClick={() => updateContent({ countdownVariant: style.value })}
             >
               {style.label}
             </Button>
