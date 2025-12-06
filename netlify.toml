@@ -9,7 +9,7 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
-    Content-Security-Policy = "frame-ancestors 'none'"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://*.googletagmanager.com https://*.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://res.cloudinary.com https://*.supabase.co https://www.facebook.com https://cakto-quiz-br01.b-cdn.net https://*.b-cdn.net https://*.cloudinary.com data: blob:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://www.facebook.com https://*.google-analytics.com; frame-ancestors 'none'"
 
 # Headers específicos para JavaScript
 [[headers]]

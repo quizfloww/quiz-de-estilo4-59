@@ -1111,7 +1111,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             role: "Cliente",
             text: "Incrível como descobrir meu estilo mudou minha autoestima. Agora sei exatamente o que comprar!",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial1.jpg",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
             rating: 5,
           },
           {
@@ -1120,7 +1120,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             role: "Cliente",
             text: "O guia é muito completo! Finalmente entendi como valorizar meu corpo e personalidade.",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/testimonial2.jpg",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
             rating: 5,
           },
         ],
