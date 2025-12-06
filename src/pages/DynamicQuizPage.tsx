@@ -151,6 +151,21 @@ const DynamicQuizPage: React.FC = () => {
       // Map to legacy format for result page
       const legacyResult = mapToLegacyResult(result, funnel.style_categories);
 
+      // Track quiz completion
+      trackQuizComplete({
+        primaryStyle: legacyResult.primaryStyle?.category,
+        funnel_id: funnel.id,
+        funnel_slug: slug,
+      });
+
+      // Track result view
+      if (legacyResult.primaryStyle) {
+        trackResultView(legacyResult.primaryStyle.category, {
+          secondary_style: legacyResult.secondaryStyle?.category,
+          user_name: userName,
+        });
+      }
+
       // Save to database
       await saveResponse.mutateAsync({
         funnel_id: funnel.id,
@@ -194,7 +209,16 @@ const DynamicQuizPage: React.FC = () => {
       // Still navigate to result even if save fails
       navigate("/resultado");
     }
-  }, [funnel, stages, answers, userName, saveResponse, progressKey, navigate]);
+  }, [
+    funnel,
+    stages,
+    answers,
+    userName,
+    saveResponse,
+    progressKey,
+    navigate,
+    slug,
+  ]);
 
   const goToNextStage = useCallback(() => {
     setNavigationDirection("forward");
