@@ -269,83 +269,67 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
       },
     },
 
-    // ==================== Q4 - ESTAMPAS FAVORITAS ====================
+    // ==================== Q4 - DETALHES (SEM IMAGEM) ====================
     {
       id: "q4",
       type: "question",
       order: 4,
-      title: "Questão 4 - Estampas Favoritas",
+      title: "Questão 4 - Detalhes",
       isEnabled: true,
       config: {
         showLogo: true,
         showProgress: true,
         allowBack: true,
-        question: "QUAL DESSAS ESTAMPAS VOCÊ MAIS GOSTA?",
-        displayType: "both",
+        question: "QUAL DETALHE VOCÊ MAIS PREFERE?",
+        displayType: "text",
         multiSelect: 3,
         autoAdvance: false,
         options: [
           {
             id: "q4-natural",
             text: "Estampas naturais, florais suaves e orgânicas",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/10_svgvyi.webp",
             styleCategory: "Natural",
             points: 1,
           },
           {
             id: "q4-classico",
             text: "Listras, poás discretos e xadrez tradicional",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735328/19_z3ahne.webp",
             styleCategory: "Clássico",
             points: 1,
           },
           {
             id: "q4-contemporaneo",
             text: "Geométricas modernas e minimalistas",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/1_gxfsn3.webp",
             styleCategory: "Contemporâneo",
             points: 1,
           },
           {
             id: "q4-elegante",
             text: "Estampas sofisticadas e refinadas",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/11_hqmr8l.webp",
             styleCategory: "Elegante",
             points: 1,
           },
           {
             id: "q4-romantico",
             text: "Florais delicados e rendas",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/12_edlmwf.webp",
             styleCategory: "Romântico",
             points: 1,
           },
           {
             id: "q4-sexy",
             text: "Animal print e estampas sensuais",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
             styleCategory: "Sexy",
             points: 1,
           },
           {
             id: "q4-dramatico",
             text: "Estampas marcantes e contrastantes",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/14_l2nprc.webp",
             styleCategory: "Dramático",
             points: 1,
           },
           {
             id: "q4-criativo",
             text: "Mix de estampas, étnicas e artísticas",
-            imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735328/15_xezvcy.webp",
             styleCategory: "Criativo",
             points: 1,
           },
@@ -353,7 +337,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
       },
     },
 
-    // ==================== Q5 - ESTAMPAS IDENTIFICAÇÃO ====================
+    // ==================== Q5 - ESTAMPAS ====================
     {
       id: "q5",
       type: "question",
@@ -373,7 +357,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-natural",
             text: "Tons terrosos e estampas da natureza",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735328/20_uzgldt.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/20_oh44vh.webp",
             styleCategory: "Natural",
             points: 1,
           },
@@ -381,7 +365,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-classico",
             text: "Padrões tradicionais e atemporais",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735328/21_pmyvyf.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735368/21_o7wkte.webp",
             styleCategory: "Clássico",
             points: 1,
           },
@@ -389,7 +373,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-contemporaneo",
             text: "Estampas clean e modernas",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/22_njwxln.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735369/22_siebw2.webp",
             styleCategory: "Contemporâneo",
             points: 1,
           },
@@ -397,7 +381,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-elegante",
             text: "Estampas discretas de alto padrão",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/23_rhmjot.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/23_bdfxrh.webp",
             styleCategory: "Elegante",
             points: 1,
           },
@@ -405,7 +389,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-romantico",
             text: "Florais românticos e delicados",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/24_aoluyp.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/24_nptszu.webp",
             styleCategory: "Romântico",
             points: 1,
           },
@@ -413,7 +397,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-sexy",
             text: "Estampas ousadas e chamativas",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/25_ifaogq.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/25_motk6b.webp",
             styleCategory: "Sexy",
             points: 1,
           },
@@ -421,7 +405,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-dramatico",
             text: "Estampas de impacto visual",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735331/26_wdpizz.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735371/26_dptanw.webp",
             styleCategory: "Dramático",
             points: 1,
           },
@@ -429,7 +413,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q5-criativo",
             text: "Mix criativo de padrões e cores",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735331/27_zocyhq.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/27_wxmklx.webp",
             styleCategory: "Criativo",
             points: 1,
           },
@@ -457,7 +441,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-natural",
             text: "Cardigã leve, jaqueta jeans básica",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735331/29_jdrcjy.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/29_sdogoy.webp",
             styleCategory: "Natural",
             points: 1,
           },
@@ -465,7 +449,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-classico",
             text: "Blazer estruturado, trench coat",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735332/30_ihshoj.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/30_nfth8k.webp",
             styleCategory: "Clássico",
             points: 1,
           },
@@ -473,7 +457,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-contemporaneo",
             text: "Jaqueta bomber, casaco funcional",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735332/31_qr5rys.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735372/31_tcmhcl.webp",
             styleCategory: "Contemporâneo",
             points: 1,
           },
@@ -481,7 +465,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-elegante",
             text: "Casaco de alfaiataria, sobretudo refinado",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735333/32_fzokgg.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/32_h78pd8.webp",
             styleCategory: "Elegante",
             points: 1,
           },
@@ -489,7 +473,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-romantico",
             text: "Casaquinho delicado, tricô com detalhes",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735333/33_uy2eco.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/33_u8pldd.webp",
             styleCategory: "Romântico",
             points: 1,
           },
@@ -497,7 +481,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-sexy",
             text: "Jaqueta de couro, blazer ajustado",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735334/34_olpcma.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/34_peadir.webp",
             styleCategory: "Sexy",
             points: 1,
           },
@@ -505,7 +489,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-dramatico",
             text: "Casaco oversized, peças statement",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735334/35_mxqsal.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735379/35_pulzso.webp",
             styleCategory: "Dramático",
             points: 1,
           },
@@ -513,7 +497,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q6-criativo",
             text: "Peças customizadas, mix de texturas",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735335/36_lejfic.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735377/36_cympaq.webp",
             styleCategory: "Criativo",
             points: 1,
           },
@@ -541,7 +525,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-natural",
             text: "Jeans confortável, calça de linho",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735335/38_aklvwl.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/38_iilv0l.webp",
             styleCategory: "Natural",
             points: 1,
           },
@@ -549,7 +533,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-classico",
             text: "Calça de alfaiataria reta, social",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735336/39_eeqzc4.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735417/39_arsswu.webp",
             styleCategory: "Clássico",
             points: 1,
           },
@@ -557,7 +541,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-contemporaneo",
             text: "Calça cargo, jogger estilosa",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735336/40_gvauqq.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/40_beq52x.webp",
             styleCategory: "Contemporâneo",
             points: 1,
           },
@@ -565,7 +549,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-elegante",
             text: "Calça de corte impecável, wide leg",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735337/41_ojzgfm.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735419/41_hconq4.webp",
             styleCategory: "Elegante",
             points: 1,
           },
@@ -573,7 +557,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-romantico",
             text: "Calça fluida, pantacourt delicada",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735337/42_h7e9fk.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735420/42_q8xws1.webp",
             styleCategory: "Romântico",
             points: 1,
           },
@@ -581,7 +565,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-sexy",
             text: "Calça skinny, legging modeladora",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735337/43_ttdqlf.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/43_ljy7sh.webp",
             styleCategory: "Sexy",
             points: 1,
           },
@@ -589,7 +573,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-dramatico",
             text: "Calça de couro, modelagem diferenciada",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735338/44_flr7ku.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735424/44_nqgvoq.webp",
             styleCategory: "Dramático",
             points: 1,
           },
@@ -597,7 +581,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q7-criativo",
             text: "Calça estampada, patchwork criativo",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735338/45_c2xluw.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735425/45_lp64m8.webp",
             styleCategory: "Criativo",
             points: 1,
           },
@@ -625,7 +609,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-natural",
             text: "Tênis confortável, rasteirinha básica",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735339/47_cgw9jz.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735426/47_bi6vgf.webp",
             styleCategory: "Natural",
             points: 1,
           },
@@ -633,7 +617,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-classico",
             text: "Scarpin clássico, mocassim tradicional",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735339/48_msvdx9.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/48_ymo1ur.webp",
             styleCategory: "Clássico",
             points: 1,
           },
@@ -641,7 +625,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-contemporaneo",
             text: "Tênis branco moderno, mule atual",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735340/49_cvnupr.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735427/49_apcrwa.webp",
             styleCategory: "Contemporâneo",
             points: 1,
           },
@@ -649,7 +633,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-elegante",
             text: "Salto médio elegante, sandália refinada",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735340/50_udozm5.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/50_qexxxo.webp",
             styleCategory: "Elegante",
             points: 1,
           },
@@ -657,7 +641,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-romantico",
             text: "Sapatilha delicada, sandália romântica",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735341/51_cluqlo.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735428/51_xbgntp.webp",
             styleCategory: "Romântico",
             points: 1,
           },
@@ -665,7 +649,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-sexy",
             text: "Salto alto, sandália de tiras",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735341/52_g29jbm.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/52_edlp0e.webp",
             styleCategory: "Sexy",
             points: 1,
           },
@@ -673,7 +657,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-dramatico",
             text: "Bota statement, sapato de design marcante",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735342/53_cysf8e.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735429/53_bfdp6f.webp",
             styleCategory: "Dramático",
             points: 1,
           },
@@ -681,7 +665,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q8-criativo",
             text: "Sapato colorido, design artístico",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735342/54_tpfpyl.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735430/54_xnilkc.webp",
             styleCategory: "Criativo",
             points: 1,
           },
@@ -709,7 +693,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-natural",
             text: "Acessórios minimalistas, materiais naturais",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735343/56_snz9hj.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/56_htzoxy.png",
             styleCategory: "Natural",
             points: 1,
           },
@@ -717,7 +701,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-classico",
             text: "Joias tradicionais, pérolas discretas",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735343/57_n6kzvp.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735479/57_whzmff.png",
             styleCategory: "Clássico",
             points: 1,
           },
@@ -725,7 +709,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-contemporaneo",
             text: "Relógio moderno, acessórios funcionais",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735345/61_rjbxvq.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/61_joafud.png",
             styleCategory: "Contemporâneo",
             points: 1,
           },
@@ -733,7 +717,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-elegante",
             text: "Joias finas, acessórios de grife",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735344/60_gujutc.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/60_vzsnps.png",
             styleCategory: "Elegante",
             points: 1,
           },
@@ -741,7 +725,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-romantico",
             text: "Bijuterias delicadas, flores, laços",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735344/59_n7lzpj.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735482/59_dwaqrx.png",
             styleCategory: "Romântico",
             points: 1,
           },
@@ -749,7 +733,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-sexy",
             text: "Acessórios chamativos, brilho e glamour",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735345/63_soshxx.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735487/63_lwgokn.png",
             styleCategory: "Sexy",
             points: 1,
           },
@@ -757,7 +741,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-dramatico",
             text: "Peças statement, acessórios de impacto",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735345/62_yytqbj.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735485/62_mno8wg.png",
             styleCategory: "Dramático",
             points: 1,
           },
@@ -765,7 +749,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
             id: "q9-criativo",
             text: "Mix de estilos, peças artesanais únicas",
             imageUrl:
-              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735343/58_pptjwm.webp",
+              "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735480/58_njdjoh.png",
             styleCategory: "Criativo",
             points: 1,
           },
