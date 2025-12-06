@@ -49,33 +49,35 @@ export const CountdownBlock: React.FC<CountdownBlockProps> = ({
   }, [isPreview]);
 
   return (
-    <Card className="bg-white p-4 mb-6 border-[#B89B7A]/20 shadow-sm">
+    <Card className="w-full bg-white p-3 sm:p-4 mb-4 sm:mb-6 border-[#B89B7A]/20 shadow-sm">
       <div className="text-center">
-        <p className="text-[#432818] mb-3 font-medium">{expiryMessage}</p>
+        <p className="text-sm sm:text-base text-[#432818] mb-2 sm:mb-3 font-medium">
+          {expiryMessage}
+        </p>
 
-        <div className="flex justify-center gap-2 mb-2">
+        <div className="flex justify-center gap-1.5 sm:gap-2 mb-2">
           {/* Selo Horas */}
-          <div className="bg-[#ff6b6b]/10 rounded-lg px-3 py-2 border border-[#ff6b6b]/20 shadow-sm">
-            <div className="text-xl font-bold text-[#ff6b6b]">
+          <div className="bg-[#ff6b6b]/10 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#ff6b6b]/20 shadow-sm min-w-[50px] sm:min-w-[60px]">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#ff6b6b]">
               {String(timeLeft.hours).padStart(2, "0")}
             </div>
-            <div className="text-xs text-[#432818]">HORAS</div>
+            <div className="text-[10px] sm:text-xs text-[#432818]">HORAS</div>
           </div>
 
           {/* Selo Minutos */}
-          <div className="bg-[#ff6b6b]/10 rounded-lg px-3 py-2 border border-[#ff6b6b]/20 shadow-sm">
-            <div className="text-xl font-bold text-[#ff6b6b]">
+          <div className="bg-[#ff6b6b]/10 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#ff6b6b]/20 shadow-sm min-w-[50px] sm:min-w-[60px]">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#ff6b6b]">
               {String(timeLeft.minutes).padStart(2, "0")}
             </div>
-            <div className="text-xs text-[#432818]">MIN</div>
+            <div className="text-[10px] sm:text-xs text-[#432818]">MIN</div>
           </div>
 
           {/* Selo Segundos */}
-          <div className="bg-[#ff6b6b]/10 rounded-lg px-3 py-2 border border-[#ff6b6b]/20 shadow-sm">
-            <div className="text-xl font-bold text-[#ff6b6b]">
+          <div className="bg-[#ff6b6b]/10 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 border border-[#ff6b6b]/20 shadow-sm min-w-[50px] sm:min-w-[60px]">
+            <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#ff6b6b]">
               {String(timeLeft.seconds).padStart(2, "0")}
             </div>
-            <div className="text-xs text-[#432818]">SEG</div>
+            <div className="text-[10px] sm:text-xs text-[#432818]">SEG</div>
           </div>
         </div>
       </div>

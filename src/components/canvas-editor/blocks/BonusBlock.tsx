@@ -55,14 +55,14 @@ export const BonusBlock: React.FC<BonusBlockProps> = ({
   const bonuses = content.bonusItems || defaultBonuses;
 
   return (
-    <div className="py-10">
-      <h2 className="text-2xl md:text-3xl font-playfair text-[#aa6b5d] text-center mb-2">
+    <div className="w-full py-6 sm:py-8 md:py-10 px-2 sm:px-4">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-playfair text-[#aa6b5d] text-center mb-2">
         {title}
       </h2>
-      <p className="text-center text-[#3a3a3a] mb-6 max-w-md mx-auto">
+      <p className="text-sm sm:text-base text-center text-[#3a3a3a] mb-4 sm:mb-6 max-w-md mx-auto px-2">
         {subtitle}
       </p>
-      <div className="elegant-divider w-32 mx-auto mt-0 mb-6"></div>
+      <div className="elegant-divider w-24 sm:w-32 mx-auto mt-0 mb-4 sm:mb-6"></div>
 
       <div className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-2 gap-6">

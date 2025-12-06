@@ -31,13 +31,14 @@ export const HeadingBlock: React.FC<HeadingBlockProps> = ({ content, isPreview }
   };
 
   return (
-    <h1 
-      className={cn(
-        'min-w-full',
-        fontSizeClasses[content.fontSize || '2xl'],
-        fontWeightClasses[content.fontWeight || 'bold'],
-        textAlignClasses[content.textAlign || 'center']
-      )}
+    <div className="w-full">
+      <h1 
+        className={cn(
+          'w-full',
+          fontSizeClasses[content.fontSize || '2xl'],
+          fontWeightClasses[content.fontWeight || 'bold'],
+          textAlignClasses[content.textAlign || 'center']
+        )}
     >
       {content.text || 'Título'}
     </h1>
