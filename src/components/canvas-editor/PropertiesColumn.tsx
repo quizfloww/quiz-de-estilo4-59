@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { StyleCategory } from "./BlockPropertiesPanel";
 
 interface PropertiesColumnProps {
   activeStage: FunnelStage | null;
@@ -40,6 +41,7 @@ interface PropertiesColumnProps {
   onApplyStageConfigToAll?: (stage: FunnelStage) => void;
   similarBlocksCount?: number;
   similarStagesCount?: number;
+  styleCategories?: StyleCategory[];
 }
 
 export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
@@ -53,6 +55,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
   onApplyStageConfigToAll,
   similarBlocksCount = 0,
   similarStagesCount = 0,
+  styleCategories = [],
 }) => {
   const updateHeaderContent = (key: string, value: unknown) => {
     if (!headerBlock) return;
