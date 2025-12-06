@@ -12,6 +12,9 @@ import {
   GlobeLock,
   Undo2,
   Redo2,
+  Download,
+  Upload,
+  FileJson,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -464,6 +467,128 @@ export default function FunnelEditorPage() {
     await unpublishFunnel();
   };
 
+  // Export complete funnel configuration as JSON
+  const handleExportFunnel = () => {
+    const funnelExport = {
+      name: funnel.name,
+      slug: funnel.slug,
+      globalConfig: funnel.global_config,
+      stages: localStages.map((stage) => ({
+        id: stage.id,
+        type: stage.type,
+        title: stage.title,
+        order_index: stage.order_index,
+        is_enabled: stage.is_enabled,
+        config: stage.config,
+        blocks: stageBlocks[stage.id] || [],
+      })),
+      exportDate: new Date().toISOString(),
+      version: "1.0",
+    };
+
+    const blob = new Blob([JSON.stringify(funnelExport, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `funil-${funnel.slug}-${Date.now()}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    toast.success("Funil exportado com sucesso!");
+  };
+
+  // Import complete funnel configuration from JSON
+  const handleImportFunnel = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const content = e.target?.result as string;
+        const importedData = JSON.parse(content);
+
+        // Validate basic structure
+        if (!importedData.stages || !Array.isArray(importedData.stages)) {
+          throw new Error("Formato de arquivo inválido");
+        }
+
+        // Update funnel metadata if present
+        if (importedData.name || importedData.globalConfig) {
+          await updateFunnel.mutateAsync({
+            id: funnel.id,
+            ...(importedData.name && { name: importedData.name }),
+            ...(importedData.globalConfig && {
+              global_config: importedData.globalConfig,
+            }),
+          });
+        }
+
+        // Import stages and blocks
+        const newStageBlocks: Record<string, CanvasBlock[]> = {};
+        const updatedStages: FunnelStage[] = [];
+
+        for (const importedStage of importedData.stages) {
+          // Find matching stage by order or create
+          const existingStage = localStages.find(
+            (s) => s.order_index === importedStage.order_index
+          );
+
+          if (existingStage) {
+            // Update existing stage
+            await updateStage.mutateAsync({
+              id: existingStage.id,
+              title: importedStage.title,
+              config: importedStage.config,
+              is_enabled: importedStage.is_enabled ?? true,
+            });
+
+            updatedStages.push({
+              ...existingStage,
+              title: importedStage.title,
+              config: importedStage.config,
+              is_enabled: importedStage.is_enabled ?? true,
+            });
+
+            // Import blocks for this stage
+            if (importedStage.blocks) {
+              newStageBlocks[existingStage.id] = importedStage.blocks;
+              await saveStageBocks(
+                existingStage.id,
+                importedStage.blocks,
+                existingStage.type
+              );
+            }
+          }
+        }
+
+        // Update local state
+        setStageBlocks(newStageBlocks);
+        setInitialStageBlocks(JSON.parse(JSON.stringify(newStageBlocks)));
+        setHasUnsavedChanges(false);
+
+        toast.success(
+          `Funil importado com sucesso! ${importedData.stages.length} etapas processadas.`
+        );
+      } catch (error) {
+        console.error("Error importing funnel:", error);
+        toast.error(
+          `Erro ao importar: ${
+            error instanceof Error ? error.message : "Arquivo inválido"
+          }`
+        );
+      }
+    };
+    reader.readAsText(file);
+
+    // Reset input to allow re-importing the same file
+    event.target.value = "";
+  };
+
   // Apply block content to all similar blocks (same type) across all stages
   const handleApplyBlockToAll = (
     sourceBlock: CanvasBlock,
@@ -667,6 +792,35 @@ export default function FunnelEditorPage() {
             >
               <Redo2 className="h-4 w-4" />
             </Button>
+          </div>
+
+          {/* Export/Import JSON */}
+          <div className="flex items-center gap-1 border-r pr-2 mr-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleExportFunnel}
+              title="Exportar funil completo (JSON)"
+            >
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                document.getElementById("import-funnel-json")?.click()
+              }
+              title="Importar funil completo (JSON)"
+            >
+              <Upload className="h-4 w-4" />
+            </Button>
+            <input
+              id="import-funnel-json"
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={handleImportFunnel}
+            />
           </div>
 
           <FunnelSettingsPanel
