@@ -57,6 +57,7 @@ import {
   createEmptyBlock,
   blocksToStageConfig,
 } from "@/utils/stageToBlocks";
+import { saveStageBocks } from "@/utils/syncBlocksToDatabase";
 import type { Database } from "@/integrations/supabase/types";
 import { FunnelConfig } from "@/types/funnelConfig";
 import {
@@ -363,9 +364,13 @@ export default function FunnelEditorPage() {
 
   const handleSave = async () => {
     // Save all stages with their blocks converted back to config
+    // Also sync options to stage_options table
     for (const [stageId, blocks] of Object.entries(stageBlocks)) {
-      const config = blocksToStageConfig(blocks);
-      await updateStage.mutateAsync({ id: stageId, config });
+      const stage = localStages.find((s) => s.id === stageId);
+      const stageType = stage?.type || "question";
+
+      // Use saveStageBocks to save config AND sync options to database
+      await saveStageBocks(stageId, blocks, stageType);
     }
     // Reset initial state to current state after successful save
     setInitialStageBlocks(JSON.parse(JSON.stringify(stageBlocks)));
