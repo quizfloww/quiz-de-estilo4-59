@@ -85,3 +85,14 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 ## Roadmap
 
 - Observabilidade (Sentry/Logs), i18n, autenticação (JWT/OAuth), cache (Redis), APIs documentadas (OpenAPI), ambientes separados.
+
+## Observabilidade (Sentry)
+
+- Habilite `VITE_SENTRY_DSN` nas variáveis de ambiente para inicializar o Sentry no front.
+- Amostragem padrão: `tracesSampleRate=0.2`, `replaysSessionSampleRate=0.1`, `replaysOnErrorSampleRate=1.0`.
+- Pacotes: `@sentry/react` e `@sentry/integrations` (Replay).
+
+## Deploy via GitHub Actions (Vercel)
+
+- Workflow opcional: `.github/workflows/vercel-deploy.yml`.
+- Requer secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
