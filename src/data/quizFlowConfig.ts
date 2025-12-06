@@ -1109,7 +1109,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         ctaText: "Quero Descobrir Meu Estilo Completo",
         ctaUrl:
           "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
-          resultUrl: "/resultado",
+        resultUrl: "/resultado",
         // Offer / Pricing
         finalPrice: 39,
         totalOriginal: 175,
