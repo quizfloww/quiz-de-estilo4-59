@@ -1134,6 +1134,299 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     </>
   );
 
+  // === NOVOS BLOCOS DE RESULTADO ===
+
+  const renderPersonalizedHookProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="hookTitle">Título do Gancho</Label>
+        <Textarea
+          id="hookTitle"
+          value={block.content.hookTitle || ""}
+          onChange={(e) => updateContent("hookTitle", e.target.value)}
+          placeholder="Seu estilo revela..."
+          rows={2}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="hookSubtitle">Subtítulo</Label>
+        <Textarea
+          id="hookSubtitle"
+          value={block.content.hookSubtitle || ""}
+          onChange={(e) => updateContent("hookSubtitle", e.target.value)}
+          placeholder="Você valoriza..."
+          rows={3}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Estilo Visual</Label>
+        <Select
+          value={block.content.hookStyle || "elegant"}
+          onValueChange={(value) => updateContent("hookStyle", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="elegant">Elegante</SelectItem>
+            <SelectItem value="bold">Bold (Escuro)</SelectItem>
+            <SelectItem value="minimal">Minimalista</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showCta">Mostrar CTA</Label>
+        <Switch
+          id="showCta"
+          checked={block.content.showCta || false}
+          onCheckedChange={(checked) => updateContent("showCta", checked)}
+        />
+      </div>
+    </>
+  );
+
+  const renderStyleGuideProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="guideImageUrl">URL da Imagem do Guia</Label>
+        <Input
+          id="guideImageUrl"
+          value={block.content.imageUrl || ""}
+          onChange={(e) => updateContent("imageUrl", e.target.value)}
+          placeholder="https://..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Tamanho da Imagem</Label>
+        <Select
+          value={block.content.guideImageSize || "lg"}
+          onValueChange={(value) => updateContent("guideImageSize", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="sm">Pequeno</SelectItem>
+            <SelectItem value="md">Médio</SelectItem>
+            <SelectItem value="lg">Grande</SelectItem>
+            <SelectItem value="xl">Extra Grande</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showSecondaryGuides">Mostrar Guias Secundários</Label>
+        <Switch
+          id="showSecondaryGuides"
+          checked={block.content.showSecondaryGuides !== false}
+          onCheckedChange={(checked) =>
+            updateContent("showSecondaryGuides", checked)
+          }
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="showExclusiveBadge">Mostrar Badge "Exclusivo"</Label>
+        <Switch
+          id="showExclusiveBadge"
+          checked={block.content.showExclusiveBadge !== false}
+          onCheckedChange={(checked) =>
+            updateContent("showExclusiveBadge", checked)
+          }
+        />
+      </div>
+    </>
+  );
+
+  const renderBeforeAfterProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="beforeAfterTitle">Título da Seção</Label>
+        <Input
+          id="beforeAfterTitle"
+          value={block.content.beforeAfterTitle || ""}
+          onChange={(e) => updateContent("beforeAfterTitle", e.target.value)}
+          placeholder="Transformações Reais"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Layout</Label>
+        <Select
+          value={block.content.beforeAfterLayout || "side-by-side"}
+          onValueChange={(value) => updateContent("beforeAfterLayout", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="side-by-side">Lado a Lado</SelectItem>
+            <SelectItem value="stacked">Empilhado</SelectItem>
+            <SelectItem value="slider">Slider</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {block.content.beforeAfterItems?.length || 2} transformações
+        configuradas
+      </p>
+    </>
+  );
+
+  // === NOVOS BLOCOS DE VENDAS ===
+
+  const renderMotivationProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="motivationTitle">Título</Label>
+        <Input
+          id="motivationTitle"
+          value={block.content.motivationTitle || ""}
+          onChange={(e) => updateContent("motivationTitle", e.target.value)}
+          placeholder="Por Que Conhecer Seu Estilo..."
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="motivationSubtitle">Subtítulo</Label>
+        <Textarea
+          id="motivationSubtitle"
+          value={block.content.motivationSubtitle || ""}
+          onChange={(e) => updateContent("motivationSubtitle", e.target.value)}
+          placeholder="Seu estilo é uma ferramenta poderosa..."
+          rows={3}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="motivationImageUrl">URL da Imagem (opcional)</Label>
+        <Input
+          id="motivationImageUrl"
+          value={block.content.motivationImageUrl || ""}
+          onChange={(e) => updateContent("motivationImageUrl", e.target.value)}
+          placeholder="https://..."
+        />
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {block.content.motivationPoints?.length || 4} pontos configurados
+      </p>
+    </>
+  );
+
+  const renderBonusProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="bonusTitle">Título</Label>
+        <Input
+          id="bonusTitle"
+          value={block.content.bonusTitle || ""}
+          onChange={(e) => updateContent("bonusTitle", e.target.value)}
+          placeholder="Bônus Exclusivos"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="bonusSubtitle">Subtítulo</Label>
+        <Input
+          id="bonusSubtitle"
+          value={block.content.bonusSubtitle || ""}
+          onChange={(e) => updateContent("bonusSubtitle", e.target.value)}
+          placeholder="Além do Guia Principal..."
+        />
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {block.content.bonusItems?.length || 3} bônus configurados
+      </p>
+    </>
+  );
+
+  const renderTestimonialsProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="testimonialsTitle">Título</Label>
+        <Input
+          id="testimonialsTitle"
+          value={block.content.testimonialsTitle || ""}
+          onChange={(e) => updateContent("testimonialsTitle", e.target.value)}
+          placeholder="O Que Nossas Alunas Dizem"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label>Layout</Label>
+        <Select
+          value={block.content.testimonialsLayout || "grid"}
+          onValueChange={(value) => updateContent("testimonialsLayout", value)}
+        >
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="grid">Grade</SelectItem>
+            <SelectItem value="carousel">Carrossel</SelectItem>
+            <SelectItem value="list">Lista</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <p className="text-xs text-muted-foreground">
+        {block.content.testimonials?.length || 3} depoimentos configurados
+      </p>
+    </>
+  );
+
+  const renderMentorProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="mentorName">Nome da Mentora</Label>
+        <Input
+          id="mentorName"
+          value={block.content.mentorName || ""}
+          onChange={(e) => updateContent("mentorName", e.target.value)}
+          placeholder="Gisele Galvão"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="mentorTitle">Título/Cargo</Label>
+        <Input
+          id="mentorTitle"
+          value={block.content.mentorTitle || ""}
+          onChange={(e) => updateContent("mentorTitle", e.target.value)}
+          placeholder="Consultora de Imagem & Estilo"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="mentorDescription">Descrição</Label>
+        <Textarea
+          id="mentorDescription"
+          value={block.content.mentorDescription || ""}
+          onChange={(e) => updateContent("mentorDescription", e.target.value)}
+          placeholder="Há mais de 10 anos ajudo mulheres..."
+          rows={4}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="mentorImageUrl">URL da Foto</Label>
+        <Input
+          id="mentorImageUrl"
+          value={block.content.mentorImageUrl || ""}
+          onChange={(e) => updateContent("mentorImageUrl", e.target.value)}
+          placeholder="https://..."
+        />
+      </div>
+    </>
+  );
+
+  const renderSecurePurchaseProperties = () => (
+    <>
+      <div className="space-y-2">
+        <Label htmlFor="secureText">Texto de Segurança</Label>
+        <Textarea
+          id="secureText"
+          value={block.content.secureText || ""}
+          onChange={(e) => updateContent("secureText", e.target.value)}
+          placeholder="Pagamento processado pela Hotmart..."
+          rows={2}
+        />
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Selos e formas de pagamento serão exibidos automaticamente
+      </p>
+    </>
+  );
+
   const renderProperties = () => {
     switch (block.type) {
       case "header":
@@ -1165,7 +1458,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         return renderSecondaryStylesProperties();
       case "styleProgress":
         return renderStyleProgressProperties();
-      // Blocos de Oferta
+      case "personalizedHook":
+        return renderPersonalizedHookProperties();
+      case "styleGuide":
+        return renderStyleGuideProperties();
+      case "beforeAfter":
+        return renderBeforeAfterProperties();
+      // Blocos de Oferta/Vendas
       case "priceAnchor":
         return renderPriceAnchorProperties();
       case "countdown":
@@ -1174,6 +1473,8 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         return renderCtaOfferProperties();
       case "testimonial":
         return renderTestimonialProperties();
+      case "testimonials":
+        return renderTestimonialsProperties();
       case "benefitsList":
         return renderBenefitsListProperties();
       case "guarantee":
@@ -1182,6 +1483,14 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         return renderFaqProperties();
       case "socialProof":
         return renderSocialProofProperties();
+      case "motivation":
+        return renderMotivationProperties();
+      case "bonus":
+        return renderBonusProperties();
+      case "mentor":
+        return renderMentorProperties();
+      case "securePurchase":
+        return renderSecurePurchaseProperties();
       default:
         return (
           <p className="text-sm text-muted-foreground">Bloco desconhecido</p>
