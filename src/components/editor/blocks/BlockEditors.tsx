@@ -90,9 +90,7 @@ export const HeadingEditor: React.FC<BlockEditorProps> = ({
           <Label>Tamanho</Label>
           <Select
             value={block.content.fontSize || "xl"}
-            onValueChange={(value: FontSize) =>
-              updateContent({ fontSize: value })
-            }
+            onValueChange={(value: FontSize) => updateContent({ fontSize: value })}
           >
             <SelectTrigger>
               <SelectValue />
