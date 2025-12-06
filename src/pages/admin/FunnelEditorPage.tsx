@@ -739,6 +739,7 @@ export default function FunnelEditorPage() {
               onApplyStageConfigToAll={handleApplyStageConfigToAll}
               similarBlocksCount={similarBlocksCount}
               similarStagesCount={similarStagesCount}
+              styleCategories={funnel.style_categories || undefined}
             />
           </div>
         </ResizablePanel>

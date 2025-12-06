@@ -673,6 +673,7 @@ export const PropertiesColumn: React.FC<PropertiesColumnProps> = ({
                 block={selectedBlock}
                 onUpdateBlock={onUpdateBlock}
                 compact
+                styleCategories={styleCategories}
               />
             </CardContent>
           </Card>
