@@ -10,7 +10,11 @@ import {
 } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FunnelConfig, EMPTY_FUNNEL_CONFIG } from "@/types/funnelConfig";
+import {
+  FunnelConfig,
+  EMPTY_FUNNEL_CONFIG,
+  DEFAULT_QUIZ_CONFIG,
+} from "@/types/funnelConfig";
 import { GeneralSettings } from "./settings/GeneralSettings";
 import { SeoSettings } from "./settings/SeoSettings";
 import { PixelSettings } from "./settings/PixelSettings";
@@ -46,7 +50,13 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
   const [slug, setSlug] = useState(funnelSlug);
   const [config, setConfig] = useState<FunnelConfig>(() => {
     if (globalConfig && typeof globalConfig === "object") {
-      return { ...EMPTY_FUNNEL_CONFIG, ...globalConfig };
+      // Merge com defaults, garantindo que styleCategories tenha valores se vazio
+      const merged = { ...EMPTY_FUNNEL_CONFIG, ...globalConfig };
+      // Se não tiver categorias de estilo, usa as do DEFAULT_QUIZ_CONFIG
+      if (!merged.styleCategories || merged.styleCategories.length === 0) {
+        merged.styleCategories = DEFAULT_QUIZ_CONFIG.styleCategories;
+      }
+      return merged;
     }
     return EMPTY_FUNNEL_CONFIG;
   });
@@ -55,7 +65,12 @@ export const FunnelSettingsPanel: React.FC<FunnelSettingsPanelProps> = ({
     setName(funnelName);
     setSlug(funnelSlug);
     if (globalConfig && typeof globalConfig === "object") {
-      setConfig({ ...EMPTY_FUNNEL_CONFIG, ...globalConfig });
+      const merged = { ...EMPTY_FUNNEL_CONFIG, ...globalConfig };
+      // Se não tiver categorias de estilo, usa as do DEFAULT_QUIZ_CONFIG
+      if (!merged.styleCategories || merged.styleCategories.length === 0) {
+        merged.styleCategories = DEFAULT_QUIZ_CONFIG.styleCategories;
+      }
+      setConfig(merged);
     }
   }, [funnelName, funnelSlug, globalConfig]);
 

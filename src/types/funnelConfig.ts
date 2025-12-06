@@ -79,8 +79,9 @@ export interface StyleCategoryConfig {
   name: string;
   description: string;
   detailedDescription?: string; // Descrição mais longa para a página de resultado
-  imageUrl: string; // Imagem principal do estilo
-  guideImageUrl?: string; // Imagem do guia/material
+  imageUrl: string; // Imagem principal do estilo (image no styleConfig)
+  guideImageUrl?: string; // Imagem do guia/material (guideImage no styleConfig)
+  materialUrl?: string; // URL do material para download/compra
   characteristics?: string[]; // Características do estilo
   colors?: string[]; // Paleta de cores sugerida
   keywords?: string[]; // Palavras-chave do estilo
