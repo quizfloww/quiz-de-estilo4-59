@@ -34,6 +34,7 @@ interface StageCanvasEditorProps {
   onSelectBlock: (blockId: string | null) => void;
   onBlocksChange: (blocks: CanvasBlock[]) => void;
   blocks: CanvasBlock[];
+  canvasBackgroundColor?: string;
 }
 
 export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
@@ -46,6 +47,7 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
   onSelectBlock,
   onBlocksChange,
   blocks,
+  canvasBackgroundColor = "#ffffff",
 }) => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -124,9 +126,10 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
       <ScrollArea className="h-full">
         <div
           className={cn(
-            "min-h-full bg-background mx-auto p-4",
+            "min-h-full mx-auto p-4",
             previewMode === "mobile" ? "max-w-[390px]" : "max-w-2xl"
           )}
+          style={{ backgroundColor: canvasBackgroundColor }}
         >
           <div className="flex flex-col gap-4">
             {isPreview ? (

@@ -1,11 +1,11 @@
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { CanvasBlock, BLOCK_TYPE_LABELS } from '@/types/canvasBlocks';
-import { BlockRenderer } from './BlockRenderer';
-import { cn } from '@/lib/utils';
-import { GripVertical, Trash2, Copy } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { CanvasBlock, BLOCK_TYPE_LABELS } from "@/types/canvasBlocks";
+import { BlockRenderer } from "./BlockRenderer";
+import { cn } from "@/lib/utils";
+import { GripVertical, Trash2, Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface SortableCanvasBlockProps {
   block: CanvasBlock;
@@ -33,22 +33,29 @@ export const SortableCanvasBlock: React.FC<SortableCanvasBlockProps> = ({
     isDragging,
   } = useSortable({ id: block.id });
 
+  // Escala do bloco (padrão 1 = 100%)
+  const scale = block.content.scale || 1;
+  const backgroundColor = block.content.backgroundColor || "transparent";
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    zIndex: isDragging ? 1000 : 'auto',
+    zIndex: isDragging ? 1000 : "auto",
+  };
+
+  // Estilo do container do bloco com escala e cor de fundo
+  const blockContainerStyle: React.CSSProperties = {
+    transform: `scale(${scale})`,
+    transformOrigin: "top center",
+    backgroundColor,
+    marginTop: block.style?.marginTop,
+    marginBottom: block.style?.marginBottom,
   };
 
   if (isPreview) {
     return (
-      <div 
-        className="min-w-full relative"
-        style={{
-          marginTop: block.style?.marginTop,
-          marginBottom: block.style?.marginBottom,
-        }}
-      >
+      <div className="min-w-full relative" style={blockContainerStyle}>
         <BlockRenderer block={block} isPreview />
       </div>
     );
@@ -59,18 +66,18 @@ export const SortableCanvasBlock: React.FC<SortableCanvasBlockProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'group/block relative min-w-full rounded-md transition-all',
-        isSelected && 'ring-2 ring-primary ring-offset-2',
-        !isPreview && 'hover:ring-2 hover:ring-primary/50 cursor-pointer'
+        "group/block relative min-w-full rounded-md transition-all",
+        isSelected && "ring-2 ring-primary ring-offset-2",
+        !isPreview && "hover:ring-2 hover:ring-primary/50 cursor-pointer"
       )}
       onClick={onSelect}
     >
       {/* Toolbar do bloco */}
       {!isPreview && (
-        <div 
+        <div
           className={cn(
-            'absolute -top-8 left-0 right-0 flex items-center justify-between opacity-0 group-hover/block:opacity-100 transition-opacity z-10',
-            isSelected && 'opacity-100'
+            "absolute -top-8 left-0 right-0 flex items-center justify-between opacity-0 group-hover/block:opacity-100 transition-opacity z-10",
+            isSelected && "opacity-100"
           )}
         >
           <div className="flex items-center gap-1 bg-background border rounded-md shadow-sm px-2 py-1">
@@ -85,7 +92,7 @@ export const SortableCanvasBlock: React.FC<SortableCanvasBlockProps> = ({
               {BLOCK_TYPE_LABELS[block.type]}
             </span>
           </div>
-          
+
           <div className="flex items-center gap-1 bg-background border rounded-md shadow-sm">
             {onDuplicate && (
               <Button
@@ -118,15 +125,9 @@ export const SortableCanvasBlock: React.FC<SortableCanvasBlockProps> = ({
       )}
 
       {/* Conteúdo do bloco */}
-      <div 
-        className={cn(
-          'min-w-full',
-          !isPreview && 'p-2'
-        )}
-        style={{
-          marginTop: block.style?.marginTop,
-          marginBottom: block.style?.marginBottom,
-        }}
+      <div
+        className={cn("min-w-full", !isPreview && "p-2")}
+        style={blockContainerStyle}
       >
         <BlockRenderer block={block} isEditing={isSelected} />
       </div>
