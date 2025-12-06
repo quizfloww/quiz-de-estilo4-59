@@ -242,6 +242,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderHeaderProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="flex items-center justify-between">
         <Label htmlFor="showLogo">Mostrar Logo</Label>
         <Switch
@@ -279,6 +280,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           }
         />
       </div>
+      {renderGlobalStyleControls({ showBackground: true, showText: true })}
     </>
   );
 
@@ -540,6 +542,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onCheckedChange={(checked) => updateContent("required", checked)}
         />
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showBorder: true,
+      })}
     </>
   );
 
@@ -861,6 +868,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </button>
         </div>
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showBorder: true,
+      })}
     </>
   );
 
@@ -900,6 +912,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onCheckedChange={(checked) => updateContent("fullWidth", checked)}
         />
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
@@ -915,11 +932,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           placeholder="1rem"
         />
       </div>
+      {renderGlobalStyleControls({ showBackground: true })}
     </>
   );
 
   const renderDividerProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label>Estilo</Label>
         <Select
@@ -975,11 +994,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onValueChange={([value]) => updateContent("dividerWidth", value)}
         />
       </div>
+      {renderGlobalStyleControls({ showBackground: true })}
     </>
   );
 
   const renderStyleResultProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="flex items-center justify-between">
         <Label htmlFor="showPercentage">Mostrar Porcentagem</Label>
         <Switch
@@ -1032,11 +1053,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
   const renderSecondaryStylesProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label>Quantidade Máxima</Label>
         <Select
@@ -1065,6 +1092,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           }
         />
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
@@ -1073,6 +1105,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="finalPrice">Preço Final</Label>
           <Input
@@ -1202,6 +1235,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderCountdownProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="grid grid-cols-3 gap-2">
         <div className="space-y-2">
           <Label htmlFor="hours">Horas</Label>
@@ -1273,6 +1307,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderCtaOfferProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="ctaText">Texto do Botão</Label>
         <Input
@@ -1336,6 +1371,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderGuaranteeProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="guaranteeDays">Dias de Garantia</Label>
         <Input
@@ -1396,6 +1432,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label>Estilo</Label>
           <Select
@@ -1513,6 +1550,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label>Layout</Label>
           <Select
@@ -1676,6 +1714,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label>Estilo</Label>
           <Select
@@ -1778,6 +1817,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
   const renderSocialProofProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="space-y-2">
         <Label htmlFor="socialProofText">Texto</Label>
         <Input
@@ -1820,11 +1860,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
   const renderStyleProgressProperties = () => (
     <>
+      {renderScaleControl()}
       <div className="flex items-center justify-between">
         <Label htmlFor="showLabels">Mostrar Rótulos</Label>
         <Switch
@@ -1851,6 +1897,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           </SelectContent>
         </Select>
       </div>
+      {renderGlobalStyleControls({
+        showBackground: true,
+        showText: true,
+        showAccent: true,
+      })}
     </>
   );
 
@@ -2022,6 +2073,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="beforeAfterTitle">Título da Seção</Label>
           <Input
@@ -2169,6 +2221,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             + Adicionar Transformação
           </button>
         </div>
+        {renderGlobalStyleControls({
+          showBackground: true,
+          showText: true,
+          showAccent: true,
+        })}
       </>
     );
   };
@@ -2180,6 +2237,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
 
     return (
       <>
+        {renderScaleControl()}
         <div className="space-y-2">
           <Label htmlFor="motivationTitle">Título</Label>
           <Input
