@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -10,6 +10,8 @@ import {
   Play,
   Globe,
   GlobeLock,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -41,6 +43,7 @@ import { FunnelSettingsPanel } from "@/components/funnel-editor/FunnelSettingsPa
 import { PublishDialog } from "@/components/funnel-editor/PublishDialog";
 import { StatusBadge } from "@/components/funnel-editor/StatusBadge";
 import { usePublishFunnel, PublishValidation } from "@/hooks/usePublishFunnel";
+import { useStageBlocksHistory } from "@/hooks/useStageBlocksHistory";
 import {
   StageCanvasEditor,
   BlocksSidebar,
@@ -186,15 +189,27 @@ export default function FunnelEditorPage() {
   const [publishValidation, setPublishValidation] =
     useState<PublishValidation | null>(null);
 
-  // Canvas blocks state
-  const [stageBlocks, setStageBlocks] = useState<Record<string, CanvasBlock[]>>(
-    {}
-  );
+  // Canvas blocks state with undo/redo
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [initialStageBlocks, setInitialStageBlocks] = useState<
     Record<string, CanvasBlock[]>
   >({});
+
+  const {
+    stageBlocks,
+    setStageBlocks,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    resetState: resetStageBlocks,
+  } = useStageBlocksHistory(
+    {},
+    {
+      maxHistorySize: 50,
+    }
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -272,6 +287,31 @@ export default function FunnelEditorPage() {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
+
+  // Keyboard shortcuts for Undo/Redo
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      }
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === "y" || (e.key === "z" && e.shiftKey))
+      ) {
+        e.preventDefault();
+        redo();
+      }
+      // Ctrl+S to save
+      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [undo, redo]);
 
   const activeStage = localStages.find((s) => s.id === activeStageId);
   const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
@@ -362,7 +402,8 @@ export default function FunnelEditorPage() {
   // Find header block for properties column
   const headerBlock = currentBlocks.find((b) => b.type === "header") || null;
 
-  const handleSave = async () => {
+  // Internal save logic (used by auto-save and manual save)
+  const handleSaveInternal = useCallback(async () => {
     // Save all stages with their blocks converted back to config
     // Also sync options to stage_options table
     for (const [stageId, blocks] of Object.entries(stageBlocks)) {
@@ -375,6 +416,27 @@ export default function FunnelEditorPage() {
     // Reset initial state to current state after successful save
     setInitialStageBlocks(JSON.parse(JSON.stringify(stageBlocks)));
     setHasUnsavedChanges(false);
+  }, [stageBlocks, localStages]);
+
+  // Auto-save after 30 seconds of inactivity
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+
+    const autoSaveTimer = setTimeout(async () => {
+      console.log("[AutoSave] Salvando automaticamente...");
+      try {
+        await handleSaveInternal();
+        toast.info("Auto-save realizado", { duration: 2000 });
+      } catch (error) {
+        console.error("[AutoSave] Falha:", error);
+      }
+    }, 30000); // 30 seconds
+
+    return () => clearTimeout(autoSaveTimer);
+  }, [hasUnsavedChanges, handleSaveInternal]);
+
+  const handleSave = async () => {
+    await handleSaveInternal();
     toast.success("Funil salvo com sucesso!");
   };
 
@@ -578,6 +640,29 @@ export default function FunnelEditorPage() {
               Mobile
             </Button>
           </div>
+
+          {/* Undo/Redo Buttons */}
+          <div className="flex items-center gap-1 border-r pr-2 mr-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={undo}
+              disabled={!canUndo}
+              title="Desfazer (Ctrl+Z)"
+            >
+              <Undo2 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={redo}
+              disabled={!canRedo}
+              title="Refazer (Ctrl+Y)"
+            >
+              <Redo2 className="h-4 w-4" />
+            </Button>
+          </div>
+
           <FunnelSettingsPanel
             funnelId={funnel.id}
             funnelName={funnel.name}
