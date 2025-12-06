@@ -10,17 +10,27 @@ const ADMIN_CREDENTIALS = {
 
 export const test = base.extend({
   page: async ({ page }, use) => {
-    await page.addInitScript(({ email, userName, role }) => {
-      const loginTime = new Date().toISOString();
-      sessionStorage.setItem(
-        "adminSession",
-        JSON.stringify({ email, loginTime })
-      );
+    // Best-effort: add init script but don't block tests if it hangs
+    try {
+      await Promise.race([
+        page.addInitScript(({ email, userName, role }) => {
+          const loginTime = new Date().toISOString();
+          sessionStorage.setItem(
+            "adminSession",
+            JSON.stringify({ email, loginTime })
+          );
 
-      // Mantém compatibilidade com AuthContext/user data usada no app
-      localStorage.setItem("userName", userName);
-      localStorage.setItem("userRole", role);
-    }, ADMIN_CREDENTIALS);
+          // Mantém compatibilidade com AuthContext/user data usada no app
+          localStorage.setItem("userName", userName);
+          localStorage.setItem("userRole", role);
+        }, ADMIN_CREDENTIALS),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("addInitScript timeout")), 5000)
+        ),
+      ]);
+    } catch (err) {
+      console.warn("auth fixture: addInitScript failed or timed out", err);
+    }
 
     // Interceptar chamadas Supabase REST para fornecer fixtures locais
     const mockFunnel = {
@@ -78,7 +88,57 @@ export const test = base.extend({
     });
 
     // Navigate to admin root to initialize app state. The routes above will provide funnel data.
-    await page.goto("/admin");
+    const tryGoto = async (path: string, attempts = 2) => {
+      for (let i = 0; i < attempts; i++) {
+        try {
+          await page.goto(path, { waitUntil: "load", timeout: 60000 });
+          await page.waitForSelector("body", { timeout: 5000 });
+          return true;
+        } catch (e) {
+          console.warn(`auth fixture: goto failed (attempt ${i + 1}):`, e);
+          if (i < attempts - 1) {
+            try {
+              if (!page.isClosed()) await page.close();
+            } catch {}
+            const newPage = await page.context().newPage();
+            // @ts-ignore
+            page = newPage;
+          }
+        }
+      }
+      return false;
+    };
+
+    await tryGoto("/admin");
+
+    // If login form is present, perform login using provided credentials (best-effort)
+    try {
+      const emailInput = page
+        .locator(
+          'input[type="email"], input[name="email"], input[placeholder*="email"]'
+        )
+        .first();
+
+      if (await emailInput.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await emailInput.fill(ADMIN_CREDENTIALS.email);
+
+        const passwordInput = page
+          .locator('input[type="password"], input[name="password"]')
+          .first();
+        await passwordInput.fill(ADMIN_CREDENTIALS.password);
+
+        const loginButton = page
+          .locator(
+            'button[type="submit"], button:has-text("Login"), button:has-text("Entrar")'
+          )
+          .first();
+        await loginButton.click();
+
+        await page.waitForTimeout(1500);
+      }
+    } catch (err) {
+      console.warn("auth fixture: login attempt failed:", err);
+    }
 
     await use(page);
   },

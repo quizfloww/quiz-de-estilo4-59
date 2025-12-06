@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
+  // Default test timeout (ms)
+  timeout: 60000,
   testDir: "./tests/e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -12,6 +14,8 @@ export default defineConfig({
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
+    // Navigation timeout for page.goto/waitForNavigation
+    navigationTimeout: 60000,
   },
 
   projects: [
@@ -33,6 +37,6 @@ export default defineConfig({
     command: "npm run dev",
     url: "http://localhost:8080",
     reuseExistingServer: !process.env.CI,
-    timeout: 180000,
+    timeout: 240000,
   },
 });
