@@ -11,111 +11,13 @@
  * - Salvamento e publicação
  */
 
-import { test as base, expect, Page, Locator } from "@playwright/test";
-
-// Slug do funil MVP - "quiz" é o Quiz de Estilo Pessoal principal
-const MVP_FUNNEL_SLUG = "quiz";
-const FUNNELS_LIST_URL = "/admin/funnels";
-
-// Credenciais de admin
-const ADMIN_CREDENTIALS = {
-  email:
-    process.env.PLAYWRIGHT_ADMIN_EMAIL ?? "consultoria@giselegalvao.com.br",
-  password: process.env.PLAYWRIGHT_ADMIN_PASSWORD ?? "Gi$ele0809",
-};
-
-// Extend test with authenticated page that navigates to the MVP funnel editor
-const test = base.extend<{ authenticatedPage: Page }>({
-  authenticatedPage: async ({ page }, use) => {
-    const context = page.context();
-
-    // Add init script for session
-    await context.addInitScript(
-      ({ email }) => {
-        const loginTime = new Date().toISOString();
-        sessionStorage.setItem(
-          "adminSession",
-          JSON.stringify({ email, loginTime })
-        );
-        localStorage.setItem("userName", "Test Admin");
-        localStorage.setItem("userRole", "admin");
-      },
-      { email: ADMIN_CREDENTIALS.email }
-    );
-
-    // Navigate to funnels list first
-    await page.goto(FUNNELS_LIST_URL, {
-      waitUntil: "networkidle",
-      timeout: 60000,
-    });
-
-    // Handle login if needed
-    try {
-      const emailInput = page.locator('input[type="email"]').first();
-      if (await emailInput.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await emailInput.fill(ADMIN_CREDENTIALS.email);
-        await page
-          .locator('input[type="password"]')
-          .first()
-          .fill(ADMIN_CREDENTIALS.password);
-        await page
-          .locator('button[type="submit"], button:has-text("Entrar")')
-          .first()
-          .click();
-        await page.waitForTimeout(2000);
-      }
-    } catch {
-      // Login not needed or already logged in
-    }
-
-    // Wait for page to load, then check if we're on the funnels page
-    await page.waitForTimeout(1000);
-
-    // If we're not on the funnels page, click on the Funis link in sidebar
-    const currentUrl = page.url();
-    if (!currentUrl.includes("/funnels")) {
-      const funisLink = page.locator('a[href="/admin/funnels"]').first();
-      if (await funisLink.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await funisLink.click();
-        await page.waitForTimeout(2000);
-      }
-    }
-
-    // Wait for funnels page to load - look for "Seus Funis" heading or funnel cards
-    await page
-      .waitForSelector(
-        'text=Seus Funis, h2:has-text("Funis"), [class*="card"]',
-        {
-          state: "visible",
-          timeout: 15000,
-        }
-      )
-      .catch(() => {});
-
-    // Wait for page to stabilize
-    await page.waitForTimeout(1500);
-
-    // Find and click on the first available edit link for any funnel
-    const editLink = page.locator('a[href*="/edit"]').first();
-
-    // If we can find an edit link, click it
-    const linkVisible = await editLink
-      .isVisible({ timeout: 5000 })
-      .catch(() => false);
-
-    if (linkVisible) {
-      await editLink.click();
-      await page.waitForTimeout(2000);
-    }
-
-    await use(page);
-  },
-});
+// Use the existing auth fixture which mocks the funnel data
+import { test, expect } from "../fixtures/auth";
+import type { Page, Locator } from "@playwright/test";
 
 // =============================================================================
 // HELPERS
 // =============================================================================
-
 const waitForEditorToLoad = async (page: Page, timeout = 30000) => {
   // Wait for the main header with funnel name
   await page.waitForSelector('h1, [class*="font-semibold"]', {
