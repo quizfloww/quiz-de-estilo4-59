@@ -563,6 +563,7 @@ export default function FunnelEditorPage() {
             await updateStage.mutateAsync({
               id: existingStage.id,
               title: importedStage.title,
+              type: importedStage.type || existingStage.type,
               config: importedStage.config,
               is_enabled: importedStage.is_enabled ?? true,
             });
@@ -570,25 +571,57 @@ export default function FunnelEditorPage() {
             updatedStages.push({
               ...existingStage,
               title: importedStage.title,
+              type: importedStage.type || existingStage.type,
               config: importedStage.config,
               is_enabled: importedStage.is_enabled ?? true,
             });
 
             // Import blocks for this stage
-            if (importedStage.blocks) {
+            if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
+              // Usar blocos do JSON
               newStageBlocks[existingStage.id] = importedStage.blocks;
               await saveStageBocks(
                 existingStage.id,
                 importedStage.blocks,
-                existingStage.type
+                importedStage.type || existingStage.type
+              );
+            } else {
+              // Se não tem blocos no JSON, converter do config
+              const stageIndex = localStages.findIndex(
+                (s) => s.id === existingStage.id
+              );
+              const convertedBlocks = convertStageToBlocks(
+                { ...existingStage, config: importedStage.config },
+                localStages.length,
+                stageIndex
+              );
+              newStageBlocks[existingStage.id] = convertedBlocks;
+              await saveStageBocks(
+                existingStage.id,
+                convertedBlocks,
+                importedStage.type || existingStage.type
               );
             }
           }
         }
 
-        // Update local state
-        setStageBlocks(newStageBlocks);
-        setInitialStageBlocks(JSON.parse(JSON.stringify(newStageBlocks)));
+        // Update local state with imported stages
+        setLocalStages((prev) =>
+          prev.map((stage) => {
+            const updated = updatedStages.find((s) => s.id === stage.id);
+            return updated || stage;
+          })
+        );
+
+        // Force update blocks state - sobrescrever tudo
+        setStageBlocks((prev) => ({
+          ...prev,
+          ...newStageBlocks,
+        }));
+        setInitialStageBlocks((prev) => ({
+          ...prev,
+          ...JSON.parse(JSON.stringify(newStageBlocks)),
+        }));
         setHasUnsavedChanges(false);
 
         toast.success(
