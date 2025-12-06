@@ -43,8 +43,8 @@ const test = base.extend<{ authenticatedPage: Page }>({
       { email: ADMIN_CREDENTIALS.email }
     );
 
-    // Navigate to the MVP funnel editor
-    await page.goto(MVP_FUNNEL_EDIT_URL, {
+    // Navigate to funnels list first
+    await page.goto(FUNNELS_LIST_URL, {
       waitUntil: "domcontentloaded",
       timeout: 60000,
     });
@@ -66,6 +66,44 @@ const test = base.extend<{ authenticatedPage: Page }>({
       }
     } catch {
       // Login not needed or already logged in
+    }
+
+    // Wait for funnels page to load
+    await page
+      .waitForSelector(
+        "text=Gerenciar Funis, text=Seus Funis, text=Meus Funis, h1",
+        {
+          state: "visible",
+          timeout: 15000,
+        }
+      )
+      .catch(() => {});
+
+    // Find and click on the "quiz" funnel (the MVP funnel)
+    // Look for a card/link that contains the slug "quiz" or title "Quiz de Estilo"
+    const quizFunnelLink = page
+      .locator(
+        `a[href*="/edit"]:has-text("quiz"), a[href*="/${MVP_FUNNEL_SLUG}/"], [data-slug="${MVP_FUNNEL_SLUG}"]`
+      )
+      .first();
+
+    // If we can find the funnel in the list, click to edit it
+    const linkVisible = await quizFunnelLink
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+
+    if (linkVisible) {
+      await quizFunnelLink.click();
+      await page.waitForTimeout(1000);
+    } else {
+      // Fallback: Try to find any funnel card and click edit
+      const editButton = page
+        .locator('a[href*="/edit"], button:has-text("Editar")')
+        .first();
+      if (await editButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await editButton.click();
+        await page.waitForTimeout(1000);
+      }
     }
 
     await use(page);
