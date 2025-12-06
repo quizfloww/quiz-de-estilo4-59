@@ -163,3 +163,4 @@ Se suas credenciais foram expostas (ex: commitadas no Git), siga estes passos:
   - `VERCEL_TOKEN` (Account Settings → Tokens) e `VERCEL_PROJECT_ID` (Project Settings → General).
 - Teste o deploy:
   - Preview: `vercel deploy` | Produção: `vercel deploy --prod`.
+
