@@ -48,18 +48,106 @@ export const test = base.extend({
 
     const mockStages = [
       {
-        id: "stage-1",
+        id: "stage-intro",
         funnel_id: "1",
         type: "intro",
-        title: "Introdução 1",
+        title: "Boas-vindas",
         order_index: 0,
         is_enabled: true,
-        config: {},
+        config: {
+          subtitle: "Receba o guia definitivo de estilo em apenas 3 minutos",
+          imageUrl:
+            "https://images.unsplash.com/photo-1554132447-0b0db7bde42e?auto=format&fit=crop&w=600&q=60",
+          inputLabel: "Seu nome",
+          inputPlaceholder: "Digite como prefere ser chamado",
+        },
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "stage-question",
+        funnel_id: "1",
+        type: "question",
+        title: "Qual é o seu estilo?",
+        order_index: 1,
+        is_enabled: true,
+        config: {
+          question: "Escolha a opção que mais combina com a sua rotina",
+          displayType: "both",
+          multiSelect: 1,
+          autoAdvance: false,
+          options: [
+            {
+              id: "option-1",
+              text: "Minimalismo sofisticado",
+              imageUrl:
+                "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=400&q=60",
+              styleCategory: "Minimalista",
+              points: 2,
+            },
+            {
+              id: "option-2",
+              text: "Arte vibrante",
+              imageUrl:
+                "https://images.unsplash.com/photo-1475180098004-ca77a66827be?auto=format&fit=crop&w=400&q=60",
+              styleCategory: "Artsy",
+              points: 1,
+            },
+            {
+              id: "option-3",
+              text: "Elegância clássica",
+              imageUrl:
+                "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=60",
+              styleCategory: "Clássica",
+              points: 3,
+            },
+          ],
+        },
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "stage-transition",
+        funnel_id: "1",
+        type: "transition",
+        title: "Estamos quase lá",
+        order_index: 2,
+        is_enabled: true,
+        config: {
+          transitionTitle: "Preparando seu resultado",
+          transitionSubtitle:
+            "Acerte as respostas para ter um resultado ainda mais certeiro",
+          transitionMessage:
+            "Estamos cruzando seus gostos com dados exclusivos para gerar o melhor resultado para você",
+        },
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "stage-result",
+        funnel_id: "1",
+        type: "result",
+        title: "Descubra seu estilo",
+        order_index: 3,
+        is_enabled: true,
+        config: {
+          finalPrice: 47,
+          totalOriginal: 197,
+          currency: "R$",
+          ctaText: "Quero garantir meu guia",
+          ctaUrl: "https://lovable.com/checkout",
+          ctaVariant: "brand",
+          urgencyText: "Vagas limitadas",
+          showCtaIcon: true,
+        },
         created_at: new Date().toISOString(),
       },
     ];
 
-    const mockOptions: any[] = [];
+    const mockOptions: any[] = mockStages
+      .flatMap((stage) => stage.config?.options ?? [])
+      .map((option) => ({
+        ...option,
+        id: option.id,
+        stage_id: "stage-question",
+      }));
 
     // Intercept generic supabase REST requests for funnels, funnel_stages, stage_options
     // Sempre retornar lista de funis com nosso mock para evitar dependência do Supabase real

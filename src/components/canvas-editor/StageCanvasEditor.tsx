@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -7,26 +7,29 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from '@dnd-kit/core';
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers';
-import { CanvasBlock } from '@/types/canvasBlocks';
-import { SortableCanvasBlock } from './SortableCanvasBlock';
-import { FunnelStage } from '@/hooks/useFunnelStages';
-import { convertStageToBlocks } from '@/utils/stageToBlocks';
-import { cn } from '@/lib/utils';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
+import { CanvasBlock } from "@/types/canvasBlocks";
+import { SortableCanvasBlock } from "./SortableCanvasBlock";
+import { FunnelStage } from "@/hooks/useFunnelStages";
+import { convertStageToBlocks } from "@/utils/stageToBlocks";
+import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface StageCanvasEditorProps {
   stage: FunnelStage;
   totalStages: number;
   currentIndex: number;
-  previewMode: 'desktop' | 'mobile';
+  previewMode: "desktop" | "mobile";
   isPreview?: boolean;
   selectedBlockId: string | null;
   onSelectBlock: (blockId: string | null) => void;
@@ -64,10 +67,12 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
       const newIndex = blocks.findIndex((block) => block.id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
-        const newBlocks = arrayMove(blocks, oldIndex, newIndex).map((block, index) => ({
-          ...block,
-          order: index,
-        }));
+        const newBlocks = arrayMove(blocks, oldIndex, newIndex).map(
+          (block, index) => ({
+            ...block,
+            order: index,
+          })
+        );
         onBlocksChange(newBlocks);
       }
     }
@@ -104,64 +109,77 @@ export const StageCanvasEditor: React.FC<StageCanvasEditorProps> = ({
     onSelectBlock(newBlock.id);
   };
 
-  const optionBlock = blocks.find((block) => block.type === 'options');
+  const optionBlock = blocks.find((block) => block.type === "options");
   const optionItems = optionBlock?.content?.options || [];
-  const optionWarnings = optionItems.some((option: any) => !option.text && !option.imageUrl);
+  const optionWarnings = optionItems.some(
+    (option: any) => !option.text && !option.imageUrl
+  );
 
   return (
     <div
       className={cn(
-        'flex-1 overflow-hidden bg-muted/30',
-        previewMode === 'mobile' && 'flex justify-center'
+        "flex-1 overflow-hidden bg-muted/30",
+        previewMode === "mobile" && "flex justify-center"
       )}
     >
       <ScrollArea className="h-full">
         <div
           className={cn(
-            'min-h-full bg-background mx-auto p-4',
-            previewMode === 'mobile' ? 'max-w-[390px]' : 'max-w-2xl'
+            "min-h-full bg-background mx-auto p-4",
+            previewMode === "mobile" ? "max-w-[390px]" : "max-w-2xl"
           )}
         >
           <div className="flex flex-col gap-4">
-              {optionItems.length > 0 && (
-                <div className="rounded-xl border border-border bg-background/80 p-4">
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-muted-foreground">Pré-visualização das opções</p>
-                    <span className="text-xs text-muted-foreground">{optionItems.length} itens</span>
-                  </div>
-                  <div className="grid gap-3 pt-3 sm:grid-cols-2">
-                    {optionItems.map((option: any) => (
-                      <div
-                        key={option.id}
-                        className="flex flex-col gap-1 rounded-md border border-muted/20 p-2"
-                      >
-                        {option.imageUrl ? (
-                          <img
-                            src={option.imageUrl}
-                            alt={option.text || 'Opção'}
-                            className="h-16 w-full rounded object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-16 w-full items-center justify-center rounded bg-muted/30 text-xs text-muted-foreground">
-                            Sem imagem
-                          </div>
-                        )}
-                        <p className="text-sm font-medium">
-                          {option.text || <span className="text-xs italic text-muted-foreground">Sem texto</span>}
-                        </p>
-                        {option.styleCategory && (
-                          <p className="text-xs uppercase text-muted-foreground">{option.styleCategory}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  {optionWarnings && (
-                    <p className="mt-2 text-xs text-amber-600">
-                      Algumas opções não possuem texto ou imagem, preencha para garantir que apareçam corretamente no quiz.
-                    </p>
-                  )}
+            {optionItems.length > 0 && (
+              <div className="rounded-xl border border-border bg-background/80 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-muted-foreground">
+                    Pré-visualização das opções
+                  </p>
+                  <span className="text-xs text-muted-foreground">
+                    {optionItems.length} itens
+                  </span>
                 </div>
-              )}
+                <div className="grid gap-3 pt-3 sm:grid-cols-2">
+                  {optionItems.map((option: any) => (
+                    <div
+                      key={option.id}
+                      className="flex flex-col gap-1 rounded-md border border-muted/20 p-2"
+                    >
+                      {option.imageUrl ? (
+                        <img
+                          src={option.imageUrl}
+                          alt={option.text || "Opção"}
+                          className="h-16 w-full rounded object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-16 w-full items-center justify-center rounded bg-muted/30 text-xs text-muted-foreground">
+                          Sem imagem
+                        </div>
+                      )}
+                      <p className="text-sm font-medium">
+                        {option.text || (
+                          <span className="text-xs italic text-muted-foreground">
+                            Sem texto
+                          </span>
+                        )}
+                      </p>
+                      {option.styleCategory && (
+                        <p className="text-xs uppercase text-muted-foreground">
+                          {option.styleCategory}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {optionWarnings && (
+                  <p className="mt-2 text-xs text-amber-600">
+                    Algumas opções não possuem texto ou imagem, preencha para
+                    garantir que apareçam corretamente no quiz.
+                  </p>
+                )}
+              </div>
+            )}
             {isPreview ? (
               // Modo preview - sem drag and drop
               blocks.map((block) => (
