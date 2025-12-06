@@ -862,20 +862,6 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                 </div>
               )}
 
-              {/* Preview da imagem */}
-              {opt.imageUrl && (
-                <div className="mb-3 rounded-md overflow-hidden border border-muted">
-                  <img
-                    src={opt.imageUrl}
-                    alt={`Preview: ${opt.text || "Opção"}`}
-                    className="w-full h-20 object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = "none";
-                    }}
-                  />
-                </div>
-              )}
-
               <div className="flex items-start gap-2">
                 <div className="flex-1 space-y-2">
                   <Label>Texto da Opção</Label>
@@ -893,18 +879,18 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                     className={hasNoText ? "border-yellow-400" : ""}
                   />
 
-                  <Label>URL da Imagem</Label>
-                  <Input
+                  <ImageFieldWithUpload
+                    label="Imagem da Opção"
                     value={opt.imageUrl || ""}
-                    onChange={(e) => {
+                    onChange={(url) => {
                       const newOptions = [...(block.content.options || [])];
                       newOptions[idx] = {
                         ...newOptions[idx],
-                        imageUrl: e.target.value,
+                        imageUrl: url,
                       };
                       updateContent("options", newOptions);
                     }}
-                    placeholder="https://..."
+                    thumbnailSize="sm"
                   />
 
                   <div className="grid grid-cols-2 gap-2">
@@ -1774,19 +1760,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label>URL da Foto</Label>
-            <Input
-              value={testimonial.imageUrl || ""}
-              onChange={(e) =>
-                updateContent("testimonial", {
-                  ...testimonial,
-                  imageUrl: e.target.value,
-                })
-              }
-              placeholder="https://..."
-            />
-          </div>
+          <ImageFieldWithUpload
+            label="Foto da Cliente"
+            value={testimonial.imageUrl || ""}
+            onChange={(url) =>
+              updateContent("testimonial", {
+                ...testimonial,
+                imageUrl: url,
+              })
+            }
+            thumbnailSize="md"
+          />
 
           <div className="space-y-2">
             <Label>Avaliação (1-5)</Label>
