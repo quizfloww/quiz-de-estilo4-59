@@ -7,18 +7,6 @@ interface OptionsBlockProps {
   isPreview?: boolean;
 }
 
-// Tamanhos em pixels para cálculo do grid
-const IMAGE_SIZES: Record<string, number> = {
-  xs: 64,
-  sm: 80,
-  md: 112,
-  lg: 160,
-  xl: 208,
-  "2xl": 288,
-  "3xl": 384,
-  full: 480,
-};
-
 export const OptionsBlock: React.FC<OptionsBlockProps> = ({
   content,
   isPreview,
@@ -28,23 +16,17 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
   const options = content.options || [];
   const displayType = content.displayType || "text";
   const hasImages = displayType === "both" || displayType === "image";
-  const imageSize = (content.optionImageSize || "md") as
-    | "xs"
-    | "sm"
-    | "md"
-    | "lg"
-    | "xl"
-    | "2xl"
-    | "3xl"
-    | "full";
-  const imageSizePx = IMAGE_SIZES[imageSize] || 112;
-  const isLargeImage = ["2xl", "3xl", "full"].includes(imageSize);
+
+  // Novos controles de escala proporcional (igual ao ImageBlock)
+  const optionImageScale = content.optionImageScale || 1;
+  const optionImageMaxWidth = content.optionImageMaxWidth || 100;
+  const optionImageBorderRadius = content.optionImageBorderRadius || 8;
+  const optionImageBorderWidth = content.optionImageBorderWidth || 0;
+  const optionImageBorderColor = content.optionImageBorderColor || "#B89B7A";
+
   const baseColumns = content.columns || (hasImages ? 2 : 1);
   // Limitar colunas a máximo 2 para melhor responsividade mobile
-  const columns = Math.min(
-    isLargeImage && baseColumns > 2 ? 2 : baseColumns,
-    2
-  );
+  const columns = Math.min(baseColumns, 2);
   const showCheckIcon = content.showCheckIcon !== false;
   const textSize = (content.optionTextSize || "base") as
     | "xs"
@@ -86,17 +68,27 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
     );
   }
 
+  // Estilo customizado para as imagens das opções
+  const imageStyles: React.CSSProperties = {
+    transform: `scale(${optionImageScale})`,
+    transformOrigin: "center",
+    maxWidth: `${optionImageMaxWidth}%`,
+    borderRadius: `${optionImageBorderRadius}px`,
+    border:
+      optionImageBorderWidth > 0
+        ? `${optionImageBorderWidth}px solid ${optionImageBorderColor}`
+        : undefined,
+  };
+
   // Layout em grid para opções com imagens
   if (hasImages) {
-    const cellMinWidth = imageSizePx + 24;
-
     return (
       <div
         className="grid gap-3 w-full"
         style={{
           transform: `scale(${scale})`,
           transformOrigin: "top center",
-          gridTemplateColumns: `repeat(${columns}, minmax(${cellMinWidth}px, 1fr))`,
+          gridTemplateColumns: `repeat(${columns}, 1fr)`,
         }}
       >
         {quizOptions.map((option) => (
@@ -105,7 +97,7 @@ export const OptionsBlock: React.FC<OptionsBlockProps> = ({
             option={option}
             isSelected={selectedIds.includes(option.id)}
             displayType={displayType as "text" | "image" | "both"}
-            imageSize={imageSize}
+            imageStyles={imageStyles}
             textSize={textSize}
             showCheckIcon={showCheckIcon}
             onClick={handleSelect}

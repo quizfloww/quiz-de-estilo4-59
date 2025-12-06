@@ -16,6 +16,7 @@ export interface QuizOptionProps {
   isSelected: boolean;
   displayType: "text" | "image" | "both";
   imageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  imageStyles?: React.CSSProperties; // Estilos customizados para a imagem (escala, borda, etc)
   textSize?: "xs" | "sm" | "base" | "lg" | "xl";
   showCheckIcon?: boolean;
   disabled?: boolean;
@@ -55,6 +56,7 @@ export const QuizOption: React.FC<QuizOptionProps> = ({
   isSelected,
   displayType,
   imageSize = "md",
+  imageStyles,
   textSize = "base",
   showCheckIcon = true,
   disabled = false,
@@ -111,13 +113,17 @@ export const QuizOption: React.FC<QuizOptionProps> = ({
 
         {/* Image */}
         <div
-          className="overflow-hidden rounded-md flex-shrink-0"
-          style={{ width: imageSizePx, height: imageSizePx }}
+          className="overflow-hidden flex-shrink-0 flex items-center justify-center"
+          style={{
+            width: imageStyles?.maxWidth ? "100%" : imageSizePx,
+            height: imageStyles?.maxWidth ? "auto" : imageSizePx,
+          }}
         >
           <img
             src={imageUrl}
             alt={option.text}
             className="w-full h-full object-cover"
+            style={imageStyles}
             loading="lazy"
           />
         </div>
