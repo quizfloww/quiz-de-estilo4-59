@@ -20,12 +20,18 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
   const items = content.priceItems?.length ? content.priceItems : DEFAULT_ITEMS;
   const totalOriginal =
     content.totalOriginal ||
-    items.reduce((sum, item) => sum + item.originalPrice, 0);
+    items.reduce((sum, item) => sum + (item.originalPrice || 0), 0);
   const finalPrice = content.finalPrice || 39;
   const installments = content.installments || { count: 5, value: 8.83 };
+  
+  // Safe values for toFixed
+  const safeTotalOriginal = totalOriginal || 0;
+  const safeFinalPrice = finalPrice || 0;
+  const safeInstallmentValue = installments?.value || 0;
+  
   const discountBadge =
     content.discountBadge ||
-    `-${Math.round((1 - finalPrice / totalOriginal) * 100)}%`;
+    `-${Math.round((1 - safeFinalPrice / safeTotalOriginal) * 100)}%`;
   const currency = content.currency || "R$";
 
   // Background color
@@ -54,7 +60,7 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
               {item.label}
             </span>
             <span className="text-[#8F7A6A] line-through text-sm">
-              {currency} {item.originalPrice.toFixed(2)}
+              {currency} {(item.originalPrice || 0).toFixed(2)}
             </span>
           </div>
         ))}
