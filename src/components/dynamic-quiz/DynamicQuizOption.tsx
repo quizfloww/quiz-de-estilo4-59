@@ -15,6 +15,7 @@ interface DynamicQuizOptionProps {
 /**
  * Wrapper para DynamicQuizOption que adapta StageOption para QuizOptionItem
  * Usa o componente unificado QuizOption
+ * Suporta tanto image_url (snake_case do banco) quanto imageUrl (camelCase do config)
  */
 export const DynamicQuizOption: React.FC<DynamicQuizOptionProps> = ({
   option,
@@ -26,11 +27,14 @@ export const DynamicQuizOption: React.FC<DynamicQuizOptionProps> = ({
   onClick,
 }) => {
   // Converter StageOption para QuizOptionItem
+  // Suporta tanto image_url (snake_case) quanto imageUrl (camelCase)
+  const optionAny = option as any;
   const quizOption: QuizOptionItem = {
     id: option.id,
     text: option.text,
-    imageUrl: option.image_url || undefined,
-    styleCategory: option.style_category || undefined,
+    imageUrl: option.image_url || optionAny.imageUrl || undefined,
+    styleCategory:
+      option.style_category || optionAny.styleCategory || undefined,
     points: option.points,
   };
 

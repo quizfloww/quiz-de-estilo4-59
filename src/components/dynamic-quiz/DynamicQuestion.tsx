@@ -23,7 +23,7 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
   // Detecta se é questão estratégica
   const isStrategicQuestion = stage.type === "strategic";
 
-  const questionText = config.questionText || stage.title;
+  const questionText = config.questionText || config.question || stage.title;
   const displayType = config.displayType || "text";
   const multiSelect = config.multiSelect || false;
   const requiredSelections = config.requiredSelections || (multiSelect ? 3 : 1);
@@ -31,6 +31,31 @@ export const DynamicQuestion: React.FC<DynamicQuestionProps> = ({
     config.autoAdvance !== false && !multiSelect && !isStrategicQuestion;
   const buttonText =
     config.buttonText || (isStrategicQuestion ? "Próximo" : "Continuar");
+
+  // Enriquece as opções do banco com as imagens do config se necessário
+  // Isso garante compatibilidade entre snake_case do banco e camelCase do config
+  const enrichedOptions = React.useMemo(() => {
+    const configOptions = config.options || [];
+
+    return stage.options.map((opt) => {
+      // Se a opção do banco já tem image_url, usa ela
+      if (opt.image_url) return opt;
+
+      // Senão, tenta encontrar a mesma opção no config e pegar a imageUrl
+      const configOpt = configOptions.find(
+        (co: any) => co.id === opt.id || co.text === opt.text
+      );
+
+      if (configOpt?.imageUrl || configOpt?.image_url) {
+        return {
+          ...opt,
+          image_url: configOpt.imageUrl || configOpt.image_url,
+        };
+      }
+
+      return opt;
+    });
+  }, [stage.options, config.options]);
 
   useEffect(() => {
     setSelected(currentAnswers || []);
