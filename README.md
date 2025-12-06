@@ -64,7 +64,13 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 
 - Crie o projeto na Vercel e conecte ao repositório GitHub.
 - Configure as variáveis de ambiente (use `.env.example` como referência):
-  - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_APP_ENV`, opcional `VITE_SENTRY_DSN`.
+  - `VITE_SUPABASE_URL` = `https://mrymyxayqqtlxearvqkz.supabase.co`
+  - `VITE_SUPABASE_ANON_KEY` = sua anon/publishable key do projeto `mrymyxayqqtlxearvqkz`
+  - Opcional: `VITE_SUPABASE_PUBLISHABLE_KEY` (o client aceita como fallback)
+  - `VITE_APP_ENV`, opcional `VITE_SENTRY_DSN`.
+
+> Importante: remova quaisquer referências antigas ao projeto `swmhecalfwbonxabfanu` nas variáveis de ambiente.
+
 - Defina o comando de build: `npm run build` e diretório de saída: `dist`.
 - Preview Deploys para PRs: habilite automaticamente nas configurações do projeto.
 - Opcional: adicione token `VERCEL_TOKEN` e `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` nos Secrets do GitHub para deploy via Actions.
@@ -102,7 +108,10 @@ To manually trigger a deployment, you can use the "Run workflow" button on the A
 - Instale a CLI: `npm i -g vercel` e faça login: `vercel login`.
 - Na Vercel, importe o repositório do GitHub e selecione framework "Vite".
 - Configure Environment Variables (Production/Preview):
-  - `VITE_SUPABASE_URL` (Project URL do Supabase), `VITE_SUPABASE_ANON_KEY` (Anon/Public key), `VITE_APP_ENV` (ex: `production`), `VITE_SENTRY_DSN` (opcional).
+  - `VITE_SUPABASE_URL` = `https://mrymyxayqqtlxearvqkz.supabase.co`
+  - `VITE_SUPABASE_ANON_KEY` = sua anon/publishable key
+  - Opcional: `VITE_SUPABASE_PUBLISHABLE_KEY`
+  - `VITE_APP_ENV` (ex: `production`), `VITE_SENTRY_DSN` (opcional).
 - Build & Output:
   - Build: `npm run build` | Output: `dist` | Node 20.
 - Secrets no GitHub (para workflow):
