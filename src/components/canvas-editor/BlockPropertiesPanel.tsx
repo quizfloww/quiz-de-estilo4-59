@@ -2423,36 +2423,32 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                   />
 
                   <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <Label className="text-xs">Imagem Antes</Label>
-                      <Input
-                        value={item.beforeImage || ""}
-                        onChange={(e) => {
-                          const newItems = [...items];
-                          newItems[idx] = {
-                            ...newItems[idx],
-                            beforeImage: e.target.value,
-                          };
-                          updateContent("beforeAfterItems", newItems);
-                        }}
-                        placeholder="URL da imagem"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs">Imagem Depois</Label>
-                      <Input
-                        value={item.afterImage || ""}
-                        onChange={(e) => {
-                          const newItems = [...items];
-                          newItems[idx] = {
-                            ...newItems[idx],
-                            afterImage: e.target.value,
-                          };
-                          updateContent("beforeAfterItems", newItems);
-                        }}
-                        placeholder="URL da imagem"
-                      />
-                    </div>
+                    <ImageFieldWithUpload
+                      label="Imagem Antes"
+                      value={item.beforeImage || ""}
+                      onChange={(url) => {
+                        const newItems = [...items];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          beforeImage: url,
+                        };
+                        updateContent("beforeAfterItems", newItems);
+                      }}
+                      thumbnailSize="sm"
+                    />
+                    <ImageFieldWithUpload
+                      label="Imagem Depois"
+                      value={item.afterImage || ""}
+                      onChange={(url) => {
+                        const newItems = [...items];
+                        newItems[idx] = {
+                          ...newItems[idx],
+                          afterImage: url,
+                        };
+                        updateContent("beforeAfterItems", newItems);
+                      }}
+                      thumbnailSize="sm"
+                    />
                   </div>
                 </div>
               </Card>
@@ -2663,19 +2659,22 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                     rows={2}
                   />
 
-                  <div className="grid grid-cols-2 gap-2">
-                    <Input
-                      value={item.imageUrl || ""}
-                      onChange={(e) => {
-                        const newItems = [...bonusItems];
-                        newItems[idx] = {
-                          ...newItems[idx],
-                          imageUrl: e.target.value,
-                        };
-                        updateContent("bonusItems", newItems);
-                      }}
-                      placeholder="URL da imagem"
-                    />
+                  <ImageFieldWithUpload
+                    label="Imagem do Bônus"
+                    value={item.imageUrl || ""}
+                    onChange={(url) => {
+                      const newItems = [...bonusItems];
+                      newItems[idx] = {
+                        ...newItems[idx],
+                        imageUrl: url,
+                      };
+                      updateContent("bonusItems", newItems);
+                    }}
+                    thumbnailSize="sm"
+                  />
+
+                  <div className="space-y-2">
+                    <Label>Valor</Label>
                     <Input
                       value={item.value || ""}
                       onChange={(e) => {
