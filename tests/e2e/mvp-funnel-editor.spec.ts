@@ -45,7 +45,7 @@ const test = base.extend<{ authenticatedPage: Page }>({
 
     // Navigate to funnels list first
     await page.goto(FUNNELS_LIST_URL, {
-      waitUntil: "domcontentloaded",
+      waitUntil: "networkidle",
       timeout: 60000,
     });
 
@@ -68,12 +68,28 @@ const test = base.extend<{ authenticatedPage: Page }>({
       // Login not needed or already logged in
     }
 
-    // Wait for funnels page to load
+    // Wait for page to load, then check if we're on the funnels page
+    await page.waitForTimeout(1000);
+
+    // If we're not on the funnels page, click on the Funis link in sidebar
+    const currentUrl = page.url();
+    if (!currentUrl.includes("/funnels")) {
+      const funisLink = page.locator('a[href="/admin/funnels"]').first();
+      if (await funisLink.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await funisLink.click();
+        await page.waitForTimeout(2000);
+      }
+    }
+
+    // Wait for funnels page to load - look for "Seus Funis" heading or funnel cards
     await page
-      .waitForSelector('text=Seus Funis, h2, [class*="card"]', {
-        state: "visible",
-        timeout: 15000,
-      })
+      .waitForSelector(
+        'text=Seus Funis, h2:has-text("Funis"), [class*="card"]',
+        {
+          state: "visible",
+          timeout: 15000,
+        }
+      )
       .catch(() => {});
 
     // Wait for page to stabilize
