@@ -63,6 +63,7 @@ export const convertStageToBlocks = (
         fontSize: "2xl",
         fontWeight: "bold",
         textAlign: "center",
+        color: "#432818", // Cor padrão do tema da Gisele Galvão
       },
     });
   } else if (stage.type === "transition") {
