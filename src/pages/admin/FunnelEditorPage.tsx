@@ -712,7 +712,10 @@ export default function FunnelEditorPage() {
                 onSelectBlock={handleSelectBlock}
                 onBlocksChange={handleBlocksChange}
                 blocks={currentBlocks}
-                canvasBackgroundColor={(activeStage.config as Record<string, unknown>)?.canvasBackgroundColor as string || "#ffffff"}
+                canvasBackgroundColor={
+                  ((activeStage.config as Record<string, unknown>)
+                    ?.canvasBackgroundColor as string) || "#ffffff"
+                }
               />
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground bg-muted/30">
