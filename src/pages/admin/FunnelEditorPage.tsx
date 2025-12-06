@@ -443,6 +443,9 @@ export default function FunnelEditorPage() {
     toast.success("Funil salvo com sucesso!");
   }, [handleSaveInternal]);
 
+  // Atualiza ref para uso no keyboard shortcut
+  handleSaveRef.current = handleSave;
+
   const handleOpenPublishDialog = async () => {
     setShowPublishDialog(true);
     const validation = await validateFunnel(
