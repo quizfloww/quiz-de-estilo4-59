@@ -25,10 +25,10 @@ export const MentorBlock: React.FC<MentorBlockProps> = ({
   const name = content.mentorName || "Gisele Galvão";
   const title =
     content.mentorTitle ||
-    "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal";
+    "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal e Especialista em coloração pessoal com Certificação internacional";
   const description =
     content.mentorDescription ||
-    "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Com mais de 10 anos de experiência, já transformou a vida de milhares de mulheres através do poder do estilo pessoal.";
+    "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal.";
   const imageUrl = content.mentorImageUrl || DEFAULT_MENTOR_IMAGE;
   const credentials = content.mentorCredentials || defaultCredentials;
 

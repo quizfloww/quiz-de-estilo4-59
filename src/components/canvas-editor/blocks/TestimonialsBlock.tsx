@@ -43,7 +43,7 @@ export const TestimonialsBlock: React.FC<TestimonialsBlockProps> = ({
   isPreview,
 }) => {
   const layout = content.testimonialsLayout || "grid";
-  const title = content.testimonialsTitle || "O Que Nossas Alunas Dizem";
+  const title = content.testimonialsTitle || "O que dizem nossas clientes";
   const testimonials = content.testimonials || defaultTestimonials;
 
   const layoutClasses = {

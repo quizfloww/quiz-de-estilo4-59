@@ -593,21 +593,20 @@ export const createEmptyBlock = (type: CanvasBlockType): CanvasBlock => {
         },
       ],
       testimonialsLayout: "grid",
-      testimonialsTitle: "O Que Nossas Alunas Dizem",
+      testimonialsTitle: "O que dizem nossas clientes",
     },
     mentor: {
       mentorName: "Gisele Galvão",
       mentorTitle:
-        "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal",
+        "Consultora de Imagem e Estilo, Personal Branding, Estrategista de Marca pessoal e Especialista em coloração pessoal com Certificação internacional",
       mentorDescription:
-        "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal. Com mais de 10 anos de experiência, já transformou a vida de milhares de mulheres através do poder do estilo pessoal.",
+        "Advogada de formação, mãe e esposa. Apaixonada por ajudar mulheres a descobrirem seu estilo autêntico e transformarem sua relação com a imagem pessoal.",
       mentorImageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1745347467/GISELE-GALV%C3%83O-POSE-ACESSIBILIDADE_i23qvj.webp",
       mentorCredentials: [
         "Especialista em Análise de Estilo",
         "Consultora de Imagem Certificada",
         "Mais de 5.000 mulheres transformadas",
-        "Especialista em coloração pessoal com Certificação internacional",
       ],
     },
     securePurchase: {
