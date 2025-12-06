@@ -537,7 +537,7 @@ test.describe("FunnelEditor - Salvamento e Publicação", () => {
 test.describe("FunnelEditor - Responsividade", () => {
   test("deve ser responsivo em desktop", async ({ page }) => {
     page.setViewportSize({ width: 1920, height: 1080 });
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
 
     const header = page
       .locator('h1, .funnel-title, [data-testid="funnel-name"]')
@@ -547,7 +547,7 @@ test.describe("FunnelEditor - Responsividade", () => {
 
   test("deve ser responsivo em laptop", async ({ page }) => {
     page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     const header = page
       .locator('h1, .funnel-title, [data-testid="funnel-name"]')
       .first();
@@ -556,7 +556,7 @@ test.describe("FunnelEditor - Responsividade", () => {
 
   test("deve ser responsivo em tablet grande", async ({ page }) => {
     page.setViewportSize({ width: 1024, height: 768 });
-    await page.goto("/admin/funnels/1/edit");
+    await waitForEditorReady(page);
     const header = page
       .locator('h1, .funnel-title, [data-testid="funnel-name"]')
       .first();
