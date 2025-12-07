@@ -780,6 +780,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showFont: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -834,6 +835,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showFont: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1001,6 +1003,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: false,
         showBorder: false,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1054,6 +1057,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showBorder: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1440,6 +1444,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showBorder: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1484,6 +1489,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1500,6 +1506,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         />
       </div>
       {renderGlobalStyleControls({ showBackground: true })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1562,6 +1569,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         />
       </div>
       {renderGlobalStyleControls({ showBackground: true })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1685,6 +1693,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1778,6 +1787,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -1910,6 +1920,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -1983,6 +1994,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2047,6 +2059,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showAccent: true,
         showBorder: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2098,6 +2111,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       </div>
 
       {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2220,6 +2234,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -2386,6 +2401,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -2492,6 +2508,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -2546,6 +2563,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2583,6 +2601,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2690,6 +2709,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showText: true,
         showAccent: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2745,6 +2765,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showAccent: true,
         showBorder: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -2902,6 +2923,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           showText: true,
           showAccent: true,
         })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -2988,6 +3010,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -3161,6 +3184,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -3369,6 +3393,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true, showAccent: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
@@ -3459,6 +3484,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         showAccent: true,
         showBorder: true,
       })}
+      {renderAdvancedControls()}
     </>
   );
 
@@ -3571,6 +3597,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         </div>
 
         {renderGlobalStyleControls({ showBackground: true })}
+        {renderAdvancedControls()}
       </>
     );
   };
