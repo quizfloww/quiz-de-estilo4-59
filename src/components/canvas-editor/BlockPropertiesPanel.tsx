@@ -269,6 +269,402 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     );
   };
 
+  // ======== CONTROLES AVANÇADOS: TEMPLATES, A/B TESTING, ANIMAÇÕES ========
+
+  // Helper de Variáveis de Template
+  const renderTemplateHelper = () => {
+    const availableVariables = [
+      { var: "{userName}", desc: "Nome do usuário" },
+      { var: "{category}", desc: "Categoria de estilo principal" },
+      { var: "{percentage}", desc: "Percentual (ex: 85%)" },
+      { var: "{congratsMessage}", desc: "Mensagem de parabéns personalizada" },
+      { var: "{powerMessage}", desc: "Mensagem de poder do estilo" },
+      { var: "{styleImage}", desc: "URL da imagem do estilo" },
+      { var: "{guideImage}", desc: "URL da imagem do guia" },
+      { var: "{secondary1}", desc: "Estilo secundário 1" },
+      { var: "{secondary2}", desc: "Estilo secundário 2" },
+      { var: "{emoji}", desc: "Emoji do estilo" },
+      { var: "{hookMessage}", desc: "Gancho personalizado" },
+      { var: "{resultTitle}", desc: "Título do resultado" },
+      { var: "{transformationMessage}", desc: "Mensagem de transformação" },
+      { var: "{userEmail}", desc: "Email do usuário" },
+    ];
+
+    return (
+      <Collapsible open={showTemplateHelp} onOpenChange={setShowTemplateHelp}>
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            size="sm"
+          >
+            <span className="flex items-center gap-2">
+              <Info className="h-4 w-4" />
+              Variáveis de Template
+            </span>
+            {showTemplateHelp ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-2 space-y-2">
+          <div className="text-xs text-muted-foreground bg-muted p-3 rounded-md space-y-2">
+            <p className="font-semibold">
+              Use variáveis para personalizar textos:
+            </p>
+            <div className="space-y-1">
+              {availableVariables.map(({ var: variable, desc }) => (
+                <div key={variable} className="flex items-start gap-2">
+                  <code className="text-xs bg-background px-1 rounded shrink-0">
+                    {variable}
+                  </code>
+                  <span>- {desc}</span>
+                </div>
+              ))}
+            </div>
+            <p className="pt-2 border-t mt-2">
+              <strong>Exemplo:</strong> "Olá {"{userName}"}, seu estilo é{" "}
+              {"{category}"}!"
+            </p>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  };
+
+  // Configuração de Teste A/B
+  const renderABTestConfig = () => {
+    const abTest = block.abTest;
+
+    const updateABTest = (updates: Partial<ABTestConfig>) => {
+      updateBlockProperty("abTest", {
+        ...abTest,
+        ...updates,
+      });
+    };
+
+    const updateVariant = (
+      variantId: string,
+      updates: Partial<ABTestConfig["variants"][0]>
+    ) => {
+      const variants = abTest?.variants || [];
+      const updatedVariants = variants.map((v) =>
+        v.id === variantId ? { ...v, ...updates } : v
+      );
+      updateABTest({ variants: updatedVariants });
+    };
+
+    const addVariant = () => {
+      const variants = abTest?.variants || [];
+      const newVariant = {
+        id: `variant-${Date.now()}`,
+        name: `Variante ${variants.length + 1}`,
+        weight: 0.5,
+        contentOverrides: {},
+      };
+      updateABTest({ variants: [...variants, newVariant] });
+    };
+
+    const removeVariant = (variantId: string) => {
+      const variants = abTest?.variants || [];
+      updateABTest({ variants: variants.filter((v) => v.id !== variantId) });
+    };
+
+    return (
+      <Collapsible open={showABTestConfig} onOpenChange={setShowABTestConfig}>
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            size="sm"
+          >
+            <span className="flex items-center gap-2">
+              Teste A/B
+              {abTest?.enabled && (
+                <span className="text-xs bg-green-500 text-white px-2 py-0.5 rounded">
+                  Ativo
+                </span>
+              )}
+            </span>
+            {showABTestConfig ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="abtest-enabled">Habilitar Teste A/B</Label>
+            <Switch
+              id="abtest-enabled"
+              checked={abTest?.enabled || false}
+              onCheckedChange={(checked) => updateABTest({ enabled: checked })}
+            />
+          </div>
+
+          {abTest?.enabled && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="abtest-name">Nome do Teste</Label>
+                <Input
+                  id="abtest-name"
+                  value={abTest.testName || ""}
+                  onChange={(e) => updateABTest({ testName: e.target.value })}
+                  placeholder="ex: headline-test-1"
+                />
+              </div>
+
+              <Separator />
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm font-semibold">Variantes</Label>
+                  <Button size="sm" variant="outline" onClick={addVariant}>
+                    + Adicionar
+                  </Button>
+                </div>
+
+                {(abTest.variants || []).map((variant, index) => (
+                  <Card key={variant.id} className="p-3 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Input
+                        value={variant.name}
+                        onChange={(e) =>
+                          updateVariant(variant.id, { name: e.target.value })
+                        }
+                        placeholder="Nome da variante"
+                        className="flex-1 mr-2"
+                      />
+                      {(abTest.variants?.length || 0) > 1 && (
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => removeVariant(variant.id)}
+                        >
+                          ✕
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs">
+                        Peso: {((variant.weight || 0.5) * 100).toFixed(0)}%
+                      </Label>
+                      <Slider
+                        value={[(variant.weight || 0.5) * 100]}
+                        min={0}
+                        max={100}
+                        step={5}
+                        onValueChange={([value]) =>
+                          updateVariant(variant.id, { weight: value / 100 })
+                        }
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label className="text-xs">
+                        Alterações de Conteúdo (JSON)
+                      </Label>
+                      <Textarea
+                        value={JSON.stringify(
+                          variant.contentOverrides || {},
+                          null,
+                          2
+                        )}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            updateVariant(variant.id, {
+                              contentOverrides: parsed,
+                            });
+                          } catch (err) {
+                            // Invalid JSON, ignore
+                          }
+                        }}
+                        placeholder='{"text": "Nova mensagem"}'
+                        rows={3}
+                        className="font-mono text-xs"
+                      />
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="abtest-events" className="text-xs">
+                  Eventos de Rastreamento (separados por vírgula)
+                </Label>
+                <Input
+                  id="abtest-events"
+                  value={(abTest.trackingEvents || []).join(", ")}
+                  onChange={(e) =>
+                    updateABTest({
+                      trackingEvents: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  placeholder="click, conversion, view"
+                  className="text-xs"
+                />
+              </div>
+            </>
+          )}
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  };
+
+  // Configuração de Animação
+  const renderAnimationConfig = () => {
+    const animation = block.animation;
+
+    const updateAnimation = (updates: Partial<AnimationConfig>) => {
+      updateBlockProperty("animation", {
+        ...animation,
+        ...updates,
+      });
+    };
+
+    return (
+      <Collapsible
+        open={showAnimationConfig}
+        onOpenChange={setShowAnimationConfig}
+      >
+        <CollapsibleTrigger asChild>
+          <Button
+            variant="outline"
+            className="w-full justify-between"
+            size="sm"
+          >
+            <span className="flex items-center gap-2">
+              Animações
+              {animation?.type && animation.type !== "none" && (
+                <span className="text-xs bg-blue-500 text-white px-2 py-0.5 rounded">
+                  {animation.type}
+                </span>
+              )}
+            </span>
+            {showAnimationConfig ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-3 space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor="animation-type">Tipo de Animação</Label>
+            <Select
+              value={animation?.type || "none"}
+              onValueChange={(value) =>
+                updateAnimation({ type: value as AnimationConfig["type"] })
+              }
+            >
+              <SelectTrigger id="animation-type">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nenhuma</SelectItem>
+                <SelectItem value="fade-in">Fade In</SelectItem>
+                <SelectItem value="slide-up">Deslizar para Cima</SelectItem>
+                <SelectItem value="slide-down">Deslizar para Baixo</SelectItem>
+                <SelectItem value="scale-in">Aumentar</SelectItem>
+                <SelectItem value="bounce">Pular</SelectItem>
+                <SelectItem value="pulse">Pulsar</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {animation?.type && animation.type !== "none" && (
+            <>
+              <div className="space-y-2">
+                <Label>Duração: {animation.duration || 500}ms</Label>
+                <Slider
+                  value={[animation.duration || 500]}
+                  min={100}
+                  max={2000}
+                  step={100}
+                  onValueChange={([value]) =>
+                    updateAnimation({ duration: value })
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Delay: {animation.delay || 0}ms</Label>
+                <Slider
+                  value={[animation.delay || 0]}
+                  min={0}
+                  max={1000}
+                  step={50}
+                  onValueChange={([value]) => updateAnimation({ delay: value })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="animation-easing">Easing</Label>
+                <Select
+                  value={animation.easing || "ease-out"}
+                  onValueChange={(value) => updateAnimation({ easing: value })}
+                >
+                  <SelectTrigger id="animation-easing">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="linear">Linear</SelectItem>
+                    <SelectItem value="ease">Ease</SelectItem>
+                    <SelectItem value="ease-in">Ease In</SelectItem>
+                    <SelectItem value="ease-out">Ease Out</SelectItem>
+                    <SelectItem value="ease-in-out">Ease In Out</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="animation-lowperf">
+                    Desabilitar em Baixo Desempenho
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Desativa animação em dispositivos lentos
+                  </p>
+                </div>
+                <Switch
+                  id="animation-lowperf"
+                  checked={animation.disableOnLowPerformance !== false}
+                  onCheckedChange={(checked) =>
+                    updateAnimation({ disableOnLowPerformance: checked })
+                  }
+                />
+              </div>
+            </>
+          )}
+        </CollapsibleContent>
+      </Collapsible>
+    );
+  };
+
+  // Seção Avançada Completa
+  const renderAdvancedControls = () => (
+    <div className="space-y-2 pt-4 border-t">
+      <Label className="text-xs font-semibold text-muted-foreground uppercase">
+        Configurações Avançadas
+      </Label>
+      <TooltipProvider>
+        <div className="space-y-2">
+          {renderTemplateHelper()}
+          {renderABTestConfig()}
+          {renderAnimationConfig()}
+        </div>
+      </TooltipProvider>
+    </div>
+  );
+
   const renderHeaderProperties = () => (
     <>
       {renderScaleControl()}
@@ -307,6 +703,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         />
       </div>
       {renderGlobalStyleControls({ showBackground: true, showText: true })}
+      {renderAdvancedControls()}
     </>
   );
 
