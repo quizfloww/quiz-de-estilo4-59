@@ -104,7 +104,9 @@ Inclui todos acima mais:
 4. Despublicar → Status muda para draft
 
 ### 📚 Entenda as Validações:
+
 Consulte **`ESTRUTURA-VALIDACOES-REAL.md`** para detalhes sobre:
+
 - Por que aparece "não possui opções configuradas"
 - Como corrigir erros de validação
 - Estrutura de dados esperada
