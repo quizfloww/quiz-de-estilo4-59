@@ -1,7 +1,11 @@
-const CACHE_NAME = "quiz-sell-genius-v6-no-js-cache";
+const CACHE_NAME = "quiz-sell-genius-v7-DISABLED";
 
-// Instalação simples
+// SERVICE WORKER DESABILITADO - APENAS LIMPA CACHE E SE AUTO-DESREGISTRA
 self.addEventListener("install", () => {
+  // Limpa TODOS os caches ao instalar
+  caches.keys().then((keys) => {
+    keys.forEach((key) => caches.delete(key));
+  });
   self.skipWaiting();
 });
 
@@ -19,10 +23,10 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// Fetch: Network first, simples e robusto
+// Fetch: DESABILITADO - Sempre busca da rede, NUNCA cacheia
 self.addEventListener("fetch", (event) => {
-  // Ignorar requisições não-GET
-  if (event.request.method !== "GET") return;
+  // NÃO FAZ NADA - deixa o navegador buscar normalmente da rede
+  return;
 
   // Ignorar URLs problemáticas
   try {
