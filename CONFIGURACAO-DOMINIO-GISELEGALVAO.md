@@ -74,7 +74,35 @@ Clique em **"Add Domain"** e adicione:
 - `giselegalvao.com`
 - `www.giselegalvao.com`
 
-### **2. Configurar Redirecionamentos**
+### **2. Configurar Variáveis de Ambiente** ⚠️
+
+**IMPORTANTE**: As variáveis de ambiente **NÃO precisam ser alteradas** por causa da mudança de domínio!
+
+Acesse: https://vercel.com/quiz-flow/quiz-de-estilo4-58/settings/environment-variables
+
+**Variáveis necessárias (já devem estar configuradas):**
+
+```bash
+# Supabase - Backend Database
+VITE_SUPABASE_URL=https://mrymyxayqqtlxearvqkz.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJ... # Sua chave anon atual
+
+# App Environment
+VITE_APP_ENV=production
+
+# Opcionais (recomendados para produção):
+VITE_GA4_MEASUREMENT_ID=G-XXXXXXXXXX  # Google Analytics 4
+VITE_SENTRY_DSN=https://...           # Monitoramento de erros
+VITE_AB_TEST_ACTIVE=true              # A/B Testing
+```
+
+**✅ Não é necessário alterar:**
+
+- URLs hardcoded → Já atualizadas no código
+- Tokens Facebook Pixel → Gerenciados pelo `pixelManager.ts`
+- Configurações de domínio → Gerenciadas automaticamente pela Vercel
+
+### **3. Configurar Redirecionamentos**
 
 A Vercel permite configurar:
 
@@ -83,12 +111,15 @@ A Vercel permite configurar:
 
 ## 🎯 URLs do Projeto
 
-### **Produção Atual (Vercel)**
+### **Produção Atual (Vercel) - Temporárias**
 
-- 🔍 **Inspeção**: https://vercel.com/quiz-flow/quiz-de-estilo4-58/FpCTCcUyzc2dQBNjPeNdDXh5iN7B
-- ✅ **Preview**: https://quiz-de-estilo4-58-ofqixk5qo-quiz-flow.vercel.app
+Essas URLs mudam a cada deploy. Use as URLs permanentes abaixo:
 
-### **URLs Finais (Após configuração DNS)**
+- 🔧 **Dashboard Vercel**: https://vercel.com/quiz-flow/quiz-de-estilo4-58
+- 🌐 **URL Vercel Permanente**: https://quiz-de-estilo4-58.vercel.app
+- 🔍 **Deployments**: https://vercel.com/quiz-flow/quiz-de-estilo4-58/deployments
+
+### **URLs Finais (Após configuração DNS) - PERMANENTES**
 
 - 🌐 **Site Principal**: https://giselegalvao.com
 - 📊 **Página de Resultados**: https://giselegalvao.com/resultado
