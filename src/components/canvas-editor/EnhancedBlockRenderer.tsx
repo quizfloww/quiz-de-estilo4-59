@@ -183,9 +183,10 @@ function processBlockContent(
         ...t,
         name: renderTemplate(t.name || "", context),
         text: renderTemplate(t.text || "", context),
-        imageUrl: t.imageUrl
-          ? optimizeImageUrl(t.imageUrl, { width: 80, quality: "auto:best" })
-          : undefined,
+        imageUrl:
+          t.imageUrl && !t.imageUrl.includes("w_")
+            ? optimizeImageUrl(t.imageUrl, { width: 80, quality: "auto:best" })
+            : t.imageUrl,
       })
     );
   }
@@ -203,9 +204,10 @@ function processBlockContent(
       ...b,
       title: renderTemplate(b.title || "", context),
       description: renderTemplate(b.description || "", context),
-      imageUrl: b.imageUrl
-        ? optimizeImageUrl(b.imageUrl, { width: 300, quality: "auto:good" })
-        : undefined,
+      imageUrl:
+        b.imageUrl && !b.imageUrl.includes("w_")
+          ? optimizeImageUrl(b.imageUrl, { width: 300, quality: "auto:good" })
+          : b.imageUrl,
     }));
   }
 
@@ -215,14 +217,18 @@ function processBlockContent(
         ...item,
         name: renderTemplate(item.name || "", context),
         description: renderTemplate(item.description || "", context),
-        beforeImage: optimizeImageUrl(item.beforeImage, {
-          width: 400,
-          quality: "auto:good",
-        }),
-        afterImage: optimizeImageUrl(item.afterImage, {
-          width: 400,
-          quality: "auto:good",
-        }),
+        beforeImage: !item.beforeImage.includes("w_")
+          ? optimizeImageUrl(item.beforeImage, {
+              width: 400,
+              quality: "auto:good",
+            })
+          : item.beforeImage,
+        afterImage: !item.afterImage.includes("w_")
+          ? optimizeImageUrl(item.afterImage, {
+              width: 400,
+              quality: "auto:good",
+            })
+          : item.afterImage,
       })
     );
   }
