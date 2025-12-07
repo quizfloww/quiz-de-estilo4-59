@@ -1,4 +1,9 @@
-export type QuizStageType = 'intro' | 'question' | 'transition' | 'strategic' | 'result';
+export type QuizStageType =
+  | "intro"
+  | "question"
+  | "transition"
+  | "strategic"
+  | "result";
 
 export interface QuizFlowOption {
   id: string;
@@ -20,31 +25,33 @@ export interface QuizFlowStage {
     showProgress?: boolean;
     allowBack?: boolean;
     logoUrl?: string;
-    
+
     // Intro specific
     subtitle?: string;
     imageUrl?: string;
     inputLabel?: string;
     inputPlaceholder?: string;
     buttonText?: string;
-    
+
     // Question specific
     question?: string;
     options?: QuizFlowOption[];
-    displayType?: 'text' | 'image' | 'both';
+    displayType?: "text" | "image" | "both";
     multiSelect?: number;
     autoAdvance?: boolean;
-    
+
     // Transition specific
     transitionTitle?: string;
     transitionSubtitle?: string;
     transitionMessage?: string;
-    
+
     // Result specific
-    resultLayout?: 'classic' | 'modern' | 'minimal';
+    resultLayout?: "classic" | "modern" | "minimal";
     showPercentages?: boolean;
     ctaText?: string;
     ctaUrl?: string;
+    descriptionText?: string; // Texto descritivo adicional
+    resultUrl?: string; // URL para resultados personalizados
   };
 }
 
@@ -72,5 +79,5 @@ export interface QuizFlowEditorState {
   config: QuizFlowConfig;
   activeStageId: string | null;
   isDirty: boolean;
-  previewMode: 'desktop' | 'mobile';
+  previewMode: "desktop" | "mobile";
 }

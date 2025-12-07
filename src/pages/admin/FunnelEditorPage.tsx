@@ -384,7 +384,6 @@ export default function FunnelEditorPage() {
     await createStage.mutateAsync({
       funnel_id: id,
       type,
-      type_category: type, // Preservar categoria para filtros futuros
       title: `${label} ${nextOrder + 1}`,
       order_index: nextOrder,
       is_enabled: true,
@@ -619,7 +618,6 @@ export default function FunnelEditorPage() {
               order_index: orderIndex,
               is_enabled: importedStage.is_enabled ?? true,
               config: importedStage.config || {},
-              type_category: importedStage.type || "page",
             });
 
             updatedStages.push(newStage);
