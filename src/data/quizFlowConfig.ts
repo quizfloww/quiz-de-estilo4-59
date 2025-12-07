@@ -17,7 +17,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         showProgress: true,
         allowBack: false,
         logoUrl:
-          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2",
+          "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.webp",
         subtitle:
           "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
         imageUrl:
