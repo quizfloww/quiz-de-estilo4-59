@@ -30,7 +30,7 @@ import {
   Flame,
   Eye,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "@/utils/googleAnalytics";
 import { storeUserForHotmart } from "@/utils/hotmartWebhook";
 
 // CSS aprimorado para versão B - mais persuasivo e dinâmico

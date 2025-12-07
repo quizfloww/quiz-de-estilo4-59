@@ -26,11 +26,11 @@ import {
 } from "@/components/effects/EnchantedEffects";
 import { Loader2 } from "lucide-react";
 import {
-  trackQuizStart,
-  trackQuizAnswer,
-  trackQuizComplete,
-  trackResultView,
-} from "@/utils/analytics";
+  trackGA4QuizStart,
+  trackGA4QuizQuestion,
+  trackGA4QuizComplete,
+  trackGA4ResultView,
+} from "@/utils/googleAnalytics";
 
 const DynamicQuizPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -110,7 +110,11 @@ const DynamicQuizPage: React.FC = () => {
 
     // Track quiz start
     if (!quizStartTracked.current) {
-      trackQuizStart(name);
+      trackGA4QuizStart(funnel?.title || slug, {
+        funnel_id: funnel?.id,
+        funnel_slug: slug,
+        user_name: name,
+      });
       quizStartTracked.current = true;
     }
 
@@ -125,7 +129,12 @@ const DynamicQuizPage: React.FC = () => {
 
     // Track answer (only once per question to avoid spam)
     if (!answersTracked.current.has(stageId) && selectedOptions.length > 0) {
-      trackQuizAnswer(stageId, selectedOptions.join(", "));
+      const questionIndex = stages.findIndex((s) => s.id === stageId);
+      trackGA4QuizQuestion(questionIndex + 1, stages[questionIndex]?.title, {
+        funnel_id: funnel?.id,
+        funnel_slug: slug,
+        answer: selectedOptions.join(", "),
+      });
       answersTracked.current.add(stageId);
     }
   };
@@ -157,15 +166,24 @@ const DynamicQuizPage: React.FC = () => {
       const legacyResult = mapToLegacyResult(result, funnel.style_categories);
 
       // Track quiz completion
-      trackQuizComplete({
-        primaryStyle: legacyResult.primaryStyle?.category,
-        funnel_id: funnel.id,
-        funnel_slug: slug,
-      });
+      trackGA4QuizComplete(
+        funnel.title || slug,
+        legacyResult.primaryStyle?.category,
+        legacyResult.primaryStyle?.percentage,
+        {
+          funnel_id: funnel.id,
+          funnel_slug: slug,
+          primary_style: legacyResult.primaryStyle?.category,
+          secondary_style: legacyResult.secondaryStyle?.category,
+          user_name: userName,
+        }
+      );
 
       // Track result view
       if (legacyResult.primaryStyle) {
-        trackResultView(legacyResult.primaryStyle.category, {
+        trackGA4ResultView(legacyResult.primaryStyle.category, {
+          funnel_id: funnel.id,
+          funnel_slug: slug,
           secondary_style: legacyResult.secondaryStyle?.category,
           user_name: userName,
         });
@@ -240,10 +258,10 @@ const DynamicQuizPage: React.FC = () => {
           progressPercent >= milestone &&
           !milestonesTracked.current.has(milestone)
         ) {
-          trackQuizAnswer(
-            `quiz_progress_${milestone}`,
-            `${milestone}% completed`
-          );
+          trackGA4QuizQuestion(0, `Progress: ${milestone}% completed`, {
+            funnel_id: funnel?.id,
+            funnel_slug: slug,
+          });
           milestonesTracked.current.add(milestone);
         }
       }

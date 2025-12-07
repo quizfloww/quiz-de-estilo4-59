@@ -11,11 +11,11 @@ import QuizIntro from "./QuizIntro";
 import { getStrategicQuestions } from "@/data/strategicQuestions";
 import { useAuth } from "../context/AuthContext";
 import {
-  trackQuizStart,
-  trackQuizAnswer,
-  trackQuizComplete,
-  trackResultView,
-} from "../utils/analytics";
+  trackGA4QuizStart,
+  trackGA4QuizQuestion,
+  trackGA4QuizComplete,
+  trackGA4ResultView,
+} from "../utils/googleAnalytics";
 import { preloadImages } from "@/utils/imageManager";
 import LoadingManager from "./quiz/LoadingManager";
 import { motion, AnimatePresence } from "framer-motion";
@@ -107,7 +107,10 @@ const QuizPage: React.FC = () => {
       const userName =
         user?.userName || localStorage.getItem("userName") || "Anônimo";
       const userEmail = user?.email || localStorage.getItem("userEmail");
-      trackQuizStart(userName, userEmail);
+      trackGA4QuizStart("Quiz Principal", {
+        user_name: userName,
+        user_email: userEmail,
+      });
       setQuizStartTracked(true);
     }
   }, [quizStartTracked, user, showIntro]);
@@ -194,7 +197,10 @@ const QuizPage: React.FC = () => {
         saveStrategicAnswer(response.questionId, finalOptions);
 
         // Rastreia a resposta para analytics
-        trackQuizAnswer(response.questionId, finalOptions.join(", "));
+        const questionIndex = currentQuestionIndex + 1;
+        trackGA4QuizQuestion(questionIndex, response.questionId, {
+          answer: finalOptions.join(", "),
+        });
 
         const currentProgress =
           ((currentStrategicQuestionIndex + totalQuestions + 1) /
@@ -320,7 +326,10 @@ const QuizPage: React.FC = () => {
       localStorage.setItem("quizCompletedAt", Date.now().toString());
 
       if (results?.primaryStyle) {
-        trackResultView(results.primaryStyle.category);
+        trackGA4ResultView(results.primaryStyle.category, {
+          user_name:
+            user?.userName || localStorage.getItem("userName") || undefined,
+        });
       }
 
       // Navegação para a página de resultados ocorre ao clicar no botão "Vamos ao resultado?"
@@ -400,7 +409,7 @@ const QuizPage: React.FC = () => {
           ? currentStrategicQuestionIndex === strategicQuestions.length - 1
             ? () => {
                 setShowingFinalTransition(true);
-                trackQuizComplete();
+                trackGA4QuizComplete("Quiz Principal");
                 // Manual progression to results will be triggered by button click
               }
             : goToNextStrategicQuestion // Chama a nova função para avançar

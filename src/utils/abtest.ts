@@ -1,4 +1,4 @@
-import { trackButtonClick } from "./analytics";
+import { trackButtonClick } from "./googleAnalytics";
 import { ABTestVariant, ABTestConfig } from "@/types/abtest";
 
 // Configuração do teste A/B para landing pages

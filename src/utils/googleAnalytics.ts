@@ -128,34 +128,96 @@ export const trackGA4Conversion = (
 /**
  * Track quiz events
  */
-export const trackGA4QuizStart = (quizName?: string): void => {
+export const trackGA4QuizStart = (
+  quizName?: string,
+  params?: {
+    funnel_id?: string;
+    funnel_slug?: string;
+    user_name?: string;
+    user_email?: string;
+  }
+): void => {
   trackGA4Event("quiz_start", {
     quiz_name: quizName,
     event_category: "engagement",
+    funnel_id: params?.funnel_id,
+    funnel_slug: params?.funnel_slug,
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+    user_name: params?.user_name,
+    user_email: params?.user_email,
   });
 };
 
 export const trackGA4QuizComplete = (
   quizName?: string,
   result?: string,
-  score?: number
+  score?: number,
+  params?: {
+    funnel_id?: string;
+    funnel_slug?: string;
+    primary_style?: string;
+    secondary_style?: string;
+    user_name?: string;
+  }
 ): void => {
   trackGA4Event("quiz_complete", {
     quiz_name: quizName,
     quiz_result: result,
     quiz_score: score,
-    event_category: "engagement",
+    event_category: "conversion",
+    funnel_id: params?.funnel_id,
+    funnel_slug: params?.funnel_slug,
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+    primary_style: params?.primary_style,
+    secondary_style: params?.secondary_style,
+    user_name: params?.user_name,
   });
 };
 
 export const trackGA4QuizQuestion = (
   questionNumber: number,
-  questionText?: string
+  questionText?: string,
+  params?: {
+    funnel_id?: string;
+    funnel_slug?: string;
+    answer?: string;
+  }
 ): void => {
   trackGA4Event("quiz_question", {
     question_number: questionNumber,
     question_text: questionText,
     event_category: "engagement",
+    funnel_id: params?.funnel_id,
+    funnel_slug: params?.funnel_slug,
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+    answer: params?.answer,
+  });
+};
+
+/**
+ * Track result view
+ */
+export const trackGA4ResultView = (
+  resultType: string,
+  params?: {
+    funnel_id?: string;
+    funnel_slug?: string;
+    secondary_style?: string;
+    user_name?: string;
+  }
+): void => {
+  trackGA4Event("result_view", {
+    event_category: "engagement",
+    result_type: resultType,
+    funnel_id: params?.funnel_id,
+    funnel_slug: params?.funnel_slug,
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+    secondary_style: params?.secondary_style,
+    user_name: params?.user_name,
   });
 };
 
@@ -164,12 +226,20 @@ export const trackGA4QuizQuestion = (
  */
 export const trackGA4Lead = (
   leadType: "email" | "phone" | "form",
-  value?: number
+  value?: number,
+  params?: {
+    funnel_id?: string;
+    funnel_slug?: string;
+  }
 ): void => {
   trackGA4Event("generate_lead", {
     lead_type: leadType,
     value,
     currency: "BRL",
+    funnel_id: params?.funnel_id,
+    funnel_slug: params?.funnel_slug,
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
   });
 };
 
@@ -236,6 +306,85 @@ export const trackGA4OutboundLink = (url: string): void => {
     event_label: url,
     transport_type: "beacon",
   });
+};
+
+/**
+ * Track button click (compatibilidade com analytics.ts)
+ */
+export const trackButtonClick = (
+  buttonId: string,
+  buttonText?: string,
+  location?: string
+): void => {
+  trackGA4Event("button_click", {
+    button_id: buttonId,
+    button_text: buttonText || "unknown",
+    button_location: location || "unknown",
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+  });
+};
+
+/**
+ * Track sale conversion (compatibilidade com analytics.ts)
+ */
+export const trackSaleConversion = (
+  value: number,
+  currency: string = "BRL",
+  productName?: string
+): void => {
+  trackGA4Event("purchase", {
+    value,
+    currency,
+    content_name: productName || "Product",
+    content_type: "product",
+    custom_domain:
+      typeof window !== "undefined" ? window.location.hostname : undefined,
+  });
+};
+
+/**
+ * Capture UTM parameters
+ */
+export const captureUTMParameters = (): Record<string, string> => {
+  if (typeof window === "undefined") return {};
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const utmParams: Record<string, string> = {};
+
+  const utmKeys = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_term",
+    "utm_content",
+    "fbclid",
+    "gclid",
+  ];
+
+  utmKeys.forEach((key) => {
+    const value = urlParams.get(key);
+    if (value) {
+      utmParams[key] = value;
+      try {
+        localStorage.setItem(key, value);
+      } catch (e) {
+        if (ENABLE_DEBUG) {
+          console.warn(`[GA4] Failed to store ${key} in localStorage`, e);
+        }
+      }
+    }
+  });
+
+  if (Object.keys(utmParams).length > 0) {
+    setGA4UserProperties(utmParams);
+  }
+
+  if (ENABLE_DEBUG) {
+    console.log("[GA4] UTM parameters captured:", utmParams);
+  }
+
+  return utmParams;
 };
 
 // Auto-inicializar se estiver no browser

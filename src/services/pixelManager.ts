@@ -1,4 +1,3 @@
-
 /**
  * Serviço para gerenciar múltiplos Facebook Pixels no sistema
  */
@@ -13,38 +12,62 @@ interface FunnelConfig {
 
 export const FUNNEL_CONFIGS: Record<string, FunnelConfig> = {
   // Funnel 1 - Quiz como isca
-  "default": {
+  default: {
     pixelId: "1311550759901086",
-    token: "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
+    token:
+      "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
     utmCampaign: "Teste Lovable - Por Fora",
     funnelName: "quiz_isca",
-    ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
+    ctaUrl:
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
   },
   // Funnel 2 - Quiz embutido na oferta
   "quiz-descubra-seu-estilo": {
     pixelId: "1038647624890676",
-    token: "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
+    token:
+      "EAAEJYWeJHLABOwGC1ZC1GxRfJBAAIBHFB4kYqIFrNyoyuRpnRLyNp7L2VZBop3sGuyzchC6XkD1EfBrlxmCoMxTZCBEWrP2DwZBOPu5fZBKZCZBybZBG9xAxaSFJJzk3VZB4i08EKFImWmsKhYXWK9RdtfR0eZCQaoNHFm4rGmby9LNjvZAcuVYEAX6M2e0vSfdB96vWQZDZD",
     utmCampaign: "Teste Lovable - Por Dentro",
     funnelName: "quiz_embutido",
-    ctaUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912"
-  }
+    ctaUrl:
+      "https://pay.hotmart.com/W98977034C?checkoutMode=10&bid=1744967466912",
+  },
 };
 
 /**
- * Identifica o funil atual baseado na URL
+ * Mapeamento de custom domains para funis
+ * Adicione seus custom domains aqui
+ */
+const DOMAIN_TO_FUNNEL: Record<string, string> = {
+  // Exemplos (adicione seus domínios reais):
+  // "meu-dominio-1.com": "default",
+  // "meu-dominio-2.com": "quiz-descubra-seu-estilo",
+
+  // Fallback para domínio Vercel
+  "quiz-de-estilo4-58.vercel.app": "default",
+};
+
+/**
+ * Identifica o funil atual baseado no hostname e path
+ * Prioridade: 1) Custom domain, 2) Path, 3) Default
  */
 export const getCurrentFunnel = (): string => {
-  if (typeof window === 'undefined') return 'default';
-  
+  if (typeof window === "undefined") return "default";
+
+  const hostname = window.location.hostname;
   const path = window.location.pathname;
-  
-  // Verifica caminhos específicos para identificar o funil
-  if (path.includes('/quiz-descubra-seu-estilo')) {
-    return 'quiz-descubra-seu-estilo';
+
+  // 1. Verifica se o hostname está mapeado para um funil específico
+  if (DOMAIN_TO_FUNNEL[hostname]) {
+    return DOMAIN_TO_FUNNEL[hostname];
   }
-  
-  // Funil padrão se nenhuma condição for atendida
-  return 'default';
+
+  // 2. Fallback: Verifica caminhos específicos (comportamento antigo)
+  if (path.includes("/quiz-descubra-seu-estilo")) {
+    return "quiz-descubra-seu-estilo";
+  }
+
+  // 3. Funil padrão se nenhuma condição for atendida
+  return "default";
 };
 
 /**
@@ -86,22 +109,28 @@ export const getCtaUrl = (): string => {
 /**
  * Marca evento específico de funil para análises
  */
-export const trackFunnelEvent = (eventName: string, eventData: Record<string, any> = {}): void => {
+export const trackFunnelEvent = (
+  eventName: string,
+  eventData: Record<string, unknown> = {}
+): void => {
   const funnelConfig = getCurrentFunnelConfig();
-  
+
   // Adiciona informações do funil aos dados do evento
   const enrichedData = {
     ...eventData,
     funnel_id: funnelConfig.funnelName,
-    funnel_name: funnelConfig.funnelName === 'quiz_isca' ? 'Quiz como Isca' : 'Quiz Embutido',
-    funnel_campaign: funnelConfig.utmCampaign
+    funnel_name:
+      funnelConfig.funnelName === "quiz_isca"
+        ? "Quiz como Isca"
+        : "Quiz Embutido",
+    funnel_campaign: funnelConfig.utmCampaign,
   };
-  
+
   // Registra no console para debugging
   console.log(`Tracking funnel event: ${eventName}`, enrichedData);
-  
+
   // Se o Facebook Pixel estiver disponível, envia o evento
-  if (typeof window !== 'undefined' && window.fbq) {
-    window.fbq('trackCustom', eventName, enrichedData);
+  if (typeof window !== "undefined" && window.fbq) {
+    window.fbq("trackCustom", eventName, enrichedData);
   }
 };

@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { useLoadingState } from "@/hooks/useLoadingState";
 import { useIsLowPerformanceDevice } from "@/hooks/use-mobile";
 import ResultSkeleton from "@/components/result/ResultSkeleton";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "@/utils/googleAnalytics";
 import BuildInfo from "@/components/BuildInfo";
 import SecurePurchaseElement from "@/components/result/SecurePurchaseElement";
 import { useAuth } from "@/context/AuthContext";

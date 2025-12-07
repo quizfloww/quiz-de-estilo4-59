@@ -11,9 +11,11 @@ import { AdminAuthProvider } from "./context/AdminAuthContext";
 import { QuizProvider } from "./context/QuizContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
-import { captureUTMParameters } from "./utils/analytics";
+import {
+  captureUTMParameters,
+  trackGA4PageView,
+} from "./utils/googleAnalytics";
 import { loadFacebookPixelDynamic } from "./utils/facebookPixelDynamic";
-import { trackGA4PageView } from "./utils/googleAnalytics";
 // import { addBreadcrumb } from "./utils/sentry"; // Desabilitado até configurar Sentry
 import { Analytics } from "@vercel/analytics/react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";

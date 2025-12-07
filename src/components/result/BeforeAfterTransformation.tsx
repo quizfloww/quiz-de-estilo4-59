@@ -7,7 +7,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { trackButtonClick } from "@/utils/analytics";
+import { trackButtonClick } from "@/utils/googleAnalytics";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { preloadImagesByUrls } from "@/utils/imageManager";
 
@@ -28,14 +28,16 @@ interface TransformationItem {
 // Transformações reais de clientes - URLs atualizadas
 const transformations: TransformationItem[] = [
   {
-    image: "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
+    image:
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430335/ADRIANA-_ANTES_E_DEPOIS_ttgifc.png",
     name: "Adriana",
     id: "transformation-adriana",
     width: 1200,
     height: 1500,
   },
   {
-    image: "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
+    image:
+      "https://res.cloudinary.com/der8kogzu/image/upload/v1752430348/MARIANGELA_-_ANTES_E_DEPOIS_ipuoap.png",
     name: "Mariangela",
     id: "transformation-mariangela",
     width: 1200,
