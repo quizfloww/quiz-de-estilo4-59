@@ -4,7 +4,12 @@
  */
 
 import { trackGA4Event } from "./googleAnalytics";
-import { addBreadcrumb } from "./sentry";
+// import { addBreadcrumb } from "./sentry";
+
+// Função dummy do Sentry até configurar DSN
+const addBreadcrumb = (...args: any[]) => {
+  // Noop até Sentry configurado
+};
 
 // Configuração
 const AB_TEST_ACTIVE = import.meta.env.VITE_AB_TEST_ACTIVE === "true";
