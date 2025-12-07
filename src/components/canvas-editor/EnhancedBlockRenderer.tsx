@@ -2,7 +2,15 @@
 // Envolve blocos com features avançadas
 
 import React from "react";
-import { CanvasBlock } from "@/types/canvasBlocks";
+import {
+  CanvasBlock,
+  CanvasBlockContent,
+  ABTestConfig,
+  TestimonialItem,
+  BenefitItem,
+  BonusItem,
+  BeforeAfterItem,
+} from "@/types/canvasBlocks";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useAuth } from "@/context/AuthContext";
 import { useBlockABTest } from "@/hooks/useBlockABTest";
@@ -10,6 +18,17 @@ import { renderTemplate } from "@/utils/templateEngine";
 import { optimizeImageUrl } from "@/utils/imageOptimization";
 import { AnimatedWrapper } from "@/components/ui/animated-wrapper";
 import { useIsLowPerformanceDevice } from "@/hooks/use-mobile";
+
+import { StyleResult } from "@/types/quiz";
+
+interface TemplateContext {
+  userName?: string;
+  userEmail?: string;
+  primaryStyle: StyleResult | null;
+  secondaryStyles: StyleResult[];
+  totalSelections: number;
+  currentDate: string;
+}
 
 interface EnhancedBlockRendererProps {
   block: CanvasBlock;
@@ -76,9 +95,9 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
 
     return (
       <AnimatedWrapper
-        animation={block.animation.type as any}
-        duration={block.animation.duration}
-        delay={block.animation.delay}
+        animation={block.animation.type}
+        duration={block.animation.duration || 500}
+        delay={block.animation.delay || 0}
         show={true}
       >
         {React.cloneElement(children as React.ReactElement, {
@@ -92,7 +111,10 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
 };
 
 // Processa conteúdo do bloco substituindo templates e otimizando imagens
-function processBlockContent(content: any, context: any): any {
+function processBlockContent(
+  content: CanvasBlockContent,
+  context: TemplateContext
+): CanvasBlockContent {
   const processed = { ...content };
 
   // Processar campos de texto com templates
@@ -157,18 +179,20 @@ function processBlockContent(content: any, context: any): any {
 
   // Processar arrays de objetos (testimonials, benefits, etc)
   if (Array.isArray(processed.testimonials)) {
-    processed.testimonials = processed.testimonials.map((t: any) => ({
-      ...t,
-      name: renderTemplate(t.name || "", context),
-      text: renderTemplate(t.text || "", context),
-      imageUrl: t.imageUrl
-        ? optimizeImageUrl(t.imageUrl, { width: 80, quality: "auto:best" })
-        : undefined,
-    }));
+    processed.testimonials = processed.testimonials.map(
+      (t: TestimonialItem) => ({
+        ...t,
+        name: renderTemplate(t.name || "", context),
+        text: renderTemplate(t.text || "", context),
+        imageUrl: t.imageUrl
+          ? optimizeImageUrl(t.imageUrl, { width: 80, quality: "auto:best" })
+          : undefined,
+      })
+    );
   }
 
   if (Array.isArray(processed.benefits)) {
-    processed.benefits = processed.benefits.map((b: any) => ({
+    processed.benefits = processed.benefits.map((b: BenefitItem) => ({
       ...b,
       title: renderTemplate(b.title || "", context),
       description: renderTemplate(b.description || "", context),
@@ -176,7 +200,7 @@ function processBlockContent(content: any, context: any): any {
   }
 
   if (Array.isArray(processed.bonusItems)) {
-    processed.bonusItems = processed.bonusItems.map((b: any) => ({
+    processed.bonusItems = processed.bonusItems.map((b: BonusItem) => ({
       ...b,
       title: renderTemplate(b.title || "", context),
       description: renderTemplate(b.description || "", context),
@@ -188,7 +212,7 @@ function processBlockContent(content: any, context: any): any {
 
   if (Array.isArray(processed.beforeAfterItems)) {
     processed.beforeAfterItems = processed.beforeAfterItems.map(
-      (item: any) => ({
+      (item: BeforeAfterItem) => ({
         ...item,
         name: renderTemplate(item.name || "", context),
         description: renderTemplate(item.description || "", context),
@@ -209,22 +233,28 @@ function processBlockContent(content: any, context: any): any {
 
 // Aplica variante de teste A/B
 function applyABTestVariant(
-  content: any,
-  abTest: any,
-  variant: "A" | "B" | "C"
-): any {
+  content: CanvasBlockContent,
+  abTest: ABTestConfig | undefined,
+  variant: string
+): CanvasBlockContent {
   if (!abTest || !abTest.enabled) {
     return content;
   }
 
-  const variantConfig = abTest.variants.find((v: any) => v.id === variant);
-  if (!variantConfig || !variantConfig.content) {
+  const variantConfig = abTest.variants.find((v) => v.id === variant);
+  if (!variantConfig) {
     return content;
   }
 
-  // Merge do conteúdo da variante
+  // Merge do conteúdo da variante (suporta tanto content quanto contentOverrides)
+  const variantContent =
+    variantConfig.content || variantConfig.contentOverrides;
+  if (!variantContent) {
+    return content;
+  }
+
   return {
     ...content,
-    ...variantConfig.content,
+    ...variantContent,
   };
 }
