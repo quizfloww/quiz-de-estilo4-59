@@ -4,7 +4,7 @@
 import {
   hotmartWebhookManager,
   HotmartWebhookData,
-} from "../../src/utils/hotmartWebhook";
+} from "../../src/utils/hotmartWebhook.js";
 
 export default async function handler(req: any, res: any) {
   try {

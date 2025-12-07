@@ -1,9 +1,33 @@
-
 // Sistema de Webhook Hotmart
 // ID: agQzTLUehWUfhPzjhdwntVQz0JNT5E0216ae0d-00a9-48ae-85d1-f0d14bd8e0df
 
-import { supabase } from "@/integrations/supabase/client";
-import { trackSaleConversion } from "./analytics";
+import { createClient } from "@supabase/supabase-js";
+import { trackSaleConversion } from "./analytics.js";
+
+// Declaração de tipos para Window
+declare global {
+  interface Window {
+    fbq?: (
+      action: string,
+      event: string,
+      data?: Record<string, unknown>
+    ) => void;
+    gtag?: (command: string, ...args: unknown[]) => void;
+  }
+}
+
+// Declaração de tipo global para Window
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+// Criar cliente Supabase para ambiente Node.js
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || "";
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Interfaces para dados do webhook Hotmart
 export interface HotmartBuyer {
