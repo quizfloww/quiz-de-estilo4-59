@@ -15,6 +15,7 @@ import { captureUTMParameters } from "./utils/analytics";
 import { loadFacebookPixelDynamic } from "./utils/facebookPixelDynamic";
 import { trackGA4PageView } from "./utils/googleAnalytics";
 // import { addBreadcrumb } from "./utils/sentry"; // Desabilitado até configurar Sentry
+import { Analytics } from "@vercel/analytics/react";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import CriticalCSSLoader from "./components/CriticalCSSLoader";
 import { initialCriticalCSS, heroCriticalCSS } from "./utils/critical-css";
@@ -139,6 +140,7 @@ const App = () => {
               </Suspense>
             </Router>
             <Toaster />
+            <Analytics />
           </TooltipProvider>
         </QuizProvider>
       </AuthProvider>
