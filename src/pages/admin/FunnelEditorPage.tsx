@@ -64,6 +64,13 @@ import {
   blocksToStageConfig,
 } from "@/utils/stageToBlocks";
 import { saveStageBocks } from "@/utils/syncBlocksToDatabase";
+import { sanitizeStageConfig } from "@/utils/stageConfigSchema";
+import {
+  saveStageDraft,
+  getStageDraft,
+  markStageSynced,
+  isIndexedDBAvailable,
+} from "@/services/draftService";
 import type { Database } from "@/integrations/supabase/types";
 import { FunnelConfig } from "@/types/funnelConfig";
 import {
@@ -295,6 +302,37 @@ export default function FunnelEditorPage() {
     setHasUnsavedChanges(hasChanges);
   }, [stageBlocks, initialStageBlocks]);
 
+  // Auto-save with IndexedDB (offline draft backup)
+  useEffect(() => {
+    // Only auto-save if IndexedDB is available
+    if (!isIndexedDBAvailable()) {
+      console.warn("IndexedDB not available, auto-save disabled");
+      return;
+    }
+
+    const autoSaveTimer = setInterval(async () => {
+      if (hasUnsavedChanges && activeStage && activeStageId && id) {
+        try {
+          const blocks = stageBlocks[activeStageId];
+          if (blocks && blocks.length > 0) {
+            await saveStageDraft(
+              activeStageId,
+              id,
+              activeStage.title,
+              activeStage,
+              blocks
+            );
+            console.log("✅ Auto-save draft:", activeStage.title);
+          }
+        } catch (error) {
+          console.error("❌ Auto-save error:", error);
+        }
+      }
+    }, 5000); // Auto-save every 5 seconds
+
+    return () => clearInterval(autoSaveTimer);
+  }, [hasUnsavedChanges, activeStage, activeStageId, stageBlocks, id]);
+
   // Warn before leaving with unsaved changes
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -437,6 +475,19 @@ export default function FunnelEditorPage() {
 
       // Use saveStageBocks to save config AND sync options to database
       await saveStageBocks(stageId, blocks, stageType);
+
+      // Mark IndexedDB draft as synced after successful save
+      if (isIndexedDBAvailable()) {
+        try {
+          await markStageSynced(stageId);
+          console.log("✅ Draft marcado como sincronizado:", stageId);
+        } catch (error) {
+          console.warn(
+            "⚠️ Não foi possível marcar draft como sincronizado:",
+            error
+          );
+        }
+      }
     }
     // Reset initial state to current state after successful save
     setInitialStageBlocks(JSON.parse(JSON.stringify(stageBlocks)));
