@@ -32,6 +32,11 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
     stageBlocks: Record<string, CanvasBlock[]>,
     funnelSlug: string
   ): Promise<PublishValidation> => {
+    console.clear();
+    console.log(
+      "%c🔥 NOVA VALIDAÇÃO - TIMESTAMP: " + new Date().toISOString(),
+      "background: #222; color: #ff6b6b; font-size: 20px; font-weight: bold;"
+    );
     setIsValidating(true);
     const errors: ValidationItem[] = [];
     const warnings: ValidationItem[] = [];
