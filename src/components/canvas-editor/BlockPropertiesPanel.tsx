@@ -4,6 +4,8 @@ import {
   CanvasBlock,
   BLOCK_TYPE_LABELS,
   CanvasOption,
+  ABTestConfig,
+  AnimationConfig,
 } from "@/types/canvasBlocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,6 +22,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Slider } from "@/components/ui/slider";
 import { ImageFieldWithUpload } from "@/components/ui/image-field-with-upload";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export interface StyleCategory {
   id: string;
@@ -53,6 +69,11 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   compact = false,
   styleCategories = DEFAULT_STYLE_CATEGORIES,
 }) => {
+  // Estado para controlar expansão das seções avançadas
+  const [showTemplateHelp, setShowTemplateHelp] = useState(false);
+  const [showABTestConfig, setShowABTestConfig] = useState(false);
+  const [showAnimationConfig, setShowAnimationConfig] = useState(false);
+
   // Use provided categories or fall back to defaults
   const categories =
     styleCategories.length > 0 ? styleCategories : DEFAULT_STYLE_CATEGORIES;
@@ -74,6 +95,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         ...block.content,
         [key]: value,
       },
+    });
+  };
+
+  const updateBlockProperty = (key: string, value: unknown) => {
+    onUpdateBlock({
+      ...block,
+      [key]: value,
     });
   };
 
