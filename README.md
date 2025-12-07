@@ -1,6 +1,23 @@
-# Gisele Galvão Website
+# 🎨 Quiz Sell Genius - Gisele Galvão
 
-This repository contains the source code for the Gisele Galvão website.
+Sistema de quiz interativo com funil de vendas e analytics avançado, pronto para escalar.
+
+## ✨ Features para Escalabilidade
+
+- 🚀 **Google Analytics 4 (GA4)** - Tracking completo de eventos e conversões
+- 🐛 **Sentry** - Error tracking e performance monitoring em produção
+- 📊 **Web Vitals** - Monitoramento automático de performance (LCP, FID, CLS)
+- 🧪 **A/B Testing** - Sistema completo de testes A/B com tracking de conversão
+- 🔐 **Validações** - Input validation e sanitização para segurança
+- 📱 **PWA Ready** - Service Workers e offline-first
+- ⚡ **Performance** - Code-splitting, lazy loading, otimização de imagens
+
+## 📚 Documentação
+
+- **[GUIA-SETUP-ESCALA.md](./GUIA-SETUP-ESCALA.md)** - Configuração completa para escala
+- **[EXEMPLOS-USO-ESCALA.md](./EXEMPLOS-USO-ESCALA.md)** - Exemplos práticos de uso
+- **[ANALYTICS_REPORT.md](./docs/ANALYTICS_REPORT.md)** - Relatório de analytics
+- **[GUIA-COMANDOS.md](./GUIA-COMANDOS.md)** - Comandos úteis
 
 ## CI/CD Setup
 
@@ -163,4 +180,3 @@ Se suas credenciais foram expostas (ex: commitadas no Git), siga estes passos:
   - `VERCEL_TOKEN` (Account Settings → Tokens) e `VERCEL_PROJECT_ID` (Project Settings → General).
 - Teste o deploy:
   - Preview: `vercel deploy` | Produção: `vercel deploy --prod`.
-
