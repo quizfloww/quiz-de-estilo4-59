@@ -30,6 +30,23 @@ export type CanvasBlockType =
   | "mentor"
   | "securePurchase";
 
+// Configuração de teste A/B para blocos
+export interface ABTestConfig {
+  enabled: boolean;
+  testName: string;
+  variants: {
+    id: "A" | "B" | "C";
+    weight: number; // Porcentagem de tráfego (0-100)
+    position?: "top" | "middle" | "bottom" | number; // Posição alternativa
+    content?: Partial<CanvasBlockContent>; // Conteúdo alternativo
+  }[];
+  trackingEvents?: {
+    view?: string;
+    click?: string;
+    conversion?: string;
+  };
+}
+
 export interface CanvasOption {
   id: string;
   text: string;
@@ -282,12 +299,40 @@ export interface CanvasBlockStyle {
   backgroundColor?: string;
 }
 
+// Configuração de teste A/B para blocos
+export interface ABTestConfig {
+  enabled: boolean;
+  testName: string;
+  variants: {
+    id: 'A' | 'B' | 'C';
+    weight: number; // Porcentagem de tráfego (0-100)
+    position?: 'top' | 'middle' | 'bottom' | number; // Posição alternativa
+    content?: Partial<CanvasBlockContent>; // Conteúdo alternativo
+  }[];
+  trackingEvents?: {
+    view?: string;
+    click?: string;
+    conversion?: string;
+  };
+}
+
+// Configuração de animações avançadas
+export interface AnimationConfig {
+  type: 'none' | 'fade' | 'slide' | 'scale' | 'bounce' | 'rotate';
+  duration: number; // ms
+  delay: number; // ms
+  easing?: 'linear' | 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out';
+  disableOnLowPerformance?: boolean;
+}
+
 export interface CanvasBlock {
   id: string;
   type: CanvasBlockType;
   order: number;
   content: CanvasBlockContent;
   style?: CanvasBlockStyle;
+  abTest?: ABTestConfig; // Configuração de teste A/B
+  animation?: AnimationConfig; // Configuração de animações
 }
 
 export interface CanvasState {
