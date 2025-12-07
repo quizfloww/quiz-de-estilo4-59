@@ -1,4 +1,4 @@
-const CACHE_NAME = "quiz-sell-genius-v4";
+const CACHE_NAME = "quiz-sell-genius-v5-fix-validations";
 
 // Instalação simples
 self.addEventListener("install", () => {
@@ -27,18 +27,21 @@ self.addEventListener("fetch", (event) => {
   // Ignorar URLs problemáticas
   try {
     const url = new URL(event.request.url);
-    
+
     // Ignorar extensões do browser
-    if (url.protocol === "chrome-extension:" || url.protocol === "moz-extension:") return;
-    
+    if (
+      url.protocol === "chrome-extension:" ||
+      url.protocol === "moz-extension:"
+    )
+      return;
+
     // Ignorar URLs externas conhecidas por causar problemas
     if (url.hostname === "cdn.lovable.dev") return;
     if (url.hostname.includes("fonts.gstatic.com")) return;
     if (url.hostname.includes("fonts.googleapis.com")) return;
-    
+
     // Ignorar webmanifest
     if (url.pathname.includes("webmanifest")) return;
-    
   } catch (e) {
     return;
   }
