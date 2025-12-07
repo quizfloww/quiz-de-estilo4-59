@@ -40,17 +40,23 @@ export const initSentry = (): void => {
       dsn: SENTRY_DSN,
       environment: SENTRY_ENVIRONMENT,
 
-      // Performance Monitoring
+      // Performance Monitoring - integrations opcionais
       integrations: [
-        Sentry.browserTracingIntegration({
-          // Tracking de navegação
-          tracePropagationTargets: ["localhost", /^https:\/\/yourapp\.com/],
-        }),
-        Sentry.replayIntegration({
-          // Session Replay para debugging
-          maskAllText: true,
-          blockAllMedia: true,
-        }),
+        ...(typeof Sentry.browserTracingIntegration === "function"
+          ? [
+              Sentry.browserTracingIntegration({
+                tracePropagationTargets: ["localhost", /^https:\/\/.+/],
+              }),
+            ]
+          : []),
+        ...(typeof Sentry.replayIntegration === "function"
+          ? [
+              Sentry.replayIntegration({
+                maskAllText: true,
+                blockAllMedia: true,
+              }),
+            ]
+          : []),
       ],
 
       // Sampling rates
@@ -71,6 +77,11 @@ export const initSentry = (): void => {
 
           // Ignorar erros de rede temporários
           if (error.message.includes("Network request failed")) {
+            return null;
+          }
+
+          // Ignorar erro de manifest
+          if (error.message.includes("manifest")) {
             return null;
           }
         }
@@ -206,13 +217,12 @@ export const setSentryTag = (key: string, value: string): void => {
 
 /**
  * Start transaction (performance monitoring)
- * Nota: startTransaction está deprecated no Sentry v8+
- * Use startSpan() para novas implementações
+ * Simplificado para evitar conflitos
  */
 export const startTransaction = (name: string, op: string): any => {
-  // Compatibilidade com versão atual do Sentry
-  if (typeof Sentry.startSpan === "function") {
-    return Sentry.startSpan({ name, op }, (span) => span);
+  // Retorna undefined - performance será monitorado pelo performanceMonitoring.ts
+  if (ENABLE_DEBUG) {
+    console.log(`[Sentry] Transaction: ${name} (${op})`);
   }
   return undefined;
 };
