@@ -1,0 +1,6 @@
+# Arquivos públicos - não requerem autenticação
+/site.webmanifest
+/favicon.ico
+/robots.txt
+/favicons/*
+/assets/*
