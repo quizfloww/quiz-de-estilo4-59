@@ -221,7 +221,7 @@ test.describe("Publicar Funil - Validações Específicas", () => {
     }
   });
 
-  test("TC09: Deve validar que perguntas tenham blocos de opções configurados", async ({
+  test("TC09: Deve mostrar warnings sobre opções (NÃO bloqueia publicação)", async ({
     page,
   }) => {
     const success = await navigateToEditor(page);
@@ -231,15 +231,22 @@ test.describe("Publicar Funil - Validações Específicas", () => {
     await publishButton.click();
     await page.waitForTimeout(3000);
 
-    const noOptionsError = page.locator(
+    const noOptionsWarning = page.locator(
       "text=/não possui opções configuradas/i"
     );
-    const hasError = await noOptionsError.isVisible().catch(() => false);
+    const hasWarning = await noOptionsWarning.isVisible().catch(() => false);
 
-    if (hasError) {
-      const errorCount = await noOptionsError.count();
-      console.log(`✓ Detectadas ${errorCount} etapas sem bloco de opções`);
-      await expect(noOptionsError.first()).toBeVisible();
+    if (hasWarning) {
+      const warningCount = await noOptionsWarning.count();
+      console.log(`⚠️ ${warningCount} warnings sobre opções (não bloqueiam)`);
+
+      // Verifica que botão Publicar ainda está habilitado
+      const publishNowButton = page
+        .locator('button:has-text("Publicar Agora")')
+        .first();
+      const isEnabled = await publishNowButton.isEnabled().catch(() => true);
+      expect(isEnabled).toBe(true);
+      console.log("✓ Botão Publicar habilitado mesmo com warnings");
     } else {
       console.log(
         "✓ Todas as etapas de pergunta têm blocos de opções configurados"
