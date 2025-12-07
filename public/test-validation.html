@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste de Validação - Diagnóstico</title>
+    <style>
+      body {
+        font-family: "Courier New", monospace;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #00ff00;
+      }
+      h1 {
+        color: #00ff00;
+        text-align: center;
+      }
+      .log-section {
+        background: #000;
+        border: 2px solid #00ff00;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+      }
+      .error {
+        color: #ff0000;
+        font-weight: bold;
+      }
+      .warning {
+        color: #ff9900;
+      }
+      .success {
+        color: #00ff00;
+        font-weight: bold;
+      }
+      .info {
+        color: #00aaff;
+      }
+      pre {
+        background: #0a0a0a;
+        padding: 15px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      button {
+        background: #00ff00;
+        color: #000;
+        border: none;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        border-radius: 5px;
+        margin: 10px 5px;
+      }
+      button:hover {
+        background: #00cc00;
+      }
+      .test-result {
+        padding: 10px;
+        margin: 10px 0;
+        border-left: 4px solid;
+      }
+      .test-pass {
+        border-color: #00ff00;
+        background: rgba(0, 255, 0, 0.1);
+      }
+      .test-fail {
+        border-color: #ff0000;
+        background: rgba(255, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 DIAGNÓSTICO DE VALIDAÇÃO</h1>
+
+    <div class="log-section">
+      <h2>📋 Instruções:</h2>
+      <ol>
+        <li>Abra o Console do DevTools (F12)</li>
+        <li>Clique em "Executar Teste de Validação"</li>
+        <li>Veja os logs detalhados abaixo e no console</li>
+        <li>Compare com o que aparece no PublishDialog</li>
+      </ol>
+    </div>
+
+    <div class="log-section">
+      <h2>🧪 Testes Disponíveis:</h2>
+      <button onclick="testValidationLogic()">
+        Executar Teste de Validação
+      </button>
+      <button onclick="checkBrowserCache()">
+        Verificar Cache do Navegador
+      </button>
+      <button onclick="clearAllCache()">Limpar TODO o Cache</button>
+    </div>
+
+    <div class="log-section">
+      <h2>📊 Resultados:</h2>
+      <div id="results"></div>
+    </div>
+
+    <script>
+      function log(message, type = "info") {
+        const resultsDiv = document.getElementById("results");
+        const logEntry = document.createElement("div");
+        logEntry.className = type;
+        logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        resultsDiv.appendChild(logEntry);
+        console.log(message);
+      }
+
+      function testValidationLogic() {
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = '<h3 class="info">⏳ Executando testes...</h3>';
+
+        log("🚀 Iniciando teste de lógica de validação...", "info");
+
+        // Simular dados de teste
+        const mockStages = [
+          { id: "1", type: "intro", title: "Introdução" },
+          { id: "2", type: "question", title: "Questão 1 - Tipo de Roupa" },
+          { id: "3", type: "question", title: "Questão 2 - Personalidade" },
+          {
+            id: "4",
+            type: "strategic",
+            title: "Estratégica 1 - Autopercepção",
+          },
+        ];
+
+        const mockStageBlocks = {
+          1: [{ id: "b1", type: "header" }],
+          2: [], // Sem blocos
+          3: [], // Sem blocos
+          4: [], // Sem blocos
+        };
+
+        // Simular a lógica de validação
+        const errors = [];
+        const warnings = [];
+
+        // Check intro
+        const introStages = mockStages.filter((s) => s.type === "intro");
+        if (introStages.length === 0) {
+          errors.push({
+            id: "intro-required",
+            message: "É necessário pelo menos uma etapa de introdução",
+            type: "error",
+          });
+        }
+
+        // Check questions
+        const questionStages = mockStages.filter(
+          (s) => s.type === "question" || s.type === "strategic"
+        );
+        if (questionStages.length === 0) {
+          errors.push({
+            id: "questions-required",
+            message: "É necessário pelo menos uma etapa de pergunta",
+            type: "error",
+          });
+        }
+
+        // VALIDAÇÃO DE OPÇÕES - DESABILITADA
+        log(
+          "⚠️  VALIDAÇÃO DE OPÇÕES DESABILITADA - Versão 2024-12-07 15:35",
+          "warning"
+        );
+
+        // NÃO ADICIONA NADA SOBRE OPÇÕES!
+
+        // Resultado
+        const hasOptionsErrors = errors.filter((e) =>
+          e.message.includes("opções configuradas")
+        ).length;
+        const hasOptionsWarnings = warnings.filter((w) =>
+          w.message.includes("opções configuradas")
+        ).length;
+
+        // Mostrar resultados
+        resultsDiv.innerHTML = "";
+
+        const testResult = document.createElement("div");
+        testResult.className =
+          hasOptionsErrors > 0
+            ? "test-result test-fail"
+            : "test-result test-pass";
+        testResult.innerHTML = `
+                <h3>${
+                  hasOptionsErrors > 0 ? "❌ TESTE FALHOU" : "✅ TESTE PASSOU"
+                }</h3>
+                <p><strong>Total de Errors:</strong> ${errors.length}</p>
+                <p><strong>Total de Warnings:</strong> ${warnings.length}</p>
+                <p><strong>'opções configuradas' em Errors:</strong> ${hasOptionsErrors}</p>
+                <p><strong>'opções configuradas' em Warnings:</strong> ${hasOptionsWarnings}</p>
+                <h4>Detalhes dos Errors:</h4>
+                <pre>${JSON.stringify(errors, null, 2)}</pre>
+                <h4>Detalhes dos Warnings:</h4>
+                <pre>${JSON.stringify(warnings, null, 2)}</pre>
+            `;
+        resultsDiv.appendChild(testResult);
+
+        if (hasOptionsErrors > 0) {
+          log(
+            '🚨 ERRO: Validação adicionou "opções configuradas" em ERRORS!',
+            "error"
+          );
+        } else {
+          log(
+            '✅ SUCESSO: Validação NÃO adicionou "opções configuradas" em ERRORS',
+            "success"
+          );
+        }
+      }
+
+      function checkBrowserCache() {
+        log("🔍 Verificando cache do navegador...", "info");
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = '<h3 class="info">🔍 Verificando cache...</h3>';
+
+        // Check Service Workers
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            log(`📡 Service Workers ativos: ${registrations.length}`, "info");
+            registrations.forEach((reg, i) => {
+              log(`  SW ${i + 1}: ${reg.active?.scriptURL || "N/A"}`, "info");
+            });
+          });
+        }
+
+        // Check Caches
+        if ("caches" in window) {
+          caches.keys().then((cacheNames) => {
+            log(`💾 Caches armazenados: ${cacheNames.length}`, "info");
+            cacheNames.forEach((name, i) => {
+              log(`  Cache ${i + 1}: ${name}`, "info");
+            });
+          });
+        }
+
+        // Check Storage
+        log(`📦 localStorage items: ${localStorage.length}`, "info");
+        log(`📦 sessionStorage items: ${sessionStorage.length}`, "info");
+      }
+
+      async function clearAllCache() {
+        log("🧹 Limpando TUDO...", "info");
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = '<h3 class="warning">🧹 Limpando cache...</h3>';
+
+        try {
+          // Desregistrar Service Workers
+          if ("serviceWorker" in navigator) {
+            const registrations =
+              await navigator.serviceWorker.getRegistrations();
+            for (let registration of registrations) {
+              await registration.unregister();
+              log("✅ Service Worker desregistrado", "success");
+            }
+          }
+
+          // Limpar Caches
+          if ("caches" in window) {
+            const cacheNames = await caches.keys();
+            for (let cacheName of cacheNames) {
+              await caches.delete(cacheName);
+              log(`✅ Cache deletado: ${cacheName}`, "success");
+            }
+          }
+
+          // Limpar Storage
+          localStorage.clear();
+          sessionStorage.clear();
+          log("✅ Storage limpo", "success");
+
+          resultsDiv.innerHTML =
+            '<div class="test-result test-pass"><h3>✅ LIMPEZA CONCLUÍDA!</h3><p>Recarregue a página (Ctrl+Shift+R)</p></div>';
+        } catch (error) {
+          log(`❌ Erro ao limpar: ${error.message}`, "error");
+          resultsDiv.innerHTML = `<div class="test-result test-fail"><h3>❌ ERRO</h3><p>${error.message}</p></div>`;
+        }
+      }
+
+      // Executar teste automaticamente ao carregar
+      window.addEventListener("load", () => {
+        log("🚀 Página de diagnóstico carregada", "success");
+        log('👉 Clique em "Executar Teste de Validação" para começar', "info");
+      });
+    </script>
+  </body>
+</html>

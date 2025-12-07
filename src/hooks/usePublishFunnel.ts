@@ -37,6 +37,12 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
       "%c🔥 NOVA VALIDAÇÃO - TIMESTAMP: " + new Date().toISOString(),
       "background: #222; color: #ff6b6b; font-size: 20px; font-weight: bold;"
     );
+
+    // ALERTA VISUAL NA TELA
+    alert(
+      "🔥 VALIDAÇÃO INICIADA - Versão 2024-12-07 16:00\n\nValidação de opções DESABILITADA!\nVerifique o console (F12) para logs detalhados."
+    );
+
     setIsValidating(true);
     const errors: ValidationItem[] = [];
     const warnings: ValidationItem[] = [];
@@ -80,11 +86,15 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
         });
       }
 
-      // VALIDAÇÃO DE OPÇÕES COMPLETAMENTE DESABILITADA - 2024-12-07 15:35
+      // VALIDAÇÃO DE OPÇÕES COMPLETAMENTE DESABILITADA - 2024-12-07 16:00
       // NÃO VALIDA MAIS SE HÁ OPÇÕES CONFIGURADAS
+      const validationId = Math.random().toString(36).substring(7);
       console.log(
-        "⚠️ VALIDAÇÃO DE OPÇÕES DESABILITADA - Versão 2024-12-07 15:35"
+        "%c⚠️ VALIDAÇÃO DE OPÇÕES DESABILITADA - ID: " + validationId,
+        "background: #ff9900; color: #000; font-size: 16px; padding: 8px;"
       );
+      console.log("✅ Código atualizado: 2024-12-07 16:00");
+      console.log("✅ NENHUMA validação de opções será adicionada a ERRORS");
 
       // Check if question stages have valid options (WARNINGS ONLY - não bloqueia publicação)
       // CÓDIGO COMENTADO PARA TESTE - SE AINDA APARECER "não possui opções" É CACHE DO NAVEGADOR
