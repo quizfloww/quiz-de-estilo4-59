@@ -9,7 +9,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { ImprovedDragDropEditor } from "@/components/result-editor/ImprovedDragDropEditor";
+import { DragDropEditor as ImprovedDragDropEditor } from "@/components/result-editor/DragDropEditor";
 import { CanvasBlock } from "@/types/canvasBlocks";
 
 interface EnhancedResultPageEditorPageProps {

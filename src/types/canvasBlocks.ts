@@ -30,23 +30,6 @@ export type CanvasBlockType =
   | "mentor"
   | "securePurchase";
 
-// Configuração de teste A/B para blocos
-export interface ABTestConfig {
-  enabled: boolean;
-  testName: string;
-  variants: {
-    id: "A" | "B" | "C";
-    weight: number; // Porcentagem de tráfego (0-100)
-    position?: "top" | "middle" | "bottom" | number; // Posição alternativa
-    content?: Partial<CanvasBlockContent>; // Conteúdo alternativo
-  }[];
-  trackingEvents?: {
-    view?: string;
-    click?: string;
-    conversion?: string;
-  };
-}
-
 export interface CanvasOption {
   id: string;
   text: string;
@@ -139,6 +122,21 @@ export interface CanvasBlockContent {
   imageAlignment?: "left" | "center" | "right";
   imageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
 
+  // Image Advanced Controls
+  imageScale?: number;
+  imageMaxWidth?: number;
+  imageBorderRadius?: number;
+  imageBorderWidth?: number;
+  imageBorderColor?: string;
+  imageShadow?: "none" | "sm" | "md" | "lg" | "xl";
+  imageFrame?:
+    | "none"
+    | "circle"
+    | "rounded"
+    | "rounded-lg"
+    | "square"
+    | "soft-square";
+
   // Input
   label?: string;
   placeholder?: string;
@@ -154,6 +152,16 @@ export interface CanvasBlockContent {
   optionTextSize?: "xs" | "sm" | "base" | "lg" | "xl";
   optionImageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
   showCheckIcon?: boolean;
+
+  // Option Image Advanced Controls
+  optionImageScale?: number;
+  optionImageMaxWidth?: number;
+  optionImageBorderRadius?: number;
+  optionImageBorderWidth?: number;
+  optionImageBorderColor?: string;
+
+  // Title Color
+  color?: string;
 
   // Button
   buttonText?: string;
@@ -217,6 +225,12 @@ export interface CanvasBlockContent {
   guaranteeTitle?: string;
   guaranteeDescription?: string;
   guaranteeImageUrl?: string;
+  guaranteeSubtitle?: string;
+
+  // Personalized Greeting
+  showGreeting?: boolean;
+  greetingTemplate?: string;
+  greetingSubtitle?: string;
 
   // CTA Offer
   ctaText?: string;
@@ -299,28 +313,43 @@ export interface CanvasBlockStyle {
   backgroundColor?: string;
 }
 
+// Variante de teste A/B
+export interface ABTestVariant {
+  id: string; // Aceita qualquer string para flexibilidade
+  name?: string;
+  weight: number; // Porcentagem de tráfego (0-1 ou 0-100)
+  position?: "top" | "middle" | "bottom" | number;
+  content?: Partial<CanvasBlockContent>;
+  contentOverrides?: Partial<CanvasBlockContent>; // Alias para compatibilidade
+}
+
 // Configuração de teste A/B para blocos
 export interface ABTestConfig {
   enabled: boolean;
   testName: string;
-  variants: {
-    id: "A" | "B" | "C";
-    weight: number; // Porcentagem de tráfego (0-100)
-    position?: "top" | "middle" | "bottom" | number; // Posição alternativa
-    content?: Partial<CanvasBlockContent>; // Conteúdo alternativo
-  }[];
-  trackingEvents?: {
-    view?: string;
-    click?: string;
-    conversion?: string;
-  };
+  variants: ABTestVariant[];
+  trackingEvents?:
+    | string[]
+    | {
+        // Suporta array ou objeto
+        view?: string;
+        click?: string;
+        conversion?: string;
+      };
 }
 
 // Configuração de animações avançadas
 export interface AnimationConfig {
-  type: "none" | "fade" | "slide" | "scale" | "bounce" | "rotate";
-  duration: number; // ms
-  delay: number; // ms
+  type:
+    | "none"
+    | "fade-in"
+    | "slide-up"
+    | "slide-down"
+    | "scale-in"
+    | "bounce"
+    | "pulse";
+  duration?: number; // ms
+  delay?: number; // ms
   easing?: "linear" | "ease" | "ease-in" | "ease-out" | "ease-in-out";
   disableOnLowPerformance?: boolean;
 }

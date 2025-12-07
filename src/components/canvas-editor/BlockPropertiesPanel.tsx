@@ -5,6 +5,7 @@ import {
   BLOCK_TYPE_LABELS,
   CanvasOption,
   ABTestConfig,
+  ABTestVariant,
   AnimationConfig,
 } from "@/types/canvasBlocks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
