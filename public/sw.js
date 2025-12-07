@@ -1,4 +1,4 @@
-const CACHE_NAME = "quiz-sell-genius-v7-DISABLED";
+const CACHE_NAME = "quiz-sell-genius-v8-VERCEL-FIX-" + Date.now();
 
 // SERVICE WORKER DESABILITADO - APENAS LIMPA CACHE E SE AUTO-DESREGISTRA
 self.addEventListener("install", () => {
