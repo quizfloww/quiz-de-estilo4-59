@@ -81,6 +81,11 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
         const optionsBlock = blocks.find((b) => b.type === "options");
 
         if (!optionsBlock) {
+          console.log(
+            "🟡 AVISO (não bloqueia):",
+            stage.title,
+            "- Adicionando a WARNINGS"
+          );
           warnings.push({
             id: `options-${stage.id}`,
             message: `A etapa "${stage.title}" não possui opções configuradas`,
@@ -144,6 +149,14 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
     } finally {
       setIsValidating(false);
     }
+
+    console.log("📊 VALIDAÇÃO FINAL:", {
+      totalErrors: errors.length,
+      totalWarnings: warnings.length,
+      isValid: errors.length === 0,
+    });
+    console.log("❌ Errors:", errors);
+    console.log("⚠️ Warnings:", warnings);
 
     return {
       isValid: errors.length === 0,
