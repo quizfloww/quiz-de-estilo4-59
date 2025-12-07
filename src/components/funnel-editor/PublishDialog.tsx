@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,22 +6,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  CheckCircle2, 
-  XCircle, 
-  AlertTriangle, 
-  Copy, 
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  Copy,
   ExternalLink,
   Loader2,
   Globe,
-  Rocket
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { PublishValidation, ValidationItem } from '@/hooks/usePublishFunnel';
+  Rocket,
+} from "lucide-react";
+import { toast } from "sonner";
+import { PublishValidation, ValidationItem } from "@/hooks/usePublishFunnel";
 
 interface PublishDialogProps {
   open: boolean;
@@ -42,11 +42,38 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
   isPublishing,
   onPublish,
 }) => {
+  // 🔍 LOG DE DIAGNÓSTICO - Rastreia quando validation muda
+  React.useEffect(() => {
+    if (validation && open) {
+      console.log(
+        "%c📋 PublishDialog RECEBEU validation:",
+        "background: #4a90e2; color: white; font-size: 16px; padding: 4px;"
+      );
+      console.log("  ✅ isValid:", validation.isValid);
+      console.log("  ❌ errors.length:", validation.errors.length);
+      console.log("  ⚠️  warnings.length:", validation.warnings.length);
+      console.log("  📄 validation completo:", validation);
+
+      // Verificar se há mensagens sobre "opções configuradas" nos ERRORS
+      const optionsErrors = validation.errors.filter((e) =>
+        e.message.includes("opções configuradas")
+      );
+      if (optionsErrors.length > 0) {
+        console.error(
+          "%c🚨 ERRO ENCONTRADO: Mensagens sobre 'opções configuradas' em ERRORS!",
+          "background: #ff0000; color: white; font-size: 18px; padding: 8px;"
+        );
+        console.error("Total de erros sobre opções:", optionsErrors.length);
+        console.error("Detalhes:", optionsErrors);
+      }
+    }
+  }, [validation, open]);
+
   const publicUrl = `${window.location.origin}/quiz/${funnelSlug}`;
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(publicUrl);
-    toast.success('URL copiada!');
+    toast.success("URL copiada!");
   };
 
   const handlePublish = async () => {
@@ -55,12 +82,12 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
   };
 
   const renderValidationItem = (item: ValidationItem) => {
-    const isError = item.type === 'error';
+    const isError = item.type === "error";
     return (
       <div
         key={item.id}
         className={`flex items-start gap-3 p-3 rounded-lg ${
-          isError ? 'bg-destructive/10' : 'bg-yellow-500/10'
+          isError ? "bg-destructive/10" : "bg-yellow-500/10"
         }`}
       >
         {isError ? (
@@ -68,7 +95,13 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
         ) : (
           <AlertTriangle className="h-5 w-5 text-yellow-500 shrink-0 mt-0.5" />
         )}
-        <span className={`text-sm ${isError ? 'text-destructive' : 'text-yellow-700 dark:text-yellow-400'}`}>
+        <span
+          className={`text-sm ${
+            isError
+              ? "text-destructive"
+              : "text-yellow-700 dark:text-yellow-400"
+          }`}
+        >
           {item.message}
         </span>
       </div>
@@ -93,7 +126,9 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
           {isValidating ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
-              <span className="ml-2 text-sm text-muted-foreground">Validando...</span>
+              <span className="ml-2 text-sm text-muted-foreground">
+                Validando...
+              </span>
             </div>
           ) : validation ? (
             <ScrollArea className="max-h-[250px]">
@@ -125,7 +160,8 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
                   <div className="flex items-center gap-3 p-4 rounded-lg bg-green-500/10">
                     <CheckCircle2 className="h-5 w-5 text-green-500" />
                     <span className="text-sm text-green-700 dark:text-green-400">
-                      Todas as validações passaram! Seu funil está pronto para ser publicado.
+                      Todas as validações passaram! Seu funil está pronto para
+                      ser publicado.
                     </span>
                   </div>
                 )}
@@ -168,7 +204,8 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
           {/* Warning Message */}
           {validation?.isValid && (
             <p className="text-xs text-muted-foreground bg-muted p-3 rounded-lg">
-              ⚠️ Ao publicar, o funil estará disponível publicamente para qualquer pessoa acessar através da URL acima.
+              ⚠️ Ao publicar, o funil estará disponível publicamente para
+              qualquer pessoa acessar através da URL acima.
             </p>
           )}
         </div>
