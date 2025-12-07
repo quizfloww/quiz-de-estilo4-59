@@ -206,15 +206,15 @@ export const setSentryTag = (key: string, value: string): void => {
 
 /**
  * Start transaction (performance monitoring)
+ * Nota: startTransaction está deprecated no Sentry v8+
+ * Use startSpan() para novas implementações
  */
-export const startTransaction = (
-  name: string,
-  op: string
-): Sentry.Transaction | undefined => {
-  return Sentry.startTransaction({
-    name,
-    op,
-  });
+export const startTransaction = (name: string, op: string): any => {
+  // Compatibilidade com versão atual do Sentry
+  if (typeof Sentry.startSpan === "function") {
+    return Sentry.startSpan({ name, op }, (span) => span);
+  }
+  return undefined;
 };
 
 /**
@@ -265,7 +265,7 @@ export const withAsyncErrorBoundary = <
 export class PerformanceTimer {
   private name: string;
   private startTime: number;
-  private transaction?: Sentry.Transaction;
+  private transaction?: any;
 
   constructor(name: string, op: string = "custom") {
     this.name = name;
@@ -276,7 +276,7 @@ export class PerformanceTimer {
   finish(): number {
     const duration = performance.now() - this.startTime;
 
-    if (this.transaction) {
+    if (this.transaction && typeof this.transaction.finish === "function") {
       this.transaction.finish();
     }
 
