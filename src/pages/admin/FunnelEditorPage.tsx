@@ -520,33 +520,13 @@ export default function FunnelEditorPage() {
   handleSaveRef.current = handleSave;
 
   const handleOpenPublishDialog = async () => {
-    console.log(
-      "%c🚀 INICIANDO PUBLICAÇÃO - handleOpenPublishDialog",
-      "background: #9b59b6; color: white; font-size: 18px; padding: 6px;"
-    );
-    console.log("  📝 Total de stages:", localStages.length);
-    console.log("  🧱 Total de stageBlocks:", Object.keys(stageBlocks).length);
-    console.log("  🏷️  Slug do funil:", funnel?.slug);
-
     setShowPublishDialog(true);
-
-    console.log("  ⏳ Chamando validateFunnel...");
     const validation = await validateFunnel(
       localStages,
       stageBlocks,
       funnel?.slug || ""
     );
-
-    console.log(
-      "%c✅ VALIDAÇÃO RETORNADA de validateFunnel:",
-      "background: #27ae60; color: white; font-size: 16px; padding: 4px;"
-    );
-    console.log("  isValid:", validation.isValid);
-    console.log("  errors:", validation.errors);
-    console.log("  warnings:", validation.warnings);
-
     setPublishValidation(validation);
-    console.log("  💾 setPublishValidation chamado com:", validation);
   };
 
   const handlePublish = async () => {
