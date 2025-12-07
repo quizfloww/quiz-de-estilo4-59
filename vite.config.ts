@@ -47,8 +47,12 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      // Força deduplicação do React para evitar múltiplas instâncias
+      react: path.resolve(__dirname, "./node_modules/react"),
+      "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
     },
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json"],
+    dedupe: ["react", "react-dom"],
   },
 
   build: {
