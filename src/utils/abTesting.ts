@@ -7,7 +7,7 @@ import { trackGA4Event } from "./googleAnalytics";
 // import { addBreadcrumb } from "./sentry";
 
 // Função dummy do Sentry até configurar DSN
-const addBreadcrumb = (...args: any[]) => {
+const addBreadcrumb = (...args: unknown[]) => {
   // Noop até Sentry configurado
 };
 
@@ -314,11 +314,22 @@ export const useABTest = (testName: string = "landing_page") => {
   };
 };
 
+interface ABTestStats {
+  [key: string]: ABTestConfig & {
+    currentVariant: ABTestVariant;
+    active: boolean;
+    weights: {
+      variantA: number;
+      variantB: number;
+    };
+  };
+}
+
 /**
  * Obtém estatísticas dos testes (para admin)
  */
-export const getABTestStats = (): Record<string, any> => {
-  const stats: Record<string, any> = {};
+export const getABTestStats = (): ABTestStats => {
+  const stats: ABTestStats = {} as ABTestStats;
 
   Object.entries(AB_TESTS).forEach(([testName, test]) => {
     stats[testName] = {
