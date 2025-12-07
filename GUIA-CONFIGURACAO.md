@@ -101,6 +101,15 @@ echo "G-ABC123XYZ" | vercel env add VITE_GA_ID development
 
 ### 3. 🛒 **Configurar Hotmart Webhook** (QUANDO VENDER)
 
+#### ⚠️ IMPORTANTE: Não precisa configurar nada na Vercel!
+
+O endpoint do webhook **já está pronto e funcionando** automaticamente:
+
+- ✅ Código: `api/webhook/hotmart.ts`
+- ✅ URL pública: Automaticamente disponível
+- ✅ Sem variáveis de ambiente necessárias
+- ✅ Pronto para receber notificações
+
 #### Quando configurar?
 
 - Quando tiver produtos na Hotmart
@@ -111,6 +120,8 @@ echo "G-ABC123XYZ" | vercel env add VITE_GA_ID development
 ```
 https://quiz-de-estilo4-58.vercel.app/api/webhook/hotmart
 ```
+
+**⚠️ Você só precisa configurar NA HOTMART, não na Vercel!**
 
 #### Como configurar na Hotmart:
 
