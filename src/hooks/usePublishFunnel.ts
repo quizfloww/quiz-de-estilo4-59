@@ -173,13 +173,54 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
     });
     console.log("❌ Errors:", errors);
     console.log("⚠️ Warnings:", warnings);
+
+    // 🔍 TESTE ESPECÍFICO: Verificar se há "opções configuradas" nos errors
+    const optionsInErrors = errors.filter((e) =>
+      e.message.includes("opções configuradas")
+    );
+    const optionsInWarnings = warnings.filter((w) =>
+      w.message.includes("opções configuradas")
+    );
+
+    if (optionsInErrors.length > 0) {
+      console.error(
+        "%c🚨 ALERTA: Encontrei 'opções configuradas' em ERRORS!",
+        "background: #e74c3c; color: white; font-size: 20px; padding: 10px;"
+      );
+      console.error("Quantidade:", optionsInErrors.length);
+      console.error("Detalhes:", optionsInErrors);
+      console.trace("Stack trace de onde isso foi adicionado:");
+    } else {
+      console.log(
+        "%c✅ OK: Nenhuma mensagem sobre 'opções configuradas' em ERRORS",
+        "background: #27ae60; color: white; font-size: 14px; padding: 4px;"
+      );
+    }
+
+    if (optionsInWarnings.length > 0) {
+      console.log(
+        "%c⚠️  INFO: 'opções configuradas' está em WARNINGS (correto)",
+        "background: #f39c12; color: white; font-size: 14px; padding: 4px;"
+      );
+      console.log("Quantidade:", optionsInWarnings.length);
+    }
+
     console.log("=".repeat(80));
 
-    return {
+    const result = {
       isValid: errors.length === 0,
       errors,
       warnings,
     };
+
+    // 🔍 Congelar os arrays para detectar modificações posteriores
+    Object.freeze(result);
+    Object.freeze(result.errors);
+    Object.freeze(result.warnings);
+
+    console.log("🔒 Arrays congelados para detectar modificações");
+
+    return result;
   };
 
   const publishMutation = useMutation({
