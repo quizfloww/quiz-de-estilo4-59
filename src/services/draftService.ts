@@ -21,7 +21,7 @@ interface DraftDB extends DBSchema {
       synced: boolean; // Se foi sincronizado com Supabase
       version: number; // Versão do draft para controle
     };
-    indexes: { "by-modified": number; "by-synced": boolean };
+    indexes: { "by-modified": number };
   };
   stageDrafts: {
     key: string; // stage_id
@@ -38,7 +38,6 @@ interface DraftDB extends DBSchema {
     indexes: {
       "by-funnel": string;
       "by-modified": number;
-      "by-synced": boolean;
     };
   };
   blockDrafts: {
@@ -158,10 +157,10 @@ export async function deleteFunnelDraft(funnelId: string): Promise<void> {
 /**
  * Lista todos os rascunhos de funil não sincronizados
  */
-export async function getUnsyncedFunnelDrafts(): Promise<any[]> {
+export async function getUnsyncedFunnelDrafts() {
   const db = await initDB();
-  const index = db.transaction("funnelDrafts").store.index("by-synced");
-  return await index.getAll(false);
+  const allDrafts = await db.getAll("funnelDrafts");
+  return allDrafts.filter((draft) => !draft.synced);
 }
 
 /**
@@ -305,22 +304,18 @@ export async function deleteBlockDraft(blockId: string): Promise<void> {
 /**
  * Retorna todas as alterações não sincronizadas
  */
-export async function getAllUnsyncedDrafts(): Promise<{
-  funnels: any[];
-  stages: any[];
-  blocks: any[];
-}> {
+export async function getAllUnsyncedDrafts() {
   const db = await initDB();
 
-  const funnelIndex = db.transaction("funnelDrafts").store.index("by-synced");
-  const stageIndex = db.transaction("stageDrafts").store.index("by-synced");
-  const blockIndex = db.transaction("blockDrafts").store.index("by-synced");
-
-  const [funnels, stages, blocks] = await Promise.all([
-    funnelIndex.getAll(false),
-    stageIndex.getAll(false),
-    blockIndex.getAll(false),
+  const [allFunnels, allStages, allBlocks] = await Promise.all([
+    db.getAll("funnelDrafts"),
+    db.getAll("stageDrafts"),
+    db.getAll("blockDrafts"),
   ]);
+
+  const funnels = allFunnels.filter((d) => !d.synced);
+  const stages = allStages.filter((d) => !d.synced);
+  const blocks = allBlocks.filter((d) => !d.synced);
 
   return { funnels, stages, blocks };
 }
@@ -331,24 +326,29 @@ export async function getAllUnsyncedDrafts(): Promise<{
 export async function clearSyncedDrafts(): Promise<void> {
   const db = await initDB();
 
+  const db = await initDB();
+
+  // Buscar todos os drafts e filtrar os sincronizados
+  const [allFunnels, allStages, allBlocks] = await Promise.all([
+    db.getAll("funnelDrafts"),
+    db.getAll("stageDrafts"),
+    db.getAll("blockDrafts"),
+  ]);
+
+  const syncedFunnelIds = allFunnels.filter((d) => d.synced).map((d) => d.id);
+  const syncedStageIds = allStages.filter((d) => d.synced).map((d) => d.id);
+  const syncedBlockIds = allBlocks.filter((d) => d.synced).map((d) => d.id);
+
+  // Deletar em transação
   const tx = db.transaction(
     ["funnelDrafts", "stageDrafts", "blockDrafts"],
     "readwrite"
   );
 
-  // Buscar e deletar sincronizados
-  const funnelIndex = tx.objectStore("funnelDrafts").index("by-synced");
-  const stageIndex = tx.objectStore("stageDrafts").index("by-synced");
-  const blockIndex = tx.objectStore("blockDrafts").index("by-synced");
-
-  const syncedFunnels = await funnelIndex.getAllKeys(true);
-  const syncedStages = await stageIndex.getAllKeys(true);
-  const syncedBlocks = await blockIndex.getAllKeys(true);
-
   await Promise.all([
-    ...syncedFunnels.map((key) => tx.objectStore("funnelDrafts").delete(key)),
-    ...syncedStages.map((key) => tx.objectStore("stageDrafts").delete(key)),
-    ...syncedBlocks.map((key) => tx.objectStore("blockDrafts").delete(key)),
+    ...syncedFunnelIds.map((id) => tx.objectStore("funnelDrafts").delete(id)),
+    ...syncedStageIds.map((id) => tx.objectStore("stageDrafts").delete(id)),
+    ...syncedBlockIds.map((id) => tx.objectStore("blockDrafts").delete(id)),
   ]);
 
   await tx.done;

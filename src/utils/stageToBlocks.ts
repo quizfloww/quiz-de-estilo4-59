@@ -6,6 +6,50 @@ import {
 import { FunnelStage } from "@/hooks/useFunnelStages";
 import { v4 as uuidv4 } from "uuid";
 
+// ============================================
+// Helpers Tipados para Extração de Config
+// ============================================
+
+function getConfigString(
+  config: Record<string, unknown>,
+  key: string,
+  defaultValue: string = ""
+): string {
+  const value = config[key];
+  return typeof value === "string" ? value : defaultValue;
+}
+
+function getConfigBoolean(
+  config: Record<string, unknown>,
+  key: string,
+  defaultValue: boolean = false
+): boolean {
+  const value = config[key];
+  return typeof value === "boolean" ? value : defaultValue;
+}
+
+function getConfigNumber(
+  config: Record<string, unknown>,
+  key: string,
+  defaultValue: number = 0
+): number {
+  const value = config[key];
+  return typeof value === "number" ? value : defaultValue;
+}
+
+function getConfigArray<T = unknown>(
+  config: Record<string, unknown>,
+  key: string,
+  defaultValue: T[] = []
+): T[] {
+  const value = config[key];
+  return Array.isArray(value) ? value : defaultValue;
+}
+
+// ============================================
+// Conversão de Stage para Blocos
+// ============================================
+
 export const convertStageToBlocks = (
   stage: FunnelStage,
   totalStages: number,
@@ -25,12 +69,14 @@ export const convertStageToBlocks = (
     type: "header",
     order: order++,
     content: {
-      showLogo: config.showLogo !== false,
-      logoUrl:
-        config.logoUrl ||
-        "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png",
-      showProgress: config.showProgress !== false,
-      showBackButton: config.allowBack !== false,
+      showLogo: getConfigBoolean(config, "showLogo", true),
+      logoUrl: getConfigString(
+        config,
+        "logoUrl",
+        "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
+      ),
+      showProgress: getConfigBoolean(config, "showProgress", true),
+      showBackButton: getConfigBoolean(config, "allowBack", true),
       progress,
     },
   });
@@ -42,7 +88,7 @@ export const convertStageToBlocks = (
       type: "heading",
       order: order++,
       content: {
-        text: config.question || stage.title,
+        text: getConfigString(config, "question", stage.title),
         fontSize: "2xl",
         fontWeight: "bold",
         textAlign: "center",
@@ -55,11 +101,16 @@ export const convertStageToBlocks = (
       type: "heading",
       order: order++,
       content: {
-        text:
-          config.subtitle ||
-          config.title ||
-          stage.title ||
-          "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você.",
+        text: getConfigString(
+          config,
+          "subtitle",
+          getConfigString(
+            config,
+            "title",
+            stage.title ||
+              "Chega de um guarda-roupa lotado e da sensação de que nada combina com Você."
+          )
+        ),
         fontSize: "2xl",
         fontWeight: "bold",
         textAlign: "center",
@@ -72,10 +123,11 @@ export const convertStageToBlocks = (
       type: "heading",
       order: order++,
       content: {
-        text:
-          config.transitionTitle ||
-          stage.title ||
-          "Enquanto calculamos o seu resultado...",
+        text: getConfigString(
+          config,
+          "transitionTitle",
+          stage.title || "Enquanto calculamos o seu resultado..."
+        ),
         fontSize: "2xl",
         fontWeight: "bold",
         textAlign: "center",
@@ -91,15 +143,22 @@ export const convertStageToBlocks = (
       order: order++,
       content: {
         // Saudação personalizada com nome do usuário
-        showGreeting: config.showGreeting !== false,
-        greetingTemplate: config.greetingTemplate || "Olá, {nome}!",
-        greetingSubtitle:
-          config.greetingSubtitle || "Seu Estilo Predominante é:",
+        showGreeting: getConfigBoolean(config, "showGreeting", true),
+        greetingTemplate: getConfigString(
+          config,
+          "greetingTemplate",
+          "Olá, {nome}!"
+        ),
+        greetingSubtitle: getConfigString(
+          config,
+          "greetingSubtitle",
+          "Seu Estilo Predominante é:"
+        ),
         // Gancho de resultado
-        hookTitle: config.hookTitle || "",
-        hookSubtitle: config.hookSubtitle || "",
-        hookStyle: config.hookStyle || "elegant",
-        showCta: config.showHookCta !== false,
+        hookTitle: getConfigString(config, "hookTitle", ""),
+        hookSubtitle: getConfigString(config, "hookSubtitle", ""),
+        hookStyle: getConfigString(config, "hookStyle", "elegant"),
+        showCta: getConfigBoolean(config, "showHookCta", true),
       },
     });
 

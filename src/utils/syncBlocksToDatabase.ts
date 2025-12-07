@@ -24,6 +24,7 @@ interface RawOptionItem {
 
 interface FunnelStage {
   id: string;
+  type: string;
   config?: Record<string, unknown>;
 }
 
