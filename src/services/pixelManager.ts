@@ -38,9 +38,9 @@ export const FUNNEL_CONFIGS: Record<string, FunnelConfig> = {
  * Adicione seus custom domains aqui
  */
 const DOMAIN_TO_FUNNEL: Record<string, string> = {
-  // Exemplos (adicione seus domínios reais):
-  // "meu-dominio-1.com": "default",
-  // "meu-dominio-2.com": "quiz-descubra-seu-estilo",
+  // Domínio principal em produção
+  "giselegalvao.com": "default",
+  "www.giselegalvao.com": "default",
 
   // Fallback para domínio Vercel
   "quiz-de-estilo4-58.vercel.app": "default",
