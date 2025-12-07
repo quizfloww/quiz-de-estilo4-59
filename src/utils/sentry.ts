@@ -26,12 +26,19 @@ const ENABLE_DEBUG = !IS_PRODUCTION;
  * Inicializa o Sentry
  */
 export const initSentry = (): void => {
+  // Desabilitado temporariamente - configure VITE_SENTRY_DSN no .env para habilitar
   if (!SENTRY_DSN) {
     if (ENABLE_DEBUG) {
-      console.warn(
-        "[Sentry] DSN não configurado. Monitoramento de erros desabilitado."
+      console.log(
+        "[Sentry] DSN não configurado. Monitoramento desabilitado (configure VITE_SENTRY_DSN para habilitar)."
       );
     }
+    return;
+  }
+
+  // Não inicializar se DSN não estiver configurado corretamente
+  if (!SENTRY_DSN.includes("ingest.sentry.io")) {
+    console.warn("[Sentry] DSN inválido. Ignorando inicialização.");
     return;
   }
 

@@ -14,7 +14,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { captureUTMParameters } from "./utils/analytics";
 import { loadFacebookPixelDynamic } from "./utils/facebookPixelDynamic";
 import { trackGA4PageView } from "./utils/googleAnalytics";
-import { addBreadcrumb } from "./utils/sentry";
+// import { addBreadcrumb } from "./utils/sentry"; // Desabilitado até configurar Sentry
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import CriticalCSSLoader from "./components/CriticalCSSLoader";
 import { initialCriticalCSS, heroCriticalCSS } from "./utils/critical-css";
@@ -52,10 +52,10 @@ const NavigationTracker = () => {
     // Track page view no GA4
     trackGA4PageView(location.pathname + location.search);
 
-    // Breadcrumb no Sentry
-    addBreadcrumb(`Navigation: ${location.pathname}`, "navigation", "info", {
-      search: location.search,
-    });
+    // Breadcrumb no Sentry - desabilitado até configurar
+    // addBreadcrumb(`Navigation: ${location.pathname}`, "navigation", "info", {
+    //   search: location.search,
+    // });
   }, [location]);
 
   return null;
