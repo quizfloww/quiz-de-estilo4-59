@@ -69,7 +69,7 @@ export function optimizeImageUrl(
     // Para outras CDNs, usar query parameters genéricos
     return optimizeGenericUrl(url, opts);
   } catch (error) {
-    console.error('Erro ao otimizar URL da imagem:', error);
+    console.error("Erro ao otimizar URL da imagem:", error);
     return url; // Retornar URL original em caso de erro
   }
 }

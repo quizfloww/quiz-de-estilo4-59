@@ -152,7 +152,7 @@ function processBlockContent(
     );
   }
 
-  // Otimizar URLs de imagens
+  // Otimizar URLs de imagens (apenas se não estiverem já otimizadas)
   const imageFields = [
     "imageUrl",
     "logoUrl",
@@ -165,10 +165,14 @@ function processBlockContent(
 
   imageFields.forEach((field) => {
     if (typeof processed[field] === "string" && processed[field]) {
-      processed[field] = optimizeImageUrl(processed[field], {
-        quality: "auto:best",
-        format: "auto",
-      });
+      const url = processed[field] as string;
+      // Só otimizar se não tiver transformações já aplicadas
+      if (!url.includes("w_") && !url.includes("q_") && !url.includes("f_")) {
+        processed[field] = optimizeImageUrl(url, {
+          quality: "auto:best",
+          format: "auto",
+        });
+      }
     }
   });
 
