@@ -1,0 +1,130 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Admin Panel" [level=2] [ref=e6]
+      - navigation [ref=e7]:
+        - link "Dashboard" [ref=e8] [cursor=pointer]:
+          - /url: /admin
+          - generic [ref=e9]:
+            - img [ref=e10]
+            - generic [ref=e13]: Dashboard
+        - link "Quiz" [ref=e14] [cursor=pointer]:
+          - /url: /admin/quiz
+          - generic [ref=e15]:
+            - img [ref=e16]
+            - generic [ref=e22]: Quiz
+        - link "Testes A/B" [ref=e23] [cursor=pointer]:
+          - /url: /admin/ab-tests
+          - generic [ref=e24]:
+            - img [ref=e25]
+            - generic [ref=e29]: Testes A/B
+        - link "Configurações Pixel, UTM, URL, Tokens API" [ref=e30] [cursor=pointer]:
+          - /url: /admin/settings
+          - generic [ref=e31]:
+            - img [ref=e32]
+            - generic [ref=e35]: Configurações
+          - generic [ref=e36]: Pixel, UTM, URL, Tokens API
+        - link "Criativos" [ref=e37] [cursor=pointer]:
+          - /url: /admin/criativos
+          - generic [ref=e38]:
+            - img [ref=e39]
+            - generic [ref=e42]: Criativos
+        - link "Análise de Métricas" [ref=e43] [cursor=pointer]:
+          - /url: /admin/analytics
+          - generic [ref=e44]:
+            - img [ref=e45]
+            - generic [ref=e47]: Análise de Métricas
+        - link "Editor Editor de Fluxo e Visual" [ref=e48] [cursor=pointer]:
+          - /url: /admin/editor
+          - generic [ref=e49]:
+            - img [ref=e50]
+            - generic [ref=e53]: Editor
+          - generic [ref=e54]: Editor de Fluxo e Visual
+        - link "Funis Gerenciar funis de quiz" [ref=e55] [cursor=pointer]:
+          - /url: /admin/funnels
+          - generic [ref=e56]:
+            - img [ref=e57]
+            - generic [ref=e61]: Funis
+          - generic [ref=e62]: Gerenciar funis de quiz
+      - link "Ver Site" [ref=e64] [cursor=pointer]:
+        - /url: /
+        - img [ref=e65]
+        - generic [ref=e68]: Ver Site
+    - main [ref=e70]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - link [ref=e75] [cursor=pointer]:
+              - /url: /admin
+              - img [ref=e76]
+            - generic [ref=e78]:
+              - heading "Funis" [level=1] [ref=e79]
+              - paragraph [ref=e80]: Gerencie seus funis de quiz
+          - button "Criar Funil" [ref=e81] [cursor=pointer]:
+            - img [ref=e82]
+            - text: Criar Funil
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - img [ref=e85]
+            - heading "Modelos Disponíveis" [level=2] [ref=e89]
+          - generic [ref=e90]:
+            - generic [ref=e91]:
+              - generic [ref=e92]:
+                - img "Quiz de Estilo Pessoal" [ref=e93]
+                - generic [ref=e94]:
+                  - img [ref=e95]
+                  - text: Principal
+              - generic [ref=e97]:
+                - heading "Quiz de Estilo Pessoal" [level=3] [ref=e98]
+                - paragraph [ref=e99]: O modelo principal do quiz com 10 questões de estilo + 7 estratégicas
+                - paragraph [ref=e100]: /quiz
+                - generic [ref=e101]:
+                  - button "Ver" [ref=e102] [cursor=pointer]:
+                    - img [ref=e103]
+                    - text: Ver
+                  - button "Usar" [ref=e106] [cursor=pointer]:
+                    - img [ref=e107]
+                    - text: Usar
+            - generic [ref=e110]:
+              - img "Quiz Descubra seu Estilo" [ref=e112]
+              - generic [ref=e113]:
+                - heading "Quiz Descubra seu Estilo" [level=3] [ref=e114]
+                - paragraph [ref=e115]: Variante A/B com página de oferta diferenciada
+                - paragraph [ref=e116]: /quiz-descubra-seu-estilo
+                - generic [ref=e117]:
+                  - button "Ver" [ref=e118] [cursor=pointer]:
+                    - img [ref=e119]
+                    - text: Ver
+                  - button "Usar" [ref=e122] [cursor=pointer]:
+                    - img [ref=e123]
+                    - text: Usar
+            - generic [ref=e126]:
+              - img [ref=e130]
+              - generic [ref=e131]:
+                - heading "Modelo em Branco" [level=3] [ref=e132]
+                - paragraph [ref=e133]: Comece do zero e crie seu próprio funil personalizado
+                - button "Criar Novo" [ref=e135] [cursor=pointer]:
+                  - img [ref=e136]
+                  - text: Criar Novo
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - img [ref=e139]
+            - heading "Meus Funis" [level=2] [ref=e141]
+            - generic [ref=e142]: (1)
+          - generic [ref=e144]:
+            - generic [ref=e145]:
+              - img [ref=e147]
+              - generic [ref=e150]: Rascunho
+              - button [ref=e152] [cursor=pointer]:
+                - img [ref=e153]
+            - generic [ref=e157]:
+              - heading "Funnel Teste (mock)" [level=3] [ref=e158]
+              - paragraph [ref=e159]: /funnel-teste-mock
+              - paragraph [ref=e160]: Funil mock para testes
+              - paragraph [ref=e161]: 07/12/2025
+  - region "Notifications (F8)":
+    - list
+```
