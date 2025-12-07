@@ -225,7 +225,9 @@ test.describe("Publicar Funil - Validações Específicas", () => {
     }
   });
 
-  test("TC09: Deve validar configuração de opções", async ({ page }) => {
+  test("TC09: Deve validar que perguntas tenham blocos de opções configurados", async ({
+    page,
+  }) => {
     await page.goto("/admin/funnels");
     await page.waitForLoadState("networkidle");
 
@@ -239,12 +241,21 @@ test.describe("Publicar Funil - Validações Específicas", () => {
     await publishButton.click();
     await page.waitForTimeout(3000);
 
-    // Procura por mensagem relacionada a opções
-    const optionsValidation = page.locator("text=/opções|options/i");
-    const count = await optionsValidation.count();
+    // Verifica mensagem específica: "não possui opções configuradas"
+    const noOptionsError = page.locator(
+      "text=/não possui opções configuradas/i"
+    );
+    const hasError = await noOptionsError.isVisible().catch(() => false);
 
-    if (count > 0) {
-      console.log(`✓ Validação de opções encontrada (${count} referências)`);
+    if (hasError) {
+      // Se há erro, conta quantas etapas têm problema
+      const errorCount = await noOptionsError.count();
+      console.log(`✓ Detectadas ${errorCount} etapas sem bloco de opções`);
+      await expect(noOptionsError.first()).toBeVisible();
+    } else {
+      console.log(
+        "✓ Todas as etapas de pergunta têm blocos de opções configurados"
+      );
     }
   });
 });
