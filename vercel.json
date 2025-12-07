@@ -2,7 +2,7 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     {
-      "source": "/((?!api/)(?!assets/)(?!favicons/)(?!lovable-uploads/)(?!favicon.ico)(?!site.webmanifest)(?!.*\\.webmanifest$)(?!.*\\.[a-zA-Z0-9]+$).*)",
+      "source": "/((?!api|assets|favicons|lovable-uploads|.*\\.).*)",
       "destination": "/index.html"
     }
   ],

@@ -4,7 +4,15 @@
  */
 
 import { trackGA4Event } from "./googleAnalytics";
-import { addBreadcrumb, captureMessage } from "./sentry";
+// import { addBreadcrumb, captureMessage } from "./sentry";
+
+// Funções dummy do Sentry até configurar DSN
+const addBreadcrumb = (...args: any[]) => {
+  // Noop até Sentry configurado
+};
+const captureMessage = (...args: any[]) => {
+  // Noop até Sentry configurado
+};
 
 // Configuração
 const ENABLE_MONITORING =
