@@ -42,33 +42,6 @@ export const PublishDialog: React.FC<PublishDialogProps> = ({
   isPublishing,
   onPublish,
 }) => {
-  // 🔍 LOG DE DIAGNÓSTICO - Rastreia quando validation muda
-  React.useEffect(() => {
-    if (validation && open) {
-      console.log(
-        "%c📋 PublishDialog RECEBEU validation:",
-        "background: #4a90e2; color: white; font-size: 16px; padding: 4px;"
-      );
-      console.log("  ✅ isValid:", validation.isValid);
-      console.log("  ❌ errors.length:", validation.errors.length);
-      console.log("  ⚠️  warnings.length:", validation.warnings.length);
-      console.log("  📄 validation completo:", validation);
-
-      // Verificar se há mensagens sobre "opções configuradas" nos ERRORS
-      const optionsErrors = validation.errors.filter((e) =>
-        e.message.includes("opções configuradas")
-      );
-      if (optionsErrors.length > 0) {
-        console.error(
-          "%c🚨 ERRO ENCONTRADO: Mensagens sobre 'opções configuradas' em ERRORS!",
-          "background: #ff0000; color: white; font-size: 18px; padding: 8px;"
-        );
-        console.error("Total de erros sobre opções:", optionsErrors.length);
-        console.error("Detalhes:", optionsErrors);
-      }
-    }
-  }, [validation, open]);
-
   const publicUrl = `${window.location.origin}/quiz/${funnelSlug}`;
 
   const handleCopyUrl = () => {
