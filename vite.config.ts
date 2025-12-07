@@ -68,18 +68,98 @@ export default defineConfig(({ mode }) => ({
     // Configurações para evitar problemas de MIME type
     rollupOptions: {
       output: {
-        manualChunks: {
-          "vendor-react": ["react", "react-dom", "react-router-dom"],
-          "vendor-ui": [
-            "@radix-ui/react-dialog",
-            "@radix-ui/react-dropdown-menu",
-            "@radix-ui/react-select",
-            "@radix-ui/react-tabs",
-          ],
-          "vendor-utils": ["lodash", "date-fns", "clsx", "tailwind-merge"],
-          analytics: ["./src/utils/analytics", "./src/utils/facebookPixel"],
-          charts: ["recharts"],
-          animations: ["framer-motion"],
+        manualChunks: (id) => {
+          // Dependências React e Router
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("react-router")
+            ) {
+              return "vendor-react";
+            }
+
+            // Componentes Radix UI
+            if (id.includes("@radix-ui")) {
+              return "vendor-ui";
+            }
+
+            // Utilitários gerais
+            if (
+              id.includes("lodash") ||
+              id.includes("date-fns") ||
+              id.includes("clsx") ||
+              id.includes("tailwind-merge")
+            ) {
+              return "vendor-utils";
+            }
+
+            // Supabase e autenticação
+            if (id.includes("@supabase") || id.includes("gotrue-js")) {
+              return "vendor-supabase";
+            }
+
+            // Zod e validação
+            if (id.includes("zod")) {
+              return "vendor-validation";
+            }
+
+            // Recharts
+            if (id.includes("recharts") || id.includes("d3-")) {
+              return "charts";
+            }
+
+            // Framer Motion
+            if (id.includes("framer-motion")) {
+              return "animations";
+            }
+
+            // IndexedDB
+            if (id.includes("idb")) {
+              return "vendor-db";
+            }
+
+            // Outros node_modules
+            return "vendor";
+          }
+
+          // Código do app
+          if (id.includes("/src/")) {
+            // Páginas de admin
+            if (id.includes("/pages/admin/")) {
+              return "admin";
+            }
+
+            // Componentes do editor
+            if (
+              id.includes("/components/canvas/") ||
+              id.includes("/components/editor/")
+            ) {
+              return "editor";
+            }
+
+            // Analytics
+            if (
+              id.includes("/utils/analytics") ||
+              id.includes("/utils/facebookPixel")
+            ) {
+              return "analytics";
+            }
+
+            // Schemas e validação
+            if (
+              id.includes("/schemas/") ||
+              id.includes("/utils/blockSchemas") ||
+              id.includes("/utils/stageConfigSchema")
+            ) {
+              return "schemas";
+            }
+
+            // Serviços
+            if (id.includes("/services/")) {
+              return "services";
+            }
+          }
         },
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId
@@ -104,8 +184,28 @@ export default defineConfig(({ mode }) => ({
   },
 
   optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom"],
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "clsx",
+      "tailwind-merge",
+      "@radix-ui/react-dialog",
+      "@radix-ui/react-dropdown-menu",
+      "idb", // IndexedDB otimizado
+    ],
     exclude: ["@huggingface/transformers"],
+  },
+
+  // Performance: preload de imagens críticas
+  experimental: {
+    renderBuiltUrl(filename: string) {
+      // Preload de logos e imagens de estilo
+      if (filename.includes("logo") || filename.includes("style-")) {
+        return { runtime: `window.__IMAGE_BASE__ + '${filename}'` };
+      }
+      return { relative: true };
+    },
   },
 
   css: {
