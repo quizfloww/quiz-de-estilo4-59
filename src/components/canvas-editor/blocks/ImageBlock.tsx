@@ -101,12 +101,20 @@ export const ImageBlock: React.FC<ImageBlockProps> = ({
       <img
         src={content.imageUrl}
         alt={content.imageAlt || "Imagem"}
+        loading="lazy"
+        decoding="async"
         className={cn(
           imagePosition === "top" && "object-top",
           imagePosition === "center" && "object-center",
           imagePosition === "bottom" && "object-bottom"
         )}
         style={imageStyle}
+        onError={(e) => {
+          // Fallback para erro de carregamento
+          const target = e.target as HTMLImageElement;
+          target.style.display = "none";
+          console.error("Erro ao carregar imagem:", content.imageUrl);
+        }}
       />
     </div>
   );

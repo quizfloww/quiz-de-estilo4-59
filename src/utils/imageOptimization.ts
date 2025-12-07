@@ -46,6 +46,11 @@ export function optimizeImageUrl(
 ): string {
   if (!url) return "";
 
+  // Se a URL já tem transformações Cloudinary complexas, não modificar
+  if (url.includes("/upload/") && /\/upload\/[^\/]+\//.test(url)) {
+    return url;
+  }
+
   // Merge com opções padrão
   const opts = { ...DEFAULT_OPTIONS, ...options };
 
@@ -102,10 +107,25 @@ function optimizeCloudinaryUrl(
     transformations.push(`dpr_${options.dpr}`);
   }
 
-  // Se já tem transformações na URL, adicionar às existentes
-  if (url.includes("/upload/") && transformations.length > 0) {
+  // Se não há transformações a adicionar, retornar URL original
+  if (transformations.length === 0) {
+    return url;
+  }
+
+  // Se já tem transformações na URL, não duplicar
+  if (url.includes("/upload/") && !url.match(/\/upload\/v\d+/)) {
     const transform = transformations.join(",");
+    // Evitar duplicação verificando se já existe a pasta upload
+    if (url.match(/\/upload\/[^/]+\//)) {
+      return url; // Já tem transformações, não modificar
+    }
     return url.replace("/upload/", `/upload/${transform}/`);
+  }
+
+  // Para URLs com versão (v123456)
+  if (url.includes("/upload/v") && url.match(/\/upload\/v\d+/)) {
+    const transform = transformations.join(",");
+    return url.replace(/\/upload\/(v\d+)\//, `/upload/${transform}/$1/`);
   }
 
   return url;

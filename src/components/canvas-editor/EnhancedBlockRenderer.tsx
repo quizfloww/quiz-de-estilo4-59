@@ -70,29 +70,26 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
 
   // Wrapper com animação
   const renderWithAnimation = () => {
+    // Sempre passar o conteúdo processado, mesmo sem animação
+    const childWithContent = React.cloneElement(
+      children as React.ReactElement,
+      { content: finalContent }
+    );
+
+    // Se não tem animação ou é preview, retornar diretamente
     if (!block.animation || isPreview) {
-      return (
-        <>
-          {React.cloneElement(children as React.ReactElement, {
-            content: finalContent,
-          })}
-        </>
-      );
+      return childWithContent;
     }
 
     const shouldAnimate =
       !block.animation.disableOnLowPerformance || !isLowPerformance;
 
+    // Se não deve animar, retornar sem wrapper
     if (!shouldAnimate) {
-      return (
-        <>
-          {React.cloneElement(children as React.ReactElement, {
-            content: finalContent,
-          })}
-        </>
-      );
+      return childWithContent;
     }
 
+    // Com animação
     return (
       <AnimatedWrapper
         animation={block.animation.type}
@@ -100,9 +97,7 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
         delay={block.animation.delay || 0}
         show={true}
       >
-        {React.cloneElement(children as React.ReactElement, {
-          content: finalContent,
-        })}
+        {childWithContent}
       </AnimatedWrapper>
     );
   };
