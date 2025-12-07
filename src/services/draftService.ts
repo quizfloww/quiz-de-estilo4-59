@@ -16,7 +16,7 @@ interface DraftDB extends DBSchema {
     value: {
       id: string;
       name: string;
-      data: any; // Dados do funil completo
+      data: unknown; // Dados do funil completo
       lastModified: number; // timestamp
       synced: boolean; // Se foi sincronizado com Supabase
       version: number; // Versão do draft para controle
@@ -29,8 +29,8 @@ interface DraftDB extends DBSchema {
       id: string;
       funnelId: string;
       title: string;
-      data: any; // Dados da etapa completa
-      blocks: any[]; // Blocos da etapa
+      data: unknown; // Dados da etapa completa
+      blocks: unknown[]; // Blocos da etapa
       lastModified: number;
       synced: boolean;
       version: number;
@@ -46,7 +46,7 @@ interface DraftDB extends DBSchema {
       id: string;
       stageId: string;
       funnelId: string;
-      data: any; // Dados do bloco
+      data: unknown; // Dados do bloco
       lastModified: number;
       synced: boolean;
     };
@@ -120,7 +120,7 @@ async function initDB(): Promise<IDBPDatabase<DraftDB>> {
 export async function saveFunnelDraft(
   funnelId: string,
   name: string,
-  data: any
+  data: unknown
 ): Promise<void> {
   const db = await initDB();
 
@@ -140,7 +140,7 @@ export async function saveFunnelDraft(
 /**
  * Recupera rascunho de funil
  */
-export async function getFunnelDraft(funnelId: string): Promise<any | null> {
+export async function getFunnelDraft(funnelId: string): Promise<unknown> {
   const db = await initDB();
   const draft = await db.get("funnelDrafts", funnelId);
   return draft ? draft.data : null;
@@ -187,8 +187,8 @@ export async function saveStageDraft(
   stageId: string,
   funnelId: string,
   title: string,
-  data: any,
-  blocks: any[]
+  data: unknown,
+  blocks: unknown[]
 ): Promise<void> {
   const db = await initDB();
 
@@ -210,7 +210,7 @@ export async function saveStageDraft(
 /**
  * Recupera rascunho de etapa
  */
-export async function getStageDraft(stageId: string): Promise<any | null> {
+export async function getStageDraft(stageId: string): Promise<unknown> {
   const db = await initDB();
   const draft = await db.get("stageDrafts", stageId);
   return draft || null;
@@ -219,7 +219,9 @@ export async function getStageDraft(stageId: string): Promise<any | null> {
 /**
  * Lista rascunhos de etapas de um funil
  */
-export async function getStageDraftsByFunnel(funnelId: string): Promise<any[]> {
+export async function getStageDraftsByFunnel(
+  funnelId: string
+): Promise<unknown[]> {
   const db = await initDB();
   const index = db.transaction("stageDrafts").store.index("by-funnel");
   return await index.getAll(funnelId);
@@ -257,7 +259,7 @@ export async function saveBlockDraft(
   blockId: string,
   stageId: string,
   funnelId: string,
-  data: any
+  data: unknown
 ): Promise<void> {
   const db = await initDB();
 
@@ -274,7 +276,7 @@ export async function saveBlockDraft(
 /**
  * Recupera rascunho de bloco
  */
-export async function getBlockDraft(blockId: string): Promise<any | null> {
+export async function getBlockDraft(blockId: string): Promise<unknown> {
   const db = await initDB();
   const draft = await db.get("blockDrafts", blockId);
   return draft ? draft.data : null;
@@ -283,7 +285,9 @@ export async function getBlockDraft(blockId: string): Promise<any | null> {
 /**
  * Lista blocos de uma etapa
  */
-export async function getBlockDraftsByStage(stageId: string): Promise<any[]> {
+export async function getBlockDraftsByStage(
+  stageId: string
+): Promise<unknown[]> {
   const db = await initDB();
   const index = db.transaction("blockDrafts").store.index("by-stage");
   return await index.getAll(stageId);
