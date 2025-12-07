@@ -75,6 +75,15 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   const [showABTestConfig, setShowABTestConfig] = useState(false);
   const [showAnimationConfig, setShowAnimationConfig] = useState(false);
 
+  // Estado para feedback visual de mudanças
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
+  // Estado para validação de variáveis de template
+  const [templateErrors, setTemplateErrors] = useState<Record<string, string>>(
+    {}
+  );
+
   // Use provided categories or fall back to defaults
   const categories =
     styleCategories.length > 0 ? styleCategories : DEFAULT_STYLE_CATEGORIES;
@@ -89,7 +98,123 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
     );
   }
 
+  // Validar tipo de valor baseado em propriedade
+  const validateValue = (
+    key: string,
+    value: unknown
+  ): { isValid: boolean; error?: string } => {
+    // Validação de números
+    if (
+      [
+        "hours",
+        "minutes",
+        "seconds",
+        "percentage",
+        "countdownHours",
+        "countdownMinutes",
+        "countdownSeconds",
+        "dividerThickness",
+        "dividerWidth",
+        "imageBorderWidth",
+      ].includes(key)
+    ) {
+      const numValue = typeof value === "string" ? parseFloat(value) : value;
+      if (typeof numValue !== "number" || isNaN(numValue)) {
+        return { isValid: false, error: `${key} deve ser um número` };
+      }
+      if (numValue < 0) {
+        return { isValid: false, error: `${key} não pode ser negativo` };
+      }
+    }
+
+    // Validação de URLs
+    if (
+      ["imageUrl", "logoUrl", "url", "authorImage", "guideImageUrl"].includes(
+        key
+      ) &&
+      value
+    ) {
+      const urlStr = String(value);
+      if (urlStr && !urlStr.match(/^(https?:\/\/)|(data:image)/)) {
+        return {
+          isValid: false,
+          error:
+            "URL inválida. Deve começar com http://, https:// ou data:image",
+        };
+      }
+    }
+
+    return { isValid: true };
+  };
+
+  // Validar variáveis de template em texto
+  const validateTemplateVariables = (text: string): string[] => {
+    const validVariables = [
+      "{userName}",
+      "{nome}",
+      "{category}",
+      "{percentage}",
+      "{congratsMessage}",
+      "{powerMessage}",
+      "{styleImage}",
+      "{guideImage}",
+      "{secondary1}",
+      "{secondary2}",
+      "{emoji}",
+      "{hookMessage}",
+      "{resultTitle}",
+      "{transformationMessage}",
+      "{userEmail}",
+    ];
+
+    const foundVariables = text.match(/\{[^}]+\}/g) || [];
+    const invalidVariables = foundVariables.filter(
+      (v) => !validVariables.includes(v)
+    );
+
+    return invalidVariables;
+  };
+
   const updateContent = (key: string, value: unknown) => {
+    // Validar valor
+    const validation = validateValue(key, value);
+    if (!validation.isValid) {
+      console.warn(`Validação falhou para ${key}:`, validation.error);
+      // Ainda permite a atualização mas mostra aviso
+    }
+
+    // Validar variáveis de template em campos de texto
+    if (
+      typeof value === "string" &&
+      [
+        "text",
+        "title",
+        "subtitle",
+        "greetingTemplate",
+        "hookTitle",
+        "hookSubtitle",
+      ].includes(key)
+    ) {
+      const invalidVars = validateTemplateVariables(value);
+      if (invalidVars.length > 0) {
+        setTemplateErrors((prev) => ({
+          ...prev,
+          [key]: `Variáveis inválidas: ${invalidVars.join(", ")}`,
+        }));
+      } else {
+        setTemplateErrors((prev) => {
+          const newErrors = { ...prev };
+          delete newErrors[key];
+          return newErrors;
+        });
+      }
+    }
+
+    // Marcar mudanças não salvas e atualizar timestamp
+    setHasUnsavedChanges(true);
+    setLastUpdated(new Date().toLocaleTimeString("pt-BR"));
+
+    // Atualizar bloco
     onUpdateBlock({
       ...block,
       content: {
@@ -97,6 +222,9 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
         [key]: value,
       },
     });
+
+    // Limpar indicador após 2 segundos
+    setTimeout(() => setHasUnsavedChanges(false), 2000);
   };
 
   const updateBlockProperty = (key: string, value: unknown) => {
@@ -275,7 +403,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   // Helper de Variáveis de Template
   const renderTemplateHelper = () => {
     const availableVariables = [
-      { var: "{userName}", desc: "Nome do usuário" },
+      { var: "{userName}", desc: "Nome do usuário", alias: "{nome}" },
       { var: "{category}", desc: "Categoria de estilo principal" },
       { var: "{percentage}", desc: "Percentual (ex: 85%)" },
       { var: "{congratsMessage}", desc: "Mensagem de parabéns personalizada" },
@@ -290,6 +418,15 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
       { var: "{transformationMessage}", desc: "Mensagem de transformação" },
       { var: "{userEmail}", desc: "Email do usuário" },
     ];
+
+    const copyToClipboard = (text: string) => {
+      navigator.clipboard.writeText(text);
+      toast({
+        title: "Copiado!",
+        description: `Variável ${text} copiada para a área de transferência`,
+        duration: 2000,
+      });
+    };
 
     return (
       <Collapsible open={showTemplateHelp} onOpenChange={setShowTemplateHelp}>
@@ -316,19 +453,40 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
               Use variáveis para personalizar textos:
             </p>
             <div className="space-y-1">
-              {availableVariables.map(({ var: variable, desc }) => (
-                <div key={variable} className="flex items-start gap-2">
-                  <code className="text-xs bg-background px-1 rounded shrink-0">
-                    {variable}
-                  </code>
-                  <span>- {desc}</span>
+              {availableVariables.map(({ var: variable, desc, alias }) => (
+                <div
+                  key={variable}
+                  className="flex items-center justify-between gap-2 group hover:bg-background/50 p-1 rounded transition-colors"
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <code className="text-xs bg-background px-1.5 py-0.5 rounded shrink-0 font-mono">
+                      {variable}
+                    </code>
+                    <span className="text-xs truncate">{desc}</span>
+                    {alias && (
+                      <code className="text-xs bg-muted px-1 py-0.5 rounded shrink-0 opacity-60">
+                        ou {alias}
+                      </code>
+                    )}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    onClick={() => copyToClipboard(variable)}
+                    title="Copiar variável"
+                  >
+                    📋
+                  </Button>
                 </div>
               ))}
             </div>
-            <p className="pt-2 border-t mt-2">
-              <strong>Exemplo:</strong> "Olá {"{userName}"}, seu estilo é{" "}
-              {"{category}"}!"
-            </p>
+            <div className="pt-2 border-t mt-2 space-y-1">
+              <p className="font-semibold">✨ Exemplo:</p>
+              <code className="text-xs bg-background px-2 py-1 rounded block">
+                "Olá {"{userName}"}, seu estilo é {"{category}"}!"
+              </code>
+            </div>
           </div>
         </CollapsibleContent>
       </Collapsible>
@@ -2637,10 +2795,20 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                   updateContent("greetingTemplate", e.target.value)
                 }
                 placeholder="Olá, {nome}!"
+                className={
+                  templateErrors.greetingTemplate
+                    ? "border-amber-500 focus:border-amber-500 focus:ring-amber-500"
+                    : ""
+                }
               />
               <p className="text-xs text-muted-foreground">
-                Use {"{nome}"} para inserir o nome do usuário
+                Use {"{nome}"} ou {"{userName}"} para inserir o nome do usuário
               </p>
+              {templateErrors.greetingTemplate && (
+                <p className="text-xs text-amber-600 flex items-center gap-1">
+                  <span>⚠️</span> {templateErrors.greetingTemplate}
+                </p>
+              )}
             </div>
             <div className="space-y-1">
               <Label htmlFor="greetingSubtitle">Subtítulo da saudação</Label>
@@ -2668,7 +2836,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onChange={(e) => updateContent("hookTitle", e.target.value)}
           placeholder="Seu estilo revela..."
           rows={2}
+          className={
+            templateErrors.hookTitle
+              ? "border-amber-500 focus:border-amber-500 focus:ring-amber-500"
+              : ""
+          }
         />
+        {templateErrors.hookTitle && (
+          <p className="text-xs text-amber-600 flex items-center gap-1">
+            <span>⚠️</span> {templateErrors.hookTitle}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="hookSubtitle">Subtítulo</Label>
@@ -2678,7 +2856,17 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
           onChange={(e) => updateContent("hookSubtitle", e.target.value)}
           placeholder="Você valoriza..."
           rows={3}
+          className={
+            templateErrors.hookSubtitle
+              ? "border-amber-500 focus:border-amber-500 focus:ring-amber-500"
+              : ""
+          }
         />
+        {templateErrors.hookSubtitle && (
+          <p className="text-xs text-amber-600 flex items-center gap-1">
+            <span>⚠️</span> {templateErrors.hookSubtitle}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label>Estilo Visual</Label>
@@ -3678,6 +3866,36 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
   return (
     <ScrollArea className="h-full">
       <div className="p-4 space-y-4">
+        {/* Indicador de Status */}
+        {(hasUnsavedChanges ||
+          lastUpdated ||
+          Object.keys(templateErrors).length > 0) && (
+          <div className="space-y-2">
+            {hasUnsavedChanges && (
+              <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 animate-pulse">
+                <span className="w-2 h-2 bg-amber-600 rounded-full"></span>
+                Salvando alterações...
+              </div>
+            )}
+            {!hasUnsavedChanges && lastUpdated && (
+              <div className="flex items-center gap-2 text-xs text-green-600 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+                <CheckCircle className="h-3 w-3" />
+                Salvo às {lastUpdated}
+              </div>
+            )}
+            {Object.keys(templateErrors).length > 0 && (
+              <div className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+                <div className="font-semibold mb-1">⚠️ Avisos:</div>
+                {Object.entries(templateErrors).map(([key, error]) => (
+                  <div key={key} className="ml-2">
+                    • {error}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium">
