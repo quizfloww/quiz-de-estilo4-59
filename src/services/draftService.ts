@@ -326,8 +326,6 @@ export async function getAllUnsyncedDrafts() {
 export async function clearSyncedDrafts(): Promise<void> {
   const db = await initDB();
 
-  const db = await initDB();
-
   // Buscar todos os drafts e filtrar os sincronizados
   const [allFunnels, allStages, allBlocks] = await Promise.all([
     db.getAll("funnelDrafts"),
