@@ -137,6 +137,7 @@ export const CanvasBlockContentSchema = z
       .optional(),
     fullWidth: z.boolean().optional(),
     buttonUrl: z.string().optional(),
+    buttonColor: z.string().optional(), // Cor personalizada do botão
 
     // Spacer/Divider
     height: z.string().optional(),
@@ -153,6 +154,9 @@ export const CanvasBlockContentSchema = z
     showDescription: z.boolean().optional(),
     layout: z.enum(["side-by-side", "stacked"]).optional(),
     styleImageSize: z.enum(["sm", "md", "lg", "xl"]).optional(),
+    stylePercentage: z.number().optional(), // Percentual do estilo
+    styleDescription: z.string().optional(), // Descrição do estilo
+    styleImageUrl: z.string().optional(), // URL da imagem do estilo
 
     // Secondary Styles
     maxSecondaryStyles: z.number().optional(),
@@ -221,6 +225,10 @@ export const CanvasBlockContentSchema = z
     hookSubtitle: z.string().optional(),
     hookStyle: z.enum(["elegant", "bold", "minimal"]).optional(),
     showCta: z.boolean().optional(),
+    styleCategory: z.string().optional(), // Categoria de estilo personalizado
+    userName: z.string().optional(), // Nome do usuário para personalização
+    showStyleImage: z.boolean().optional(), // Exibir imagem do estilo
+    powerMessage: z.string().optional(), // Mensagem motivacional de poder
 
     // Style Guide
     showSecondaryGuides: z.boolean().optional(),
