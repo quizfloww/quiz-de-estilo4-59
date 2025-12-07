@@ -1,4 +1,4 @@
-const CACHE_NAME = "quiz-sell-genius-v5-fix-validations";
+const CACHE_NAME = "quiz-sell-genius-v6-no-js-cache";
 
 // Instalação simples
 self.addEventListener("install", () => {
@@ -34,6 +34,12 @@ self.addEventListener("fetch", (event) => {
       url.protocol === "moz-extension:"
     )
       return;
+
+    // NUNCA CACHEAR ARQUIVOS JAVASCRIPT - SEMPRE BUSCAR DA REDE
+    if (url.pathname.endsWith(".js") || url.pathname.endsWith(".ts")) {
+      event.respondWith(fetch(event.request));
+      return;
+    }
 
     // Ignorar URLs externas conhecidas por causar problemas
     if (url.hostname === "cdn.lovable.dev") return;
