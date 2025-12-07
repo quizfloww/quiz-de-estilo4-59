@@ -34,3 +34,5 @@ dist-ssr
 !public/lovable-uploads/**
 .next/
 .next/cache
+.vercel
+.env*.local
