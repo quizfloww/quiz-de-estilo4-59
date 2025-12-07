@@ -75,12 +75,21 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
         });
       }
 
+      // VALIDAÇÃO DE OPÇÕES COMPLETAMENTE DESABILITADA - 2024-12-07 15:35
+      // NÃO VALIDA MAIS SE HÁ OPÇÕES CONFIGURADAS
+      console.log(
+        "⚠️ VALIDAÇÃO DE OPÇÕES DESABILITADA - Versão 2024-12-07 15:35"
+      );
+
       // Check if question stages have valid options (WARNINGS ONLY - não bloqueia publicação)
+      // CÓDIGO COMENTADO PARA TESTE - SE AINDA APARECER "não possui opções" É CACHE DO NAVEGADOR
+      /*
       for (const stage of questionStages) {
         const blocks = stageBlocks[stage.id] || [];
         const optionsBlock = blocks.find((b) => b.type === "options");
 
         if (!optionsBlock) {
+          // VERSÃO 2024-12-07 15:30 - WARNINGS NÃO BLOQUEIAM
           console.log(
             "🟡 AVISO (não bloqueia):",
             stage.title,
@@ -102,6 +111,7 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
           }
         }
       }
+      */
 
       // Check for result stage (warning only)
       const resultStages = stages.filter((s) => s.type === "result");
@@ -150,13 +160,15 @@ export const usePublishFunnel = (funnelId: string | undefined) => {
       setIsValidating(false);
     }
 
-    console.log("📊 VALIDAÇÃO FINAL:", {
+    console.log("=".repeat(80));
+    console.log("📊 VALIDAÇÃO FINAL - VERSÃO 2024-12-07 15:35:", {
       totalErrors: errors.length,
       totalWarnings: warnings.length,
       isValid: errors.length === 0,
     });
     console.log("❌ Errors:", errors);
     console.log("⚠️ Warnings:", warnings);
+    console.log("=".repeat(80));
 
     return {
       isValid: errors.length === 0,
