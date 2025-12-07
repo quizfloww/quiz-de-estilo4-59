@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Limpando Cache...</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+      .container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 40px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+      }
+      h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+      }
+      .status {
+        font-size: 1.2em;
+        margin: 20px 0;
+      }
+      .success {
+        color: #4ade80;
+      }
+      .error {
+        color: #f87171;
+      }
+      button {
+        background: white;
+        color: #667eea;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.1em;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+      button:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧹 Limpeza de Cache Completa</h1>
+      <div id="status" class="status">Iniciando limpeza...</div>
+      <button id="clearBtn" style="display: none">Limpar Novamente</button>
+      <button id="goHome" style="display: none">Ir para o Editor</button>
+    </div>
+
+    <script>
+      const statusDiv = document.getElementById("status");
+      const clearBtn = document.getElementById("clearBtn");
+      const goHomeBtn = document.getElementById("goHome");
+
+      async function clearEverything() {
+        let messages = [];
+
+        try {
+          // 1. Desregistrar Service Workers
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
+          for (let registration of registrations) {
+            await registration.unregister();
+            messages.push("✅ Service Worker desregistrado");
+          }
+
+          // 2. Limpar todos os caches
+          const cacheNames = await caches.keys();
+          for (let cacheName of cacheNames) {
+            await caches.delete(cacheName);
+            messages.push(`✅ Cache deletado: ${cacheName}`);
+          }
+
+          // 3. Limpar Storage
+          localStorage.clear();
+          messages.push("✅ LocalStorage limpo");
+
+          sessionStorage.clear();
+          messages.push("✅ SessionStorage limpo");
+
+          // 4. Limpar cookies
+          document.cookie.split(";").forEach((c) => {
+            document.cookie = c
+              .replace(/^ +/, "")
+              .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+          });
+          messages.push("✅ Cookies limpos");
+
+          // Mostrar resultado
+          statusDiv.innerHTML = `
+                    <div class="success">
+                        <h2>✅ LIMPEZA CONCLUÍDA!</h2>
+                        <p>Tudo foi limpo com sucesso:</p>
+                        <div style="text-align: left; display: inline-block; margin-top: 10px;">
+                            ${messages.map((m) => `<div>${m}</div>`).join("")}
+                        </div>
+                    </div>
+                `;
+
+          goHomeBtn.style.display = "inline-block";
+        } catch (error) {
+          statusDiv.innerHTML = `
+                    <div class="error">
+                        <h2>❌ Erro na limpeza</h2>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+          clearBtn.style.display = "inline-block";
+        }
+      }
+
+      // Executar automaticamente ao carregar
+      clearEverything();
+
+      clearBtn.addEventListener("click", () => {
+        clearBtn.style.display = "none";
+        goHomeBtn.style.display = "none";
+        statusDiv.textContent = "Limpando novamente...";
+        clearEverything();
+      });
+
+      goHomeBtn.addEventListener("click", () => {
+        window.location.href = "/";
+      });
+    </script>
+  </body>
+</html>
