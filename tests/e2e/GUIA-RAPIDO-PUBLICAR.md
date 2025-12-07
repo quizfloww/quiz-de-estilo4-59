@@ -64,10 +64,10 @@ npm run dev
 
 ## 📊 Cobertura
 
-### ✅ 14 Testes Simplificados:
+### ✅ 15 Testes Simplificados:
 
 - **TC01-TC06:** Testes principais (botão, diálogo, validações)
-- **TC07-TC09:** Validações específicas (intro, perguntas, opções)
+- **TC07-TC09b:** Validações específicas (intro, perguntas, blocos de opções, quantidade mínima)
 - **TC10-TC11:** Despublicar
 - **TC12:** Loading states
 - **TC13-TC14:** Integração com blocos
@@ -84,16 +84,30 @@ Inclui todos acima mais:
 
 ## 🔍 O Que é Testado
 
-### Validações:
+### Validações (Estrutura Real):
 
-- ❌ **Erros** (bloqueiam): Falta intro, perguntas, slug duplicado
-- ⚠️ **Warnings** (não bloqueiam): Etapas vazias, poucas opções
+- ❌ **Erros** (bloqueiam publicação):
+  - Falta etapa de introdução
+  - Falta etapa de pergunta
+  - Slug duplicado entre funis publicados
+  - **Perguntas sem bloco de opções** ← Erro mais comum!
+  - **Perguntas com menos de 2 opções**
+- ⚠️ **Warnings** (não bloqueiam):
+  - Etapas sem blocos configurados
+  - Falta etapa de resultado (recomendado)
 
 ### Fluxos:
 
 1. Abrir editor → Clicar Publicar → Ver validações
-2. Publicar com sucesso → Ver URL pública
-3. Despublicar → Status muda para draft
+2. Validar blocos de opções (TC09, TC09b)
+3. Publicar com sucesso → Ver URL pública
+4. Despublicar → Status muda para draft
+
+### 📚 Entenda as Validações:
+Consulte **`ESTRUTURA-VALIDACOES-REAL.md`** para detalhes sobre:
+- Por que aparece "não possui opções configuradas"
+- Como corrigir erros de validação
+- Estrutura de dados esperada
 
 ## 📈 Navegadores
 

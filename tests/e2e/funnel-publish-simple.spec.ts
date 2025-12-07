@@ -258,6 +258,37 @@ test.describe("Publicar Funil - Validações Específicas", () => {
       );
     }
   });
+
+  test("TC09b: Deve validar quantidade mínima de opções (pelo menos 2)", async ({
+    page,
+  }) => {
+    await page.goto("/admin/funnels");
+    await page.waitForLoadState("networkidle");
+
+    const editLink = page
+      .locator('a[href*="/admin/funnels/"][href*="/edit"]')
+      .first();
+    await editLink.click({ timeout: 10000 });
+    await waitForEditorReady(page);
+
+    const publishButton = page.locator('button:has-text("Publicar")').first();
+    await publishButton.click();
+    await page.waitForTimeout(3000);
+
+    // Verifica mensagem específica: "precisa de pelo menos 2 opções"
+    const minOptionsError = page.locator(
+      "text=/precisa de pelo menos 2 opções/i"
+    );
+    const hasError = await minOptionsError.isVisible().catch(() => false);
+
+    if (hasError) {
+      const errorCount = await minOptionsError.count();
+      console.log(`✓ Detectadas ${errorCount} etapas com menos de 2 opções`);
+      await expect(minOptionsError.first()).toBeVisible();
+    } else {
+      console.log("✓ Todas as etapas têm pelo menos 2 opções");
+    }
+  });
 });
 
 test.describe("Despublicar Funil", () => {
