@@ -3,6 +3,7 @@
 ## ✅ Alterações Realizadas no Código
 
 ### 1. **pixelManager.ts** - Mapeamento de Domínios
+
 ```typescript
 const DOMAIN_TO_FUNNEL: Record<string, string> = {
   "giselegalvao.com": "default",
@@ -12,6 +13,7 @@ const DOMAIN_TO_FUNNEL: Record<string, string> = {
 ```
 
 ### 2. **UtmSettingsTab.tsx** - URLs de Exemplo
+
 ```typescript
 {
   facebook: 'https://giselegalvao.com/',
@@ -22,6 +24,7 @@ const DOMAIN_TO_FUNNEL: Record<string, string> = {
 ```
 
 ### 3. **index.html** - Meta Tags OpenGraph
+
 ```html
 <meta property="og:image" content="https://giselegalvao.com/og-image.jpg" />
 ```
@@ -43,6 +46,7 @@ const DOMAIN_TO_FUNNEL: Record<string, string> = {
 Configure no painel DNS do seu provedor:
 
 **Para domínio raiz (giselegalvao.com):**
+
 ```
 Tipo: A
 Nome: @
@@ -51,6 +55,7 @@ TTL: 3600
 ```
 
 **Para www:**
+
 ```
 Tipo: CNAME
 Nome: www
@@ -65,22 +70,26 @@ TTL: 3600
 Acesse: https://vercel.com/quiz-flow/quiz-de-estilo4-58/settings/domains
 
 Clique em **"Add Domain"** e adicione:
+
 - `giselegalvao.com`
 - `www.giselegalvao.com`
 
 ### **2. Configurar Redirecionamentos**
 
 A Vercel permite configurar:
+
 - `www.giselegalvao.com` → `giselegalvao.com` (ou vice-versa)
 - HTTPS automático (certificado SSL gratuito)
 
 ## 🎯 URLs do Projeto
 
 ### **Produção Atual (Vercel)**
+
 - 🔍 **Inspeção**: https://vercel.com/quiz-flow/quiz-de-estilo4-58/FpCTCcUyzc2dQBNjPeNdDXh5iN7B
 - ✅ **Preview**: https://quiz-de-estilo4-58-ofqixk5qo-quiz-flow.vercel.app
 
 ### **URLs Finais (Após configuração DNS)**
+
 - 🌐 **Site Principal**: https://giselegalvao.com
 - 📊 **Página de Resultados**: https://giselegalvao.com/resultado
 - 🎯 **Quiz Embutido**: https://giselegalvao.com/quiz-descubra-seu-estilo
@@ -94,11 +103,12 @@ Após adicionar o domínio, a Vercel automaticamente:
 ✅ **CDN Global** - Edge network em 100+ localizações  
 ✅ **Compressão** - Gzip e Brotli automáticos  
 ✅ **Preview URLs** - URL única para cada branch/PR  
-✅ **Redirecionamentos** - HTTP → HTTPS automático  
+✅ **Redirecionamentos** - HTTP → HTTPS automático
 
 ## 📱 Verificação Pós-Deploy
 
 ### **1. Teste de DNS**
+
 ```bash
 # Verificar se o DNS está apontando corretamente
 nslookup giselegalvao.com
@@ -107,6 +117,7 @@ nslookup giselegalvao.com
 ```
 
 ### **2. Teste de SSL**
+
 ```bash
 # Verificar certificado SSL
 curl -I https://giselegalvao.com
@@ -117,6 +128,7 @@ curl -I https://giselegalvao.com
 ### **3. Testes Funcionais**
 
 Após propagação DNS, verifique:
+
 - [ ] Homepage carrega: https://giselegalvao.com
 - [ ] Quiz funciona corretamente
 - [ ] Página de resultados: https://giselegalvao.com/resultado
@@ -127,16 +139,19 @@ Após propagação DNS, verifique:
 ## 🚨 Troubleshooting
 
 ### **Domínio não carrega**
+
 - Aguarde até 48h para propagação DNS completa
 - Verifique nameservers com `whois giselegalvao.com`
 - Limpe cache DNS local: `ipconfig /flushdns` (Windows) ou `sudo dscacheutil -flushcache` (Mac)
 
 ### **SSL não funciona**
+
 - A Vercel gera certificado automaticamente após DNS configurado
 - Aguarde até 24h após propagação DNS
 - Verifique status em: https://vercel.com/quiz-flow/quiz-de-estilo4-58/settings/domains
 
 ### **Redirecionamento não funciona**
+
 - Configure na Vercel: Settings → Domains → Redirecionamento
 - Adicione regra no `vercel.json` se necessário
 
