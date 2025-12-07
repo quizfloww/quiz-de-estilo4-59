@@ -31,9 +31,15 @@ export const HeaderBlock: React.FC<HeaderBlockProps> = ({
           <img
             src={content.logoUrl}
             alt="Logo"
+            loading="eager"
+            decoding="async"
             className="max-w-24 h-auto object-cover"
             width={96}
             height={96}
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = "none";
+            }}
           />
         )}
 

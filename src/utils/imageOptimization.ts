@@ -46,21 +46,32 @@ export function optimizeImageUrl(
 ): string {
   if (!url) return "";
 
-  // Se a URL já tem transformações Cloudinary complexas, não modificar
-  if (url.includes("/upload/") && /\/upload\/[^\/]+\//.test(url)) {
-    return url;
+  try {
+    // Se a URL já tem transformações Cloudinary complexas, não modificar
+    if (url.includes("/upload/") && /\/upload\/[^/]+\//.test(url)) {
+      return url;
+    }
+
+    // Merge com opções padrão (apenas se opções foram passadas)
+    const shouldOptimize = Object.keys(options).length > 0;
+    const opts = shouldOptimize ? { ...DEFAULT_OPTIONS, ...options } : options;
+
+    // Se não há opções, retornar URL original
+    if (Object.keys(opts).length === 0) {
+      return url;
+    }
+
+    // Se for Cloudinary, usar transformações nativas
+    if (isCloudinaryUrl(url)) {
+      return optimizeCloudinaryUrl(url, opts);
+    }
+
+    // Para outras CDNs, usar query parameters genéricos
+    return optimizeGenericUrl(url, opts);
+  } catch (error) {
+    console.error('Erro ao otimizar URL da imagem:', error);
+    return url; // Retornar URL original em caso de erro
   }
-
-  // Merge com opções padrão
-  const opts = { ...DEFAULT_OPTIONS, ...options };
-
-  // Se for Cloudinary, usar transformações nativas
-  if (isCloudinaryUrl(url)) {
-    return optimizeCloudinaryUrl(url, opts);
-  }
-
-  // Para outras CDNs, usar query parameters genéricos
-  return optimizeGenericUrl(url, opts);
 }
 
 /**
