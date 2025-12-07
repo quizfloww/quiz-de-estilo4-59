@@ -35,18 +35,43 @@ https://giselegalvao.com/black-friday-2025
 
 ## 🔧 **Configuração de Pixels por Funil**
 
-### **Opção A: Usar Pixel Existente (Recomendado)**
+### ✅ **Opção A: Configurar pelo Editor No-Code (RECOMENDADO)**
 
-Se você quer usar um dos pixels já configurados:
+**SIM! Você pode configurar o Pixel diretamente no admin sem mexer em código!**
 
-**Não precisa alterar código!** O sistema já gerencia:
+**Passo a passo:**
 
-- Pixel 1311550759901086 → Funil padrão
-- Pixel 1038647624890676 → Quiz embutido
+1. Acesse: `https://giselegalvao.com/admin/funnels/:id/edit`
+2. Clique no ícone **⚙️ Settings** (canto superior direito)
+3. Vá para a aba **"Pixel"**
+4. Configure:
 
-### **Opção B: Adicionar Novo Pixel**
+   - ✅ **Ativar Facebook Pixel**: Toggle ON
+   - 📝 **Pixel ID**: Cole seu ID (ex: `1311550759901086`)
+   - ⚡ **Eventos para Rastrear**: Marque os eventos desejados
+     - PageView ✅
+     - QuizStart ✅
+     - QuizProgress ✅
+     - QuizComplete ✅
+     - CTAClick ✅
 
-Se você tem um **novo Pixel do Facebook** para um funil específico:
+5. Clique em **"Salvar Configurações"**
+6. **Pronto!** O pixel já está ativo no funil
+
+**Outras abas disponíveis no Settings:**
+
+- 🌐 **General**: Nome, Slug, Domínio customizado
+- 🔍 **SEO**: Title, Description, Keywords, OG Image
+- 📊 **UTM**: Captura automática de parâmetros
+- 🎨 **Branding**: Logo, Cores, Fontes
+- 📈 **Analytics**: Google Analytics, GTM, Hotjar
+- ✨ **Effects**: Animações, Transições
+- 🎯 **Results**: Configuração de resultados
+- 🏷️ **Categories**: Categorias de estilo
+
+### **Opção B: Configurar no Código (Avançado)**
+
+⚠️ **Somente se precisar de Conversions API ou configurações avançadas**
 
 **1. Edite o arquivo:** `src/services/pixelManager.ts`
 
