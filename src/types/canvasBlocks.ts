@@ -253,11 +253,24 @@ export interface CanvasBlockContent {
   hookSubtitle?: string;
   hookStyle?: "elegant" | "bold" | "minimal";
   showCta?: boolean;
+  styleCategory?: string;
+  userName?: string;
+  showStyleImage?: boolean;
+  powerMessage?: string;
+  ctaText?: string;
 
   // Style Guide
   showSecondaryGuides?: boolean;
   guideImageSize?: "sm" | "md" | "lg" | "xl";
   showExclusiveBadge?: boolean;
+
+  // Style Result Advanced
+  stylePercentage?: number;
+  styleDescription?: string;
+  styleImageUrl?: string;
+
+  // Button Advanced
+  buttonColor?: string;
 
   // Before/After Transformation
   beforeAfterItems?: BeforeAfterItem[];

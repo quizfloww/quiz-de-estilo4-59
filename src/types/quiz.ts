@@ -1,13 +1,15 @@
+export type StyleCategory =
+  | "Natural"
+  | "Clássico"
+  | "Contemporâneo"
+  | "Elegante"
+  | "Romântico"
+  | "Sexy"
+  | "Dramático"
+  | "Criativo";
+
 export interface StyleResult {
-  category:
-    | "Natural"
-    | "Clássico"
-    | "Contemporâneo"
-    | "Elegante"
-    | "Romântico"
-    | "Sexy"
-    | "Dramático"
-    | "Criativo";
+  category: StyleCategory;
   score: number;
   percentage: number;
 }
@@ -16,6 +18,7 @@ export interface QuizResult {
   primaryStyle: StyleResult;
   secondaryStyles: StyleResult[];
   totalSelections: number;
+  selections?: string[]; // Array de IDs das opções selecionadas
   userName?: string;
 }
 
