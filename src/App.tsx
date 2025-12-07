@@ -1,5 +1,10 @@
 import React, { Suspense, lazy, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
@@ -8,6 +13,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { captureUTMParameters } from "./utils/analytics";
 import { loadFacebookPixelDynamic } from "./utils/facebookPixelDynamic";
+import { trackGA4PageView } from "./utils/googleAnalytics";
+import { addBreadcrumb } from "./utils/sentry";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import CriticalCSSLoader from "./components/CriticalCSSLoader";
 import { initialCriticalCSS, heroCriticalCSS } from "./utils/critical-css";
@@ -37,6 +44,23 @@ const DashboardPage = lazy(() => import("./pages/admin/DashboardPage"));
 const FunnelEditorPage = lazy(() => import("./pages/admin/FunnelEditorPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
+// Componente interno para tracking de navegação
+const NavigationTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Track page view no GA4
+    trackGA4PageView(location.pathname + location.search);
+
+    // Breadcrumb no Sentry
+    addBreadcrumb(`Navigation: ${location.pathname}`, "navigation", "info", {
+      search: location.search,
+    });
+  }, [location]);
+
+  return null;
+};
+
 const App = () => {
   // Inicializar analytics na montagem do componente
   useEffect(() => {
@@ -44,7 +68,7 @@ const App = () => {
       loadFacebookPixelDynamic();
       captureUTMParameters();
 
-      console.log("App initialized with essential routes only");
+      console.log("App initialized with monitoring systems");
     } catch (error) {
       console.error("Erro ao inicializar aplicativo:", error);
     }
@@ -56,6 +80,7 @@ const App = () => {
         <QuizProvider>
           <TooltipProvider>
             <Router>
+              <NavigationTracker />
               <CriticalCSSLoader
                 cssContent={initialCriticalCSS}
                 id="initial-critical"
