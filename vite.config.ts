@@ -75,15 +75,15 @@ export default defineConfig(({ mode }) => ({
         // Garantir que React seja carregado primeiro
         entryFileNames: "assets/[name]-[hash].js",
         manualChunks: (id) => {
-          // Dependências React e Router - chunk separado para carregar primeiro
+          // Dependências React e Router - NÃO separar React para evitar problemas de ordem
           if (id.includes("node_modules")) {
-            // React DEVE estar em um chunk próprio para evitar problemas de ordem
-            if (id.includes("/react/") || id.includes("/react-dom/")) {
-              return "react-core";
-            }
-
-            if (id.includes("react-router")) {
-              return "vendor-react";
+            // React e React-DOM ficam no bundle principal para garantir ordem
+            if (
+              id.includes("/react/") ||
+              id.includes("/react-dom/") ||
+              id.includes("react-router")
+            ) {
+              return undefined; // Fica no bundle principal
             }
 
             // Componentes Radix UI
