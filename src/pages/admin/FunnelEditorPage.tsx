@@ -164,11 +164,15 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({
         ${isDragging ? "shadow-lg" : ""}
       `}
       onClick={onClick}
+      data-testid={`stage-item-${stage.id}`}
+      data-stage-type={stage.type}
+      data-stage-active={isActive}
     >
       <div
         {...attributes}
         {...listeners}
         className="cursor-grab active:cursor-grabbing"
+        data-testid={`stage-drag-handle-${stage.id}`}
       >
         <GripVertical className="h-4 w-4 text-muted-foreground" />
       </div>
@@ -186,6 +190,7 @@ const SortableStageItem: React.FC<SortableStageItemProps> = ({
           e.stopPropagation();
           onDelete();
         }}
+        data-testid={`stage-delete-${stage.id}`}
       >
         <Trash2 className="h-3 w-3" />
       </Button>
@@ -962,9 +967,15 @@ export default function FunnelEditorPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div
+      className="h-screen flex flex-col bg-background"
+      data-testid="funnel-editor"
+    >
       {/* Header */}
-      <header className="h-14 border-b flex items-center justify-between px-4 shrink-0">
+      <header
+        className="h-14 border-b flex items-center justify-between px-4 shrink-0"
+        data-testid="editor-header"
+      >
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link to="/admin/funnels">
@@ -1082,7 +1093,12 @@ export default function FunnelEditorPage() {
             <Play className="h-4 w-4 mr-2" />
             Testar
           </Button>
-          <Button variant="outline" size="sm" asChild>
+          <Button
+            variant="outline"
+            size="sm"
+            asChild
+            data-testid="editor-preview-button"
+          >
             <Link to={`/quiz/${funnel.slug}`} target="_blank">
               <Eye className="h-4 w-4 mr-2" />
               Preview
@@ -1094,6 +1110,7 @@ export default function FunnelEditorPage() {
             className={
               hasUnsavedChanges ? "bg-amber-600 hover:bg-amber-700" : ""
             }
+            data-testid="editor-save-button"
           >
             <Save className="h-4 w-4 mr-2" />
             Salvar
@@ -1107,6 +1124,7 @@ export default function FunnelEditorPage() {
               size="sm"
               onClick={handleUnpublish}
               disabled={isUnpublishing}
+              data-testid="editor-unpublish-button"
             >
               <GlobeLock className="h-4 w-4 mr-2" />
               {isUnpublishing ? "Despublicando..." : "Despublicar"}
@@ -1116,6 +1134,7 @@ export default function FunnelEditorPage() {
               size="sm"
               onClick={handleOpenPublishDialog}
               className="bg-primary hover:bg-primary/90"
+              data-testid="editor-publish-button"
             >
               <Globe className="h-4 w-4 mr-2" />
               Publicar
@@ -1128,7 +1147,10 @@ export default function FunnelEditorPage() {
       <ResizablePanelGroup direction="horizontal" className="flex-1">
         {/* Stages Sidebar */}
         <ResizablePanel defaultSize={15} minSize={12} maxSize={20}>
-          <div className="h-full flex flex-col border-r">
+          <div
+            className="h-full flex flex-col border-r"
+            data-testid="stages-sidebar"
+          >
             <div className="p-3 border-b flex items-center justify-between">
               <span className="font-medium text-sm">Etapas</span>
               <Select

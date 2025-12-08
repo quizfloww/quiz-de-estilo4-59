@@ -202,7 +202,7 @@ export default function FunnelsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" data-testid="funnels-page">
       <div className="max-w-7xl mx-auto p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -222,6 +222,7 @@ export default function FunnelsPage() {
           <Button
             onClick={handleCreateFunnel}
             disabled={createFunnel.isPending}
+            data-testid="create-funnel-button"
           >
             <Plus className="h-4 w-4 mr-2" />
             Criar Funil
@@ -229,13 +230,16 @@ export default function FunnelsPage() {
         </div>
 
         {/* Templates Section */}
-        <section className="mb-10">
+        <section className="mb-10" data-testid="templates-section">
           <div className="flex items-center gap-2 mb-4">
             <LayoutTemplate className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-semibold">Modelos Disponíveis</h2>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            data-testid="templates-grid"
+          >
             {TEMPLATES.map((template) => (
               <FunnelTemplateCard
                 key={template.id}
@@ -261,7 +265,7 @@ export default function FunnelsPage() {
         <Separator className="my-8" />
 
         {/* My Funnels Section */}
-        <section>
+        <section data-testid="my-funnels-section">
           <div className="flex items-center gap-2 mb-4">
             <FolderOpen className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-semibold">Meus Funis</h2>
