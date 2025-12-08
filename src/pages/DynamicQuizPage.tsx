@@ -22,6 +22,7 @@ import { DynamicTransition } from "@/components/dynamic-quiz/DynamicTransition";
 import { DynamicResult } from "@/components/dynamic-quiz/DynamicResult";
 import { DynamicOffer } from "@/components/dynamic-quiz/DynamicOffer";
 import { DynamicThankyou } from "@/components/dynamic-quiz/DynamicThankyou";
+import { DynamicStageRenderer } from "@/components/dynamic-quiz/DynamicStageRenderer";
 import { AnimatedStageWrapper } from "@/components/dynamic-quiz/AnimatedStageWrapper";
 import {
   EnchantedBackground,
@@ -341,6 +342,46 @@ const DynamicQuizPage: React.FC = () => {
     const showProgress = stageConfig.showProgress !== false;
     const allowReturn = stageConfig.allowReturn !== false;
 
+    // Check if stage has blocks configured (from editor)
+    const blocksArray = (stageConfig as Record<string, unknown>).blocks;
+    const hasBlocks = Array.isArray(blocksArray) && blocksArray.length > 0;
+
+    // Use DynamicStageRenderer for stages with modular blocks configured
+    // This allows the editor to fully control the layout with reorderable blocks
+    const useBlockRenderer =
+      hasBlocks &&
+      ["result", "offer", "upsell", "thankyou", "page"].includes(stage.type);
+
+    if (useBlockRenderer) {
+      // For result stage, ensure quiz is completed first
+      if (stage.type === "result" && !quizCompleted) {
+        handleQuizComplete();
+        return null;
+      }
+
+      return (
+        <DynamicStageRenderer
+          stage={stage}
+          stages={stages}
+          stageIndex={currentStageIndex}
+          globalConfig={globalConfig}
+          styleCategories={funnel?.style_categories}
+          userName={userName}
+          quizResult={quizResult}
+          onContinue={goToNextStage}
+          onPrevious={goToPreviousStage}
+          onOptionSelect={(optionId) => {
+            const currentSelected = answers[stage.id] || [];
+            const newSelected = currentSelected.includes(optionId)
+              ? currentSelected.filter((id) => id !== optionId)
+              : [...currentSelected, optionId];
+            handleAnswerChange(stage.id, newSelected);
+          }}
+          selectedOptions={answers[stage.id] || []}
+        />
+      );
+    }
+
     switch (stage.type) {
       case "intro":
         return (
@@ -371,7 +412,7 @@ const DynamicQuizPage: React.FC = () => {
           handleQuizComplete();
           return null;
         }
-        // Render result component with calculated results
+        // Fallback: Render default result component if no blocks configured
         return (
           <DynamicResult
             stage={stage}
@@ -385,6 +426,7 @@ const DynamicQuizPage: React.FC = () => {
 
       case "offer":
       case "upsell":
+        // Fallback: Render default offer component if no blocks configured
         return (
           <DynamicOffer
             stage={stage}
@@ -395,6 +437,7 @@ const DynamicQuizPage: React.FC = () => {
         );
 
       case "thankyou":
+        // Fallback: Render default thankyou component if no blocks configured
         return (
           <DynamicThankyou
             stage={stage}
@@ -408,8 +451,7 @@ const DynamicQuizPage: React.FC = () => {
         );
 
       case "page":
-        // Custom page - render based on config
-        // For now, treat as transition
+        // Custom page - use DynamicStageRenderer if has blocks, else transition
         return <DynamicTransition stage={stage} onContinue={goToNextStage} />;
 
       default:
