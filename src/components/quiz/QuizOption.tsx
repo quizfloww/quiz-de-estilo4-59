@@ -126,6 +126,7 @@ const QuizOption: React.FC<QuizOptionProps> = ({
 
   return (
     <div
+      data-testid={`quiz-option-${questionId || "unknown"}-${option.id}`}
       className={cn(
         "relative h-full",
         isDisabled && isStrategicOption
