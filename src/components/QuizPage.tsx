@@ -100,6 +100,7 @@ const QuizPage: React.FC = () => {
     showingTransition,
     showingFinalTransition,
     totalQuestions,
+    strategicQuestions.length,
   ]);
 
   useEffect(() => {
@@ -221,8 +222,10 @@ const QuizPage: React.FC = () => {
       }
     },
     [
+      currentQuestionIndex,
       currentStrategicQuestionIndex,
       saveStrategicAnswer,
+      strategicAnswers,
       totalQuestions,
       strategicQuestions.length,
     ]
@@ -347,7 +350,7 @@ const QuizPage: React.FC = () => {
       // Em caso de erro, tenta navegar diretamente
       navigate("/resultado");
     }
-  }, [strategicAnswers, submitQuizIfComplete, navigate]);
+  }, [strategicAnswers, submitQuizIfComplete, navigate, user?.userName]);
 
   const handleNextClickInternal = useCallback(() => {
     if (!showingStrategicQuestions) {
