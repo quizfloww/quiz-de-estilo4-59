@@ -98,6 +98,7 @@ export const CanvasBlockContentSchema = z
     fontSize: z.enum(["sm", "base", "lg", "xl", "2xl", "3xl"]).optional(),
     fontWeight: z.enum(["normal", "medium", "semibold", "bold"]).optional(),
     textAlign: z.enum(["left", "center", "right"]).optional(),
+    color: z.string().optional(), // Title Color
 
     // Image
     imageUrl: z.string().optional(),
@@ -108,6 +109,24 @@ export const CanvasBlockContentSchema = z
     imageAlignment: z.enum(["left", "center", "right"]).optional(),
     imageSize: z
       .enum(["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "full"])
+      .optional(),
+
+    // Image Advanced Controls
+    imageScale: z.number().optional(),
+    imageMaxWidth: z.number().optional(),
+    imageBorderRadius: z.number().optional(),
+    imageBorderWidth: z.number().optional(),
+    imageBorderColor: z.string().optional(),
+    imageShadow: z.enum(["none", "sm", "md", "lg", "xl"]).optional(),
+    imageFrame: z
+      .enum([
+        "none",
+        "circle",
+        "rounded",
+        "rounded-lg",
+        "square",
+        "soft-square",
+      ])
       .optional(),
 
     // Input
@@ -129,6 +148,13 @@ export const CanvasBlockContentSchema = z
       .enum(["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "full"])
       .optional(),
     showCheckIcon: z.boolean().optional(),
+
+    // Option Image Advanced Controls
+    optionImageScale: z.number().optional(),
+    optionImageMaxWidth: z.number().optional(),
+    optionImageBorderRadius: z.number().optional(),
+    optionImageBorderWidth: z.number().optional(),
+    optionImageBorderColor: z.string().optional(),
 
     // Button
     buttonText: z.string().optional(),
@@ -203,6 +229,12 @@ export const CanvasBlockContentSchema = z
     guaranteeTitle: z.string().optional(),
     guaranteeDescription: z.string().optional(),
     guaranteeImageUrl: z.string().optional(),
+    guaranteeSubtitle: z.string().optional(),
+
+    // Personalized Greeting
+    showGreeting: z.boolean().optional(),
+    greetingTemplate: z.string().optional(),
+    greetingSubtitle: z.string().optional(),
 
     // CTA Offer
     ctaText: z.string().optional(),
