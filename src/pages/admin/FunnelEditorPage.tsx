@@ -135,72 +135,72 @@ interface SortableStageItemProps {
   onDelete: () => void;
 }
 
-const SortableStageItem: React.FC<SortableStageItemProps> = ({
-  stage,
-  isActive,
-  onClick,
-  onDelete,
-}) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: stage.id });
+const SortableStageItem: React.FC<SortableStageItemProps> = React.memo(
+  ({ stage, isActive, onClick, onDelete }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({ id: stage.id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+    };
 
-  return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={`
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className={`
         flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors group
         ${
           isActive ? "bg-primary/10 border border-primary/20" : "hover:bg-muted"
         }
         ${isDragging ? "shadow-lg" : ""}
       `}
-      onClick={onClick}
-      data-testid={`stage-item-${stage.id}`}
-      data-stage-type={stage.type}
-      data-stage-active={isActive}
-    >
-      <div
-        {...attributes}
-        {...listeners}
-        className="cursor-grab active:cursor-grabbing"
-        data-testid={`stage-drag-handle-${stage.id}`}
+        onClick={onClick}
+        data-testid={`stage-item-${stage.id}`}
+        data-stage-type={stage.type}
+        data-stage-active={isActive}
       >
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <div
+          {...attributes}
+          {...listeners}
+          className="cursor-grab active:cursor-grabbing"
+          data-testid={`stage-drag-handle-${stage.id}`}
+        >
+          <GripVertical className="h-4 w-4 text-muted-foreground" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium truncate">{stage.title}</p>
+          <p className="text-xs text-muted-foreground">
+            {stageTypeLabels[stage.type] || stage.type}
+          </p>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-6 w-6 opacity-0 group-hover:opacity-100"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          data-testid={`stage-delete-${stage.id}`}
+        >
+          <Trash2 className="h-3 w-3" />
+        </Button>
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{stage.title}</p>
-        <p className="text-xs text-muted-foreground">
-          {stageTypeLabels[stage.type] || stage.type}
-        </p>
-      </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-6 w-6 opacity-0 group-hover:opacity-100"
-        onClick={(e) => {
-          e.stopPropagation();
-          onDelete();
-        }}
-        data-testid={`stage-delete-${stage.id}`}
-      >
-        <Trash2 className="h-3 w-3" />
-      </Button>
-    </div>
-  );
-};
+    );
+  }
+);
+
+// Display name for debugging
+SortableStageItem.displayName = "SortableStageItem";
 
 export default function FunnelEditorPage() {
   const { id } = useParams<{ id: string }>();
@@ -1017,6 +1017,7 @@ export default function FunnelEditorPage() {
                   "draft"
                 }
               />
+              <EditorStatus status={editorStatus} lastSaved={lastSaved} />
             </div>
             <span className="text-xs text-muted-foreground">
               /{funnel.slug}
