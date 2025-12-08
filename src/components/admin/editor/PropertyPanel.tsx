@@ -80,7 +80,7 @@ export default function PropertyPanel({
           <Label htmlFor="component-text">Texto</Label>
           <Textarea
             id="component-text"
-            value={selectedComponent.props?.text || ""}
+            value={(selectedComponent.props?.text as string) || ""}
             onChange={(e) => updateProperty("text", e.target.value)}
             placeholder="Digite o texto aqui"
           />
@@ -92,7 +92,7 @@ export default function PropertyPanel({
         <div>
           <Label htmlFor="heading-level">Nível do Título</Label>
           <Select
-            value={selectedComponent.props?.level?.toString() || "1"}
+            value={String(selectedComponent.props?.level || "1")}
             onValueChange={(value) => updateProperty("level", parseInt(value))}
           >
             <SelectTrigger>
@@ -113,7 +113,7 @@ export default function PropertyPanel({
         <div>
           <Label htmlFor="button-variant">Estilo do Botão</Label>
           <Select
-            value={selectedComponent.props?.variant || "primary"}
+            value={(selectedComponent.props?.variant as string) || "primary"}
             onValueChange={(value) => updateProperty("variant", value)}
           >
             <SelectTrigger>
@@ -137,7 +137,7 @@ export default function PropertyPanel({
             <Input
               id="image-src"
               type="url"
-              value={selectedComponent.props?.src || ""}
+              value={(selectedComponent.props?.src as string) || ""}
               onChange={(e) => updateProperty("src", e.target.value)}
               placeholder="https://exemplo.com/imagem.jpg"
             />
@@ -147,7 +147,7 @@ export default function PropertyPanel({
             <Input
               id="image-alt"
               type="text"
-              value={selectedComponent.props?.alt || ""}
+              value={(selectedComponent.props?.alt as string) || ""}
               onChange={(e) => updateProperty("alt", e.target.value)}
               placeholder="Descrição da imagem"
             />

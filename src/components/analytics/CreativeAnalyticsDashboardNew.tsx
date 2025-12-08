@@ -176,6 +176,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     value: string | number;
     subtitle?: string;
     trend?: "up" | "down" | null;
+    trendValue?: number;
     color: string;
   }
 
@@ -185,6 +186,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
     value,
     subtitle,
     trend,
+    trendValue,
     color,
   }: MetricCardProps) => (
     <Card
@@ -226,17 +228,17 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           {trend && (
             <div
               className={`flex items-center space-x-1 text-xs px-2 py-1 rounded-full ${
-                trend > 0
+                trend === "up"
                   ? "bg-green-50 text-green-700"
                   : "bg-red-50 text-red-700"
               }`}
             >
-              {trend > 0 ? (
+              {trend === "up" ? (
                 <TrendingUp size={12} />
               ) : (
                 <TrendingDown size={12} />
               )}
-              <span>{Math.abs(trend)}%</span>
+              <span>{trendValue !== undefined ? Math.abs(trendValue) : 0}%</span>
             </div>
           )}
         </div>
@@ -478,7 +480,8 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           title="Total de Visualizações"
           value={totalStats.page_views.toLocaleString()}
           subtitle={`Últimos ${selectedPeriod} dias`}
-          trend={5.2}
+          trend="up"
+          trendValue={5.2}
           color={brandColors.primary}
         />
         <MetricCard
@@ -490,7 +493,8 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               ? ((totalStats.leads / totalStats.page_views) * 100).toFixed(1)
               : 0
           }%`}
-          trend={3.1}
+          trend="up"
+          trendValue={3.1}
           color={brandColors.success}
         />
         <MetricCard
@@ -498,7 +502,8 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
           title="Receita Total"
           value={formatCurrency(totalStats.revenue)}
           subtitle={`${totalStats.purchases} vendas`}
-          trend={8.7}
+          trend="up"
+          trendValue={8.7}
           color={brandColors.accent}
         />
         <MetricCard
@@ -510,6 +515,7 @@ const CreativeAnalyticsDashboardNew: React.FC = () => {
               ? `${bestPerformingCreative.conversion_rate}% conv.`
               : ""
           }
+          trend={null}
           color={brandColors.secondary}
         />
       </div>

@@ -326,16 +326,16 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
       // Eventos da versão A
       const eventsA = events.filter(
         (e) =>
-          e.timestamp >= dayStart &&
-          e.timestamp < dayEnd &&
+          Number(e.timestamp) >= dayStart &&
+          Number(e.timestamp) < dayEnd &&
           e.customData?.pixel_id === "1311550759901086"
       );
 
       // Eventos da versão B
       const eventsB = events.filter(
         (e) =>
-          e.timestamp >= dayStart &&
-          e.timestamp < dayEnd &&
+          Number(e.timestamp) >= dayStart &&
+          Number(e.timestamp) < dayEnd &&
           e.customData?.pixel_id === "1038647624890676"
       );
 

@@ -1,14 +1,48 @@
 
 import React from 'react';
 
+// Extended animation types to support all AnimationConfig types
+type AnimationType = 
+  | 'fade' 
+  | 'fade-in' 
+  | 'scale' 
+  | 'scale-in' 
+  | 'slide-up' 
+  | 'slide-down' 
+  | 'bounce' 
+  | 'pulse' 
+  | 'none';
+
 interface AnimatedWrapperProps {
-  animation?: 'fade' | 'scale' | 'none';
+  animation?: AnimationType;
   show: boolean;
   duration?: number;
   delay?: number;
   className?: string;
   children: React.ReactNode;
 }
+
+const getAnimationClass = (animation: AnimationType): string => {
+  switch (animation) {
+    case 'fade':
+    case 'fade-in':
+      return 'animate-fade-in';
+    case 'scale':
+    case 'scale-in':
+      return 'animate-scale-in';
+    case 'slide-up':
+      return 'animate-slide-up';
+    case 'slide-down':
+      return 'animate-slide-down';
+    case 'bounce':
+      return 'animate-bounce';
+    case 'pulse':
+      return 'animate-pulse';
+    case 'none':
+    default:
+      return '';
+  }
+};
 
 export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
   animation = 'fade',
@@ -29,8 +63,7 @@ export const AnimatedWrapper: React.FC<AnimatedWrapperProps> = ({
 
   if (!show || !mounted) return null;
 
-  const animationClass = animation === 'fade' ? 'animate-fade-in' : 
-                        animation === 'scale' ? 'animate-scale-in' : '';
+  const animationClass = getAnimationClass(animation);
 
   return (
     <div 

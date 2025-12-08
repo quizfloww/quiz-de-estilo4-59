@@ -11,20 +11,24 @@ interface ComponentRendererProps {
   component: Component;
 }
 
+type ButtonVariant = "default" | "destructive" | "ghost" | "link" | "outline" | "secondary";
+type ButtonSize = "default" | "icon" | "lg" | "sm";
+
 export function ComponentRenderer({ component }: ComponentRendererProps) {
   const { type, props } = component;
 
   switch (type) {
     case "heading": {
-      const HeadingTag = `h${props.level || 1}` as keyof JSX.IntrinsicElements;
+      const level = (props.level as number) || 1;
+      const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
       return (
         <HeadingTag
-          className={`font-bold ${getHeadingClasses(props.level)} ${
-            props.className || ""
+          className={`font-bold ${getHeadingClasses(level)} ${
+            (props.className as string) || ""
           }`}
-          style={props.style}
+          style={props.style as React.CSSProperties}
         >
-          {props.text || "Título"}
+          {(props.text as string) || "Título"}
         </HeadingTag>
       );
     }
@@ -32,40 +36,40 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
     case "paragraph":
       return (
         <p
-          className={`text-gray-700 leading-relaxed ${props.className || ""}`}
-          style={props.style}
+          className={`text-gray-700 leading-relaxed ${(props.className as string) || ""}`}
+          style={props.style as React.CSSProperties}
         >
-          {props.text || "Parágrafo de texto."}
+          {(props.text as string) || "Parágrafo de texto."}
         </p>
       );
 
     case "button":
       return (
         <Button
-          variant={props.variant || "default"}
-          size={props.size || "default"}
-          className={props.className}
+          variant={(props.variant as ButtonVariant) || "default"}
+          size={(props.size as ButtonSize) || "default"}
+          className={(props.className as string) || ""}
           onClick={(e) => e.preventDefault()}
         >
-          {props.text || "Botão"}
+          {(props.text as string) || "Botão"}
         </Button>
       );
 
     case "image":
       return (
         <img
-          src={props.src || "https://via.placeholder.com/400x200"}
-          alt={props.alt || "Imagem"}
-          className={`max-w-full h-auto rounded ${props.className || ""}`}
-          style={props.style}
+          src={(props.src as string) || "https://via.placeholder.com/400x200"}
+          alt={(props.alt as string) || "Imagem"}
+          className={`max-w-full h-auto rounded ${(props.className as string) || ""}`}
+          style={props.style as React.CSSProperties}
         />
       );
 
     case "divider":
       return (
         <hr
-          className={`border-gray-300 ${props.className || ""}`}
-          style={props.style}
+          className={`border-gray-300 ${(props.className as string) || ""}`}
+          style={props.style as React.CSSProperties}
         />
       );
 
@@ -73,9 +77,9 @@ export function ComponentRenderer({ component }: ComponentRendererProps) {
       return (
         <div
           className={`rounded border-2 border-dashed border-gray-300 min-h-[100px] flex items-center justify-center ${
-            props.className || ""
+            (props.className as string) || ""
           }`}
-          style={props.style}
+          style={props.style as React.CSSProperties}
         >
           <span className="text-gray-400">
             Container - Arraste componentes aqui
