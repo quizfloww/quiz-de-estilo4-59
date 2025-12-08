@@ -183,10 +183,18 @@ export const CanvasBlockContentSchema = z
     stylePercentage: z.number().optional(), // Percentual do estilo
     styleDescription: z.string().optional(), // Descrição do estilo
     styleImageUrl: z.string().optional(), // URL da imagem do estilo
+    styleCategory: z.string().optional(), // Nome da categoria do estilo
+    guideImageUrl: z.string().optional(), // URL da imagem do guia
+    primaryStyle: z.any().optional(), // Objeto de resultado do estilo primário
+    styleCategories: z.any().optional(), // Array de categorias de estilo
 
     // Secondary Styles
     maxSecondaryStyles: z.number().optional(),
+    maxStyles: z.number().optional(), // Alias para maxSecondaryStyles
     showSecondaryPercentage: z.boolean().optional(),
+    showPercentages: z.boolean().optional(), // Alias para showSecondaryPercentage
+    secondaryStyles: z.any().optional(), // Array de estilos secundários
+    title: z.string().optional(), // Título do bloco
 
     // Style Progress
     showLabels: z.boolean().optional(),
