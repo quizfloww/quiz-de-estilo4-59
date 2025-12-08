@@ -238,6 +238,17 @@ export function formatValidationErrors(errors: ValidationError[]): string {
 }
 
 /**
+ * Converte erros de ValidationError[] para array de strings legíveis
+ * Usado para exibição em toast/UI
+ */
+export function formatZodErrors(errors: ValidationError[]): string[] {
+  return errors.map((err) => {
+    const location = err.path ? `em "${err.path}"` : "";
+    return `${err.message} ${location}`.trim();
+  });
+}
+
+/**
  * Valida JSON de funil para importação
  * @param data - Dados JSON do funil
  * @returns Resultado de validação com erros detalhados

@@ -643,7 +643,7 @@ export default function FunnelEditorPage() {
 
         if (!validationResult.success) {
           // Show detailed validation errors
-          const errorMessages = formatZodErrors(validationResult.error!);
+          const errorMessages = formatZodErrors(validationResult.errors);
           console.error("Validation errors:", errorMessages);
 
           // Show first 3 errors in toast (to avoid overwhelming)

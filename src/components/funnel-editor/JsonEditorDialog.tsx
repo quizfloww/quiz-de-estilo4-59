@@ -85,7 +85,7 @@ export function JsonEditorDialog({
         if (!result.success) {
           return {
             valid: false,
-            errors: formatZodErrors(result.error!),
+            errors: formatZodErrors(result.errors),
           };
         }
       }
@@ -102,7 +102,7 @@ export function JsonEditorDialog({
       if (!valid && contentType === "funnel" && val) {
         const result = validateFunnelImport(val);
         if (!result.success) {
-          setValidationErrors(formatZodErrors(result.error!));
+          setValidationErrors(formatZodErrors(result.errors));
         } else {
           setValidationErrors([]);
         }
