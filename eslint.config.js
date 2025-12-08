@@ -14,6 +14,8 @@ export default tseslint.config(
       "**/*.test.ts",
       "**/*.stories.tsx",
       "**/*.stories.ts",
+      "**/*.lovable.tsx",
+      "**/*.lovable.ts",
       "src/utils/tests/**/*",
     ],
   },
