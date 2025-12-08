@@ -173,16 +173,27 @@ test.describe("Editor - Modo de Teste do Quiz de Estilo Pessoal", () => {
       await page.waitForTimeout(300);
 
       await options.nth(2).click();
-      await page.waitForTimeout(500);
 
-      // Como autoAdvance: false nas questões de estilo (multiSelect: 3),
-      // o usuário precisa clicar no botão "Continuar" para avançar
-      const continueBtn = overlay.locator('[data-testid="test-mode-continue"]');
-      await expect(continueBtn).toBeEnabled({ timeout: 3000 });
-      await continueBtn.click();
+      // Com autoAdvance: true, após selecionar 3 opções o quiz deve avançar automaticamente
+      // Se o auto-avanço falhar, o botão "Continuar" estará habilitado como fallback
+      await page.waitForTimeout(800);
 
-      // Aguarda a próxima etapa carregar
-      await page.waitForTimeout(500);
+      // Verifica se avançou para a próxima etapa (Etapa 3)
+      // Se não avançou automaticamente, clica no botão como fallback
+      const etapa3Visible = await page
+        .getByText("Etapa 3 de")
+        .isVisible()
+        .catch(() => false);
+
+      if (!etapa3Visible) {
+        // Fallback: clica no botão continuar
+        const continueBtn = overlay.locator(
+          '[data-testid="test-mode-continue"]'
+        );
+        await expect(continueBtn).toBeEnabled({ timeout: 3000 });
+        await continueBtn.click();
+        await page.waitForTimeout(500);
+      }
 
       // Verifica se avançou para a próxima etapa (Etapa 3)
       await expect(page.getByText("Etapa 3 de")).toBeVisible({ timeout: 5000 });

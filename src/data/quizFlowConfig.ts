@@ -283,7 +283,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAL DETALHE VOCÊ MAIS PREFERE?",
         displayType: "text",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q4-natural",
@@ -351,7 +351,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAIS ESTAMPAS VOCÊ MAIS SE IDENTIFICA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q5-natural",
@@ -435,7 +435,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAL TIPO DE CASACO VOCÊ MAIS USA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q6-natural",
@@ -519,7 +519,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUE TIPO DE CALÇA VOCÊ MAIS GOSTA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q7-natural",
@@ -603,7 +603,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAL DESSES SAPATOS VOCÊ TEM OU MAIS GOSTA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q8-natural",
@@ -687,7 +687,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUE TIPO DE ACESSÓRIOS VOCÊ GOSTA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q9-natural",
@@ -771,7 +771,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "VOCÊ ESCOLHE CERTOS TECIDOS, PRINCIPALMENTE PORQUE ELES...",
         displayType: "text",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q10-natural",
