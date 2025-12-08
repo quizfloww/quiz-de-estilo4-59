@@ -4,7 +4,7 @@ import path from "path";
 import compression from "vite-plugin-compression";
 import { componentTagger } from "./src/plugins/lovable-component-tagger.js";
 
-// https://vitejs.dev/config/
+// Configuração principal do Vite
 export default defineConfig(({ mode }) => ({
   root: ".",
   base: "/",
@@ -69,105 +69,10 @@ export default defineConfig(({ mode }) => ({
         pure_funcs: ["console.log", "console.info"],
       },
     },
-    // Configurações para evitar problemas de MIME type
+    // Usar chunking padrão para evitar problemas de ordem de carregamento do React
     rollupOptions: {
       output: {
-        // Garantir que React seja carregado primeiro
         entryFileNames: "assets/[name]-[hash].js",
-        manualChunks: (id) => {
-          // Dependências React e Router - NÃO separar React para evitar problemas de ordem
-          if (id.includes("node_modules")) {
-            // React e React-DOM ficam no bundle principal para garantir ordem
-            if (
-              id.includes("/react/") ||
-              id.includes("/react-dom/") ||
-              id.includes("react-router")
-            ) {
-              return undefined; // Fica no bundle principal
-            }
-
-            // Componentes Radix UI
-            if (id.includes("@radix-ui")) {
-              return "vendor-ui";
-            }
-
-            // Utilitários gerais
-            if (
-              id.includes("lodash") ||
-              id.includes("date-fns") ||
-              id.includes("clsx") ||
-              id.includes("tailwind-merge")
-            ) {
-              return "vendor-utils";
-            }
-
-            // Supabase e autenticação
-            if (id.includes("@supabase") || id.includes("gotrue-js")) {
-              return "vendor-supabase";
-            }
-
-            // Zod e validação
-            if (id.includes("zod")) {
-              return "vendor-validation";
-            }
-
-            // Recharts
-            if (id.includes("recharts") || id.includes("d3-")) {
-              return "charts";
-            }
-
-            // Framer Motion
-            if (id.includes("framer-motion")) {
-              return "animations";
-            }
-
-            // IndexedDB
-            if (id.includes("idb")) {
-              return "vendor-db";
-            }
-
-            // Outros node_modules
-            return "vendor";
-          }
-
-          // Código do app
-          if (id.includes("/src/")) {
-            // Páginas de admin
-            if (id.includes("/pages/admin/")) {
-              return "admin";
-            }
-
-            // Componentes do editor
-            if (
-              id.includes("/components/canvas/") ||
-              id.includes("/components/editor/")
-            ) {
-              return "editor";
-            }
-
-            // Analytics
-            if (
-              id.includes("/utils/analytics") ||
-              id.includes("/utils/facebookPixel")
-            ) {
-              return "analytics";
-            }
-
-            // Schemas e validação
-            if (
-              id.includes("/schemas/") ||
-              id.includes("/utils/blockSchemas") ||
-              id.includes("/utils/stageConfigSchema")
-            ) {
-              return "schemas";
-            }
-
-            // Serviços
-            if (id.includes("/services/")) {
-              return "services";
-            }
-          }
-        },
         chunkFileNames: (chunkInfo) => {
           const facadeModuleId = chunkInfo.facadeModuleId
             ? chunkInfo.facadeModuleId.split("/").pop()
