@@ -1,7 +1,7 @@
 "use client";
 // Facebook Pixel Initializer Component
 import { useEffect } from "react";
-import { initFacebookPixel } from "@/utils/facebookPixelDynamic";
+import { loadFacebookPixelDynamic } from "@/utils/facebookPixelDynamic";
 import { trackGA4PageView } from "@/utils/googleAnalytics";
 
 interface PixelInitializerProps {
@@ -11,7 +11,7 @@ interface PixelInitializerProps {
 const PixelInitializer = ({ pageType = "other" }: PixelInitializerProps) => {
   useEffect(() => {
     // Inicializa o Facebook Pixel com o ID correto do funil atual
-    initFacebookPixel();
+    loadFacebookPixelDynamic();
 
     // Faz tracking de PageView com GA4
     trackGA4PageView(window.location.pathname, document.title);

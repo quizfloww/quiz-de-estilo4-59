@@ -1,14 +1,8 @@
 /**
  * Google Analytics 4 (GA4) Integration
  * Gerenciamento centralizado de tracking para escalabilidade
+ * Tipos globais de Window definidos em src/types/window.d.ts
  */
-
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
-  }
-}
 
 // Configuração do GA4
 const GA4_MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID;

@@ -1,12 +1,4 @@
-// Declarações de tipos para gtag e fbq no Window
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    dataLayer?: unknown[];
-    fbq?: (...args: unknown[]) => void;
-    _fbq?: (...args: unknown[]) => void;
-  }
-}
+// Tipos globais de Window definidos em src/types/window.d.ts
 
 // Function to track a generic event
 export const trackEvent = (event_name: string, params?: object) => {

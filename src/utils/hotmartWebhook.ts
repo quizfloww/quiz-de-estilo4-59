@@ -4,8 +4,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { trackSaleConversion } from "./analytics.js";
 
-// Declaração de tipos para Window já definida em src/utils/analytics.ts
-// Não precisa redeclarar aqui
+// Declaração de tipos para Window com gtag e fbq
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    fbq?: (...args: unknown[]) => void;
+  }
+}
 
 // Criar cliente Supabase para ambiente Node.js
 const supabaseUrl = process.env.VITE_SUPABASE_URL || "";

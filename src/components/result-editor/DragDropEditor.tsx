@@ -1,25 +1,29 @@
 "use client";
-import React, { useState, useCallback } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Save, Eye, Plus } from 'lucide-react';
+import React, { useState, useCallback } from "react";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Save, Eye, Plus } from "lucide-react";
 
 interface DragDropEditorProps {
   onSave: (config: any) => void;
   initialBlocks?: any[];
-  mode?: 'quiz' | 'result' | 'offer';
+  mode?: "quiz" | "result" | "offer";
   quizId?: string;
+  storageKey?: string;
 }
 
-export const DragDropEditor: React.FC<DragDropEditorProps> = ({ 
-  onSave, 
-  initialBlocks = [], 
-  mode = 'quiz',
-  quizId 
+export const DragDropEditor: React.FC<DragDropEditorProps> = ({
+  onSave,
+  initialBlocks = [],
+  mode = "quiz",
+  quizId,
+  storageKey,
 }) => {
   const [steps, setSteps] = useState([]);
-  const [activeStepId, setActiveStepId] = useState('step-1');
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const [activeStepId, setActiveStepId] = useState("step-1");
+  const [previewMode, setPreviewMode] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
 
   const handleSave = useCallback(() => {
     const editorConfig = {
@@ -27,18 +31,22 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
       activeStepId,
       previewMode,
       timestamp: Date.now(),
-      version: '2.0',
-      mode
+      version: "2.0",
+      mode,
     };
     onSave(editorConfig);
   }, [steps, activeStepId, previewMode, mode, onSave]);
 
   const getModeTitle = () => {
     switch (mode) {
-      case 'quiz': return 'Editor de Quiz';
-      case 'result': return 'Editor de Resultado';
-      case 'offer': return 'Editor de Oferta';
-      default: return 'Editor Visual';
+      case "quiz":
+        return "Editor de Quiz";
+      case "result":
+        return "Editor de Resultado";
+      case "offer":
+        return "Editor de Oferta";
+      default:
+        return "Editor Visual";
     }
   };
 
@@ -49,14 +57,14 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
         <div className="px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-gray-900">{getModeTitle()}</h1>
+              <h1 className="text-xl font-bold text-gray-900">
+                {getModeTitle()}
+              </h1>
               <div className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
                 {mode.toUpperCase()}
               </div>
             </div>
-            <div className="text-sm text-gray-600">
-              Quiz ID: {quizId}
-            </div>
+            <div className="text-sm text-gray-600">Quiz ID: {quizId}</div>
           </div>
         </div>
       </div>
@@ -72,7 +80,9 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
             </h2>
           </div>
           <div className="p-4">
-            <p className="text-sm text-gray-600">Editor simplificado - funcionalidades básicas disponíveis.</p>
+            <p className="text-sm text-gray-600">
+              Editor simplificado - funcionalidades básicas disponíveis.
+            </p>
           </div>
         </div>
 
@@ -82,7 +92,9 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
           <div className="bg-white border-b border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Preview: {previewMode}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Preview: {previewMode}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm">
@@ -101,7 +113,9 @@ export const DragDropEditor: React.FC<DragDropEditorProps> = ({
           <div className="flex-1 overflow-auto p-6">
             <Card className="p-8">
               <div className="text-center text-gray-500">
-                <h3 className="text-lg font-medium mb-2">Editor {getModeTitle()}</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  Editor {getModeTitle()}
+                </h3>
                 <p>Área de edição será implementada aqui.</p>
               </div>
             </Card>

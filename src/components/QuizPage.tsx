@@ -16,6 +16,7 @@ import {
   trackGA4QuizComplete,
   trackGA4ResultView,
 } from "../utils/googleAnalytics";
+import { trackQuizAnswer } from "../utils/analytics";
 import { preloadImages } from "@/utils/imageManager";
 import LoadingManager from "./quiz/LoadingManager";
 import { motion, AnimatePresence } from "framer-motion";
