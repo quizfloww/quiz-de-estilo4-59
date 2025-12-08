@@ -19,6 +19,9 @@ import { DynamicQuizHeader } from "@/components/dynamic-quiz/DynamicQuizHeader";
 import { DynamicIntro } from "@/components/dynamic-quiz/DynamicIntro";
 import { DynamicQuestion } from "@/components/dynamic-quiz/DynamicQuestion";
 import { DynamicTransition } from "@/components/dynamic-quiz/DynamicTransition";
+import { DynamicResult } from "@/components/dynamic-quiz/DynamicResult";
+import { DynamicOffer } from "@/components/dynamic-quiz/DynamicOffer";
+import { DynamicThankyou } from "@/components/dynamic-quiz/DynamicThankyou";
 import { AnimatedStageWrapper } from "@/components/dynamic-quiz/AnimatedStageWrapper";
 import {
   EnchantedBackground,
@@ -45,6 +48,21 @@ const DynamicQuizPage: React.FC = () => {
   const [navigationDirection, setNavigationDirection] = useState<
     "forward" | "backward"
   >("forward");
+
+  // Quiz result state for unified flow (no redirect)
+  const [quizResult, setQuizResult] = useState<{
+    primaryStyle: {
+      category: string;
+      score: number;
+      percentage: number;
+    } | null;
+    secondaryStyles: Array<{
+      category: string;
+      score: number;
+      percentage: number;
+    }>;
+  } | null>(null);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   // Analytics tracking refs
   const quizStartTracked = useRef(false);
@@ -201,13 +219,12 @@ const DynamicQuizPage: React.FC = () => {
         },
       });
 
-      // Store in localStorage for result page
-      // Format expected by ResultPage: { primaryStyle: { category, score, percentage }, secondaryStyles: [{ category, score, percentage }], userName }
+      // Store in localStorage for backward compatibility
       localStorage.setItem(
         "quizResult",
         JSON.stringify({
-          primaryStyle: legacyResult.primaryStyle, // Now: { category, score, percentage }
-          secondaryStyles: legacyResult.secondaryStyles, // Now: Array of { category, score, percentage }
+          primaryStyle: legacyResult.primaryStyle,
+          secondaryStyles: legacyResult.secondaryStyles,
           scores: legacyResult.scores,
           userName,
           totalSelections: result.totalPoints,
@@ -219,20 +236,61 @@ const DynamicQuizPage: React.FC = () => {
         localStorage.removeItem(progressKey);
       }
 
-      // Get result URL from result stage config or use default
-      const resultStage = stages.find((s) => s.type === "result");
-      const resultUrl =
-        ((resultStage?.config as Record<string, unknown>)
-          ?.resultUrl as string) || "/resultado";
+      // Store result in state for unified flow (no redirect)
+      setQuizResult({
+        primaryStyle: legacyResult.primaryStyle,
+        secondaryStyles: legacyResult.secondaryStyles || [],
+      });
+      setQuizCompleted(true);
 
-      // Navigate to result page
-      setTimeout(() => {
-        navigate(resultUrl);
-      }, 1500);
+      // Check if funnel has result/offer stages - if so, continue to them
+      const hasResultOrOfferStages = stages.some(
+        (s) =>
+          s.type === "result" ||
+          s.type === "offer" ||
+          s.type === "thankyou" ||
+          s.type === "upsell"
+      );
+
+      if (hasResultOrOfferStages) {
+        // Find the first result/offer/thankyou stage and navigate to it
+        const resultStageIndex = stages.findIndex(
+          (s) =>
+            s.type === "result" ||
+            s.type === "offer" ||
+            s.type === "thankyou" ||
+            s.type === "upsell"
+        );
+        if (resultStageIndex >= 0) {
+          setTimeout(() => {
+            setIsCalculating(false);
+            setCurrentStageIndex(resultStageIndex);
+          }, 1500);
+          return;
+        }
+      }
+
+      // Fallback: Check if config specifies external redirect
+      const resultStage = stages.find((s) => s.type === "result");
+      const resultUrl = (resultStage?.config as Record<string, unknown>)
+        ?.resultUrl as string;
+
+      if (resultUrl && resultUrl.startsWith("/")) {
+        // Only redirect if explicitly configured
+        setTimeout(() => {
+          navigate(resultUrl);
+        }, 1500);
+      } else {
+        // Stay on current page with result shown
+        setTimeout(() => {
+          setIsCalculating(false);
+        }, 1500);
+      }
     } catch (err) {
       console.error("Error saving quiz response:", err);
-      // Still navigate to result even if save fails
-      navigate("/resultado");
+      setIsCalculating(false);
+      // Still mark as completed to show results
+      setQuizCompleted(true);
     }
   }, [
     funnel,
@@ -308,9 +366,51 @@ const DynamicQuizPage: React.FC = () => {
         return <DynamicTransition stage={stage} onContinue={goToNextStage} />;
 
       case "result":
-        // Result stage triggers completion
-        handleQuizComplete();
-        return null;
+        // If quiz not completed yet, trigger completion
+        if (!quizCompleted) {
+          handleQuizComplete();
+          return null;
+        }
+        // Render result component with calculated results
+        return (
+          <DynamicResult
+            stage={stage}
+            primaryStyle={quizResult?.primaryStyle || null}
+            secondaryStyles={quizResult?.secondaryStyles || []}
+            userName={userName}
+            onContinue={goToNextStage}
+            styleCategories={funnel?.style_categories}
+          />
+        );
+
+      case "offer":
+      case "upsell":
+        return (
+          <DynamicOffer
+            stage={stage}
+            userName={userName}
+            primaryStyleCategory={quizResult?.primaryStyle?.category}
+            onContinue={goToNextStage}
+          />
+        );
+
+      case "thankyou":
+        return (
+          <DynamicThankyou
+            stage={stage}
+            userName={userName}
+            primaryStyleCategory={quizResult?.primaryStyle?.category}
+            onContinue={() => {
+              // Reset quiz or go to home
+              window.location.href = "/";
+            }}
+          />
+        );
+
+      case "page":
+        // Custom page - render based on config
+        // For now, treat as transition
+        return <DynamicTransition stage={stage} onContinue={goToNextStage} />;
 
       default:
         return null;
