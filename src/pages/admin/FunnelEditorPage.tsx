@@ -544,13 +544,22 @@ export default function FunnelEditorPage() {
   useEffect(() => {
     if (!hasUnsavedChanges) return;
 
+    // Update status to show unsaved changes
+    setEditorStatus("unsaved");
+
     const autoSaveTimer = setTimeout(async () => {
       console.log("[AutoSave] Salvando automaticamente...");
+      setEditorStatus("saving");
       try {
         await handleSaveInternal();
+        setEditorStatus("saved");
+        setLastSaved(new Date());
         toast.info("Auto-save realizado", { duration: 2000 });
+        // Reset to idle after 3 seconds
+        setTimeout(() => setEditorStatus("idle"), 3000);
       } catch (error) {
         console.error("[AutoSave] Falha:", error);
+        setEditorStatus("error");
       }
     }, 30000); // 30 seconds
 
@@ -558,8 +567,19 @@ export default function FunnelEditorPage() {
   }, [hasUnsavedChanges, handleSaveInternal]);
 
   const handleSave = useCallback(async () => {
-    await handleSaveInternal();
-    toast.success("Funil salvo com sucesso!");
+    setEditorStatus("saving");
+    try {
+      await handleSaveInternal();
+      setEditorStatus("saved");
+      setLastSaved(new Date());
+      toast.success("Funil salvo com sucesso!");
+      // Reset to idle after 3 seconds
+      setTimeout(() => setEditorStatus("idle"), 3000);
+    } catch (error) {
+      setEditorStatus("error");
+      toast.error("Erro ao salvar funil");
+      console.error("Save error:", error);
+    }
   }, [handleSaveInternal]);
 
   // Atualiza ref para uso no keyboard shortcut
