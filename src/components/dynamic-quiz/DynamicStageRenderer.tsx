@@ -182,10 +182,17 @@ export const DynamicStageRenderer: React.FC<DynamicStageRendererProps> = ({
   ]);
 
   // Get background color
+  const stageConfigTyped = (stage.config || {}) as Record<string, unknown>;
+  const globalConfigTyped = (globalConfig || {}) as Record<string, unknown>;
+  const brandingConfig = (globalConfigTyped.branding || {}) as Record<
+    string,
+    unknown
+  >;
+
   const bgColor =
     backgroundColor ||
-    (stage.config as any)?.canvasBackgroundColor ||
-    (globalConfig as any)?.branding?.backgroundColor ||
+    (stageConfigTyped.canvasBackgroundColor as string) ||
+    (brandingConfig.backgroundColor as string) ||
     "#FAF9F7";
 
   return (
