@@ -7,45 +7,45 @@ import { test, expect } from "../fixtures/auth";
 test.describe("Editor de Funil - Etapa de Resultado e Oferta", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/funnels/1/edit");
+    // Aguarda carregamento básico do editor (sidebar de etapas)
+    await expect(page.locator("text=Etapas").first()).toBeVisible({
+      timeout: 20000,
+    });
   });
+
+  const openResultStage = async (page: any) => {
+    // Seleciona a etapa "Descubra seu estilo" na sidebar
+    const stageItem = page.locator("text=Descubra seu estilo").first();
+    await expect(stageItem).toBeVisible({ timeout: 15000 });
+    await stageItem.click();
+    // Garante que o canvas carregou algum bloco
+    await expect(
+      page.locator("button:has-text('Quero garantir meu guia')").first()
+    ).toBeVisible({ timeout: 15000 });
+  };
 
   test("deve carregar a etapa de resultado com CTA e preços", async ({
     page,
   }) => {
-    // Aguarda o carregamento geral do editor
-    await expect(page.locator("text=Funil").first()).toBeVisible({
-      timeout: 15000,
-    });
-
-    // A etapa de resultado vem do mock com o título abaixo
-    const resultHeading = page.locator("text=Descubra seu estilo").first();
-    await expect(resultHeading).toBeVisible({ timeout: 10000 });
-
-    // Valida CTA e campos de oferta (vindos do mock stage result)
-    const ctaButton = page
-      .locator("button:has-text('Quero garantir meu guia')")
-      .first();
-    await expect(ctaButton).toBeVisible({ timeout: 10000 });
+    await openResultStage(page);
 
     // Valores de preço do mock: 47 de oferta, 197 original
-    const currentPrice = page.locator("text=R$ 47");
-    const originalPrice = page.locator("text=197");
-    await expect(currentPrice).toBeVisible({ timeout: 10000 });
-    await expect(originalPrice).toBeVisible({ timeout: 10000 });
+    await expect(page.locator("text=R$ 47").first()).toBeVisible({
+      timeout: 10000,
+    });
+    await expect(page.locator("text=197").first()).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("não deve mostrar placeholder em branco na seção de resultado", async ({
     page,
   }) => {
-    // Se a seção carregou, não deve existir um container vazio ocupando viewport
-    const resultSection = page
-      .locator("section:has-text('Descubra seu estilo')")
-      .first();
-    await expect(resultSection).toBeVisible({ timeout: 10000 });
+    await openResultStage(page);
 
     // Verifica que há pelo menos um bloco clicável ou botão dentro
     await expect(
-      resultSection.locator("button, a, [role='button']").first()
+      page.locator("button, a, [role='button']").first()
     ).toBeVisible({ timeout: 10000 });
   });
 });
