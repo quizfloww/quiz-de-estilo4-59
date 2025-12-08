@@ -902,7 +902,7 @@ describe("Cálculo de Estilos Secundários", () => {
     }
   });
 
-  it("estilos secundários devem ter nome e porcentagem", () => {
+  it("estilos secundários devem ter categoryName e porcentagem", () => {
     const answers: Record<string, string[]> = {
       "1": ["1a", "1b", "1c"],
       "3": ["3a", "3d", "3e"],
@@ -915,10 +915,17 @@ describe("Cálculo de Estilos Secundários", () => {
     );
 
     result.secondaryStyles.forEach((style) => {
-      expect(style.category).toBeDefined();
-      expect(typeof style.category).toBe("string");
-      expect(style.category.length).toBeGreaterThan(0);
+      // Verificar categoryId
+      expect(style.categoryId).toBeDefined();
+      expect(typeof style.categoryId).toBe("string");
+      expect(style.categoryId.length).toBeGreaterThan(0);
 
+      // Verificar categoryName
+      expect(style.categoryName).toBeDefined();
+      expect(typeof style.categoryName).toBe("string");
+      expect(style.categoryName.length).toBeGreaterThan(0);
+
+      // Verificar percentage
       expect(style.percentage).toBeDefined();
       expect(typeof style.percentage).toBe("number");
       expect(style.percentage).toBeGreaterThanOrEqual(0);
@@ -938,9 +945,11 @@ describe("Cálculo de Estilos Secundários", () => {
       STYLE_CATEGORIES
     );
 
-    const primaryCategory = result.primaryStyle?.category;
-    const secondaryCategories = result.secondaryStyles.map((s) => s.category);
+    const primaryCategoryId = result.primaryStyle?.categoryId;
+    const secondaryCategoryIds = result.secondaryStyles.map(
+      (s) => s.categoryId
+    );
 
-    expect(secondaryCategories).not.toContain(primaryCategory);
+    expect(secondaryCategoryIds).not.toContain(primaryCategoryId);
   });
 });
