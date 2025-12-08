@@ -1,4 +1,8 @@
 import { QuizFlowConfig } from "@/types/quizFlow";
+import {
+  resultStageBlocks,
+  offerStageBlocks,
+} from "./templates/resultOfferBlocks";
 
 export const defaultQuizFlowConfig: QuizFlowConfig = {
   id: "quiz-estilo-pessoal",
@@ -1149,6 +1153,8 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         styleImageSize: "lg",
         maxSecondaryStyles: 3,
         showSecondaryPercentage: true,
+        // Modular blocks for rendering
+        blocks: [...resultStageBlocks, ...offerStageBlocks],
       },
     },
   ],
