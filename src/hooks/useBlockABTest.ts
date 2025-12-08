@@ -45,11 +45,17 @@ export function useBlockABTest(config?: ABTestConfig): BlockABTestState {
     hasAssignedRef.current = true;
 
     // Tracking de visualização
-    if (config.trackingEvents?.view) {
+    const trackingEvents = config.trackingEvents;
+    if (
+      trackingEvents &&
+      typeof trackingEvents === "object" &&
+      !Array.isArray(trackingEvents) &&
+      trackingEvents.view
+    ) {
       trackEvent("ab_test_view", {
         test_name: config.testName,
         variant: assignedVariant,
-        event_label: config.trackingEvents.view,
+        event_label: trackingEvents.view,
       });
     }
   }, [config]);

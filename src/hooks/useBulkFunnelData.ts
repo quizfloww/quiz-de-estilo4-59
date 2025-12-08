@@ -3,8 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Database } from "@/integrations/supabase/types";
 
-// Stage types agora são strings livres
-type StageType = string;
+// Stage types que correspondem ao banco de dados
+type StageType = "intro" | "question" | "result" | "strategic" | "transition";
 
 interface StageToInsert {
   funnel_id: string;
@@ -12,7 +12,7 @@ interface StageToInsert {
   title: string;
   order_index: number;
   is_enabled: boolean;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
 }
 
 interface OptionToInsert {

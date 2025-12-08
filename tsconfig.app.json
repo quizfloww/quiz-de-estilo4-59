@@ -27,5 +27,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/**/*.lovable.tsx",
+    "src/**/*.lovable.ts",
+    "src/**/*.stories.tsx",
+    "src/**/*.stories.ts",
+    "src/utils/tests/**/*"
+  ]
 }

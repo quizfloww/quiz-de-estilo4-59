@@ -1071,7 +1071,6 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         resultUrl: "/resultado",
         // Offer / Pricing
         finalPrice: 39,
-        totalOriginal: 175,
         currency: "R$",
         priceItems: [
           {
