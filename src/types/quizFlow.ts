@@ -32,6 +32,8 @@ export interface QuizFlowStage {
     inputLabel?: string;
     inputPlaceholder?: string;
     buttonText?: string;
+    privacyText?: string;
+    footerText?: string;
 
     // Question specific
     question?: string;
@@ -52,6 +54,7 @@ export interface QuizFlowStage {
     ctaUrl?: string;
     descriptionText?: string; // Texto descritivo adicional
     resultUrl?: string; // URL para resultados personalizados
+    finalPrice?: number; // Preço final para CTAs de venda
   };
 }
 

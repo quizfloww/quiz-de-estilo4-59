@@ -26,8 +26,8 @@ import {
   Clock,
   BarChart3,
 } from "lucide-react";
-// getAnalyticsEvents removido - analytics.ts obsoleto
-// import { getAnalyticsEvents } from '@/utils/analytics';
+// Importar getAnalyticsEvents do módulo analytics
+import { getAnalyticsEvents } from "@/utils/analytics";
 import { LANDING_PAGE_AB_TEST } from "@/utils/abtest";
 import { toast } from "@/components/ui/use-toast";
 

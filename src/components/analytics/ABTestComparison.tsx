@@ -52,8 +52,8 @@ import {
 import { LANDING_PAGE_AB_TEST } from "@/utils/abtest";
 import { FUNNEL_CONFIGS } from "@/services/pixelManager";
 import { toast } from "@/components/ui/use-toast";
-// getAnalyticsEvents removido - analytics.ts obsoleto
-// import { getAnalyticsEvents } from '@/utils/analytics';
+// Importar getAnalyticsEvents do módulo analytics
+import { getAnalyticsEvents } from "@/utils/analytics";
 import ABTestAlerts from "./ABTestAlerts";
 
 interface ABTestMetrics {

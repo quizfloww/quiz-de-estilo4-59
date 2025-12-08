@@ -257,7 +257,7 @@ export interface CanvasBlockContent {
   userName?: string;
   showStyleImage?: boolean;
   powerMessage?: string;
-  ctaText?: string;
+  // ctaText já declarado acima em CTA Offer
 
   // Style Guide
   showSecondaryGuides?: boolean;

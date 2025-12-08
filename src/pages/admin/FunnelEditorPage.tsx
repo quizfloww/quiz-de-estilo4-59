@@ -302,6 +302,9 @@ export default function FunnelEditorPage() {
     setHasUnsavedChanges(hasChanges);
   }, [stageBlocks, initialStageBlocks]);
 
+  // Mover activeStage para antes do auto-save para evitar uso antes da declaração
+  const activeStage = localStages.find((s) => s.id === activeStageId);
+
   // Auto-save with IndexedDB (offline draft backup)
   useEffect(() => {
     // Only auto-save if IndexedDB is available
@@ -311,18 +314,22 @@ export default function FunnelEditorPage() {
     }
 
     const autoSaveTimer = setInterval(async () => {
-      if (hasUnsavedChanges && activeStage && activeStageId && id) {
+      // Usar busca direta de localStages para evitar stale closure
+      const currentActiveStage = localStages.find(
+        (s) => s.id === activeStageId
+      );
+      if (hasUnsavedChanges && currentActiveStage && activeStageId && id) {
         try {
           const blocks = stageBlocks[activeStageId];
           if (blocks && blocks.length > 0) {
             await saveStageDraft(
               activeStageId,
               id,
-              activeStage.title,
-              activeStage,
+              currentActiveStage.title,
+              currentActiveStage,
               blocks
             );
-            console.log("✅ Auto-save draft:", activeStage.title);
+            console.log("✅ Auto-save draft:", currentActiveStage.title);
           }
         } catch (error) {
           console.error("❌ Auto-save error:", error);
@@ -331,7 +338,7 @@ export default function FunnelEditorPage() {
     }, 5000); // Auto-save every 5 seconds
 
     return () => clearInterval(autoSaveTimer);
-  }, [hasUnsavedChanges, activeStage, activeStageId, stageBlocks, id]);
+  }, [hasUnsavedChanges, localStages, activeStageId, stageBlocks, id]);
 
   // Warn before leaving with unsaved changes
   useEffect(() => {
@@ -375,7 +382,7 @@ export default function FunnelEditorPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [undo, redo]);
 
-  const activeStage = localStages.find((s) => s.id === activeStageId);
+  // activeStage já declarado acima do useEffect de auto-save
   const activeStageIndex = localStages.findIndex((s) => s.id === activeStageId);
   const currentBlocks = activeStageId ? stageBlocks[activeStageId] || [] : [];
   const selectedBlock =

@@ -327,6 +327,7 @@ export type Database = {
     };
     Enums: {
       funnel_status: "draft" | "published" | "archived";
+      stage_type: "intro" | "question" | "strategic" | "transition" | "result";
     };
     CompositeTypes: {
       [_ in never]: never;

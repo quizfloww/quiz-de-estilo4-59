@@ -1,5 +1,5 @@
-// getAnalyticsEvents removido - analytics.ts obsoleto
-// import { getAnalyticsEvents } from './analytics';
+// Importar getAnalyticsEvents do módulo analytics
+import { getAnalyticsEvents } from "./analytics";
 
 // Get cached metrics or calculate if not in cache
 export const getCachedMetrics = (timeRange: "7d" | "30d" | "all") => {

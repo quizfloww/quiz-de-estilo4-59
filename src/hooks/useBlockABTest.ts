@@ -14,13 +14,13 @@ interface WindowWithAnalytics extends Window {
 }
 
 interface BlockABTestState {
-  variant: "A" | "B" | "C";
+  variant: string; // Pode ser qualquer ID de variante (ex: "A", "B", "C", "control", etc.)
   testName: string;
   isAssigned: boolean;
 }
 
 export function useBlockABTest(config?: ABTestConfig): BlockABTestState {
-  const [variant, setVariant] = useState<"A" | "B" | "C">("A");
+  const [variant, setVariant] = useState<string>("A");
   const [isAssigned, setIsAssigned] = useState(false);
   const hasAssignedRef = useRef(false);
 
@@ -32,11 +32,7 @@ export function useBlockABTest(config?: ABTestConfig): BlockABTestState {
     const storageKey = `ab_test_block_${config.testName}`;
 
     // Tentar recuperar variante existente
-    let assignedVariant = localStorage.getItem(storageKey) as
-      | "A"
-      | "B"
-      | "C"
-      | null;
+    let assignedVariant = localStorage.getItem(storageKey);
 
     if (!assignedVariant) {
       // Atribuir nova variante baseada nos pesos
@@ -66,7 +62,7 @@ export function useBlockABTest(config?: ABTestConfig): BlockABTestState {
 }
 
 // Atribui variante baseado nos pesos
-function assignVariant(variants: ABTestConfig["variants"]): "A" | "B" | "C" {
+function assignVariant(variants: ABTestConfig["variants"]): string {
   const totalWeight = variants.reduce((sum, v) => sum + v.weight, 0);
 
   if (totalWeight !== 100) {
@@ -103,10 +99,7 @@ function trackEvent(eventName: string, params: Record<string, unknown>) {
 }
 
 // Hook para tracking de conversão em teste A/B
-export function useBlockABTestConversion(
-  testName: string,
-  variant: "A" | "B" | "C"
-) {
+export function useBlockABTestConversion(testName: string, variant: string) {
   const trackConversion = (eventLabel?: string) => {
     trackEvent("ab_test_conversion", {
       test_name: testName,
@@ -130,14 +123,14 @@ export function clearBlockABTests() {
 }
 
 // Retorna todos os testes A/B de blocos ativos
-export function getActiveBlockABTests(): Record<string, "A" | "B" | "C"> {
-  const tests: Record<string, "A" | "B" | "C"> = {};
+export function getActiveBlockABTests(): Record<string, string> {
+  const tests: Record<string, string> = {};
   const keys = Object.keys(localStorage);
 
   keys.forEach((key) => {
     if (key.startsWith("ab_test_block_")) {
       const testName = key.replace("ab_test_block_", "");
-      const variant = localStorage.getItem(key) as "A" | "B" | "C";
+      const variant = localStorage.getItem(key);
       if (variant) {
         tests[testName] = variant;
       }
