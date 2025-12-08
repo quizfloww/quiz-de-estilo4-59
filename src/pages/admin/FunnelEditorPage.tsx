@@ -45,6 +45,7 @@ import { toast } from "sonner";
 import { FunnelSettingsPanel } from "@/components/funnel-editor/FunnelSettingsPanel";
 import { PublishDialog } from "@/components/funnel-editor/PublishDialog";
 import { StatusBadge } from "@/components/funnel-editor/StatusBadge";
+import { JsonEditorDialog } from "@/components/funnel-editor/JsonEditorDialog";
 import { usePublishFunnel, PublishValidation } from "@/hooks/usePublishFunnel";
 import { useStageBlocksHistory } from "@/hooks/useStageBlocksHistory";
 import {
@@ -220,6 +221,7 @@ export default function FunnelEditorPage() {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [publishValidation, setPublishValidation] =
     useState<PublishValidation | null>(null);
+  const [showJsonEditor, setShowJsonEditor] = useState(false);
 
   // Canvas blocks state with undo/redo
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
@@ -1044,6 +1046,14 @@ export default function FunnelEditorPage() {
             >
               <Upload className="h-4 w-4" />
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowJsonEditor(true)}
+              title="Editar JSON com Monaco Editor"
+            >
+              <FileJson className="h-4 w-4" />
+            </Button>
             <input
               id="import-funnel-json"
               type="file"
@@ -1257,6 +1267,112 @@ export default function FunnelEditorPage() {
         isValidating={isValidating}
         isPublishing={isPublishing}
         onPublish={handlePublish}
+      />
+
+      {/* JSON Editor Dialog */}
+      <JsonEditorDialog
+        open={showJsonEditor}
+        onOpenChange={setShowJsonEditor}
+        value={{
+          name: funnel.name,
+          slug: funnel.slug,
+          globalConfig: funnel.global_config,
+          stages: localStages.map((stage) => ({
+            id: stage.id,
+            type: stage.type,
+            title: stage.title,
+            order_index: stage.order_index,
+            is_enabled: stage.is_enabled,
+            config: stage.config,
+            blocks: stageBlocks[stage.id] || [],
+          })),
+          exportDate: new Date().toISOString(),
+          version: "1.0",
+        }}
+        onApply={async (importedData: unknown) => {
+          // Re-use the same logic as handleImportFunnel
+          const data = importedData as {
+            name?: string;
+            globalConfig?: unknown;
+            stages: Array<{
+              id?: string;
+              type: string;
+              title: string;
+              order_index: number;
+              is_enabled?: boolean;
+              config?: unknown;
+              blocks?: CanvasBlock[];
+            }>;
+          };
+
+          // Update funnel metadata if present
+          if (data.name || data.globalConfig) {
+            await updateFunnel.mutateAsync({
+              id: funnel.id,
+              ...(data.name && { name: data.name }),
+              ...(data.globalConfig && { global_config: data.globalConfig }),
+            });
+          }
+
+          // Import stages and blocks
+          const newStageBlocks: Record<string, CanvasBlock[]> = {};
+          const updatedStages: FunnelStage[] = [];
+
+          for (const importedStage of data.stages) {
+            const existingStage = localStages.find(
+              (s) => s.order_index === importedStage.order_index
+            );
+
+            if (existingStage) {
+              await updateStage.mutateAsync({
+                id: existingStage.id,
+                title: importedStage.title || existingStage.title,
+                type: importedStage.type || existingStage.type || "page",
+                config: importedStage.config || {},
+                is_enabled: importedStage.is_enabled ?? true,
+              });
+
+              const updatedStageData = {
+                ...existingStage,
+                title: importedStage.title || existingStage.title,
+                type: importedStage.type || existingStage.type || "page",
+                config: importedStage.config || {},
+                is_enabled: importedStage.is_enabled ?? true,
+              };
+              updatedStages.push(updatedStageData);
+
+              if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
+                newStageBlocks[existingStage.id] = importedStage.blocks;
+                await saveStageBocks(
+                  existingStage.id,
+                  importedStage.blocks,
+                  updatedStageData.type
+                );
+              }
+            }
+          }
+
+          setLocalStages((prev) =>
+            prev.map((stage) => {
+              const updated = updatedStages.find((s) => s.id === stage.id);
+              return updated || stage;
+            })
+          );
+
+          setStageBlocks((prev) => ({
+            ...prev,
+            ...newStageBlocks,
+          }));
+          setInitialStageBlocks((prev) => ({
+            ...prev,
+            ...JSON.parse(JSON.stringify(newStageBlocks)),
+          }));
+          setHasUnsavedChanges(false);
+        }}
+        title="Editor JSON do Funil"
+        description="Edite a configuração completa do funil em formato JSON. Use Ctrl+S para formatar."
+        contentType="funnel"
+        fileName={`funil-${funnel.slug}.json`}
       />
     </div>
   );

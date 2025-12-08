@@ -58,6 +58,14 @@ export function JsonEditor({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<typeof import("monaco-editor") | null>(null);
 
+  // Define formatDocument BEFORE handleEditorMount to avoid circular dependency
+  const formatDocument = useCallback(() => {
+    if (editorRef.current) {
+      editorRef.current.getAction("editor.action.formatDocument")?.run();
+      toast.success("JSON formatado!");
+    }
+  }, []);
+
   const handleEditorMount: OnMount = useCallback(
     (editor, monaco) => {
       editorRef.current = editor;
@@ -91,7 +99,7 @@ export function JsonEditor({
         }
       );
     },
-    [jsonSchema]
+    [jsonSchema, formatDocument]
   );
 
   const handleValidation: OnValidate = useCallback(
@@ -145,13 +153,6 @@ export function JsonEditor({
     },
     [onChange]
   );
-
-  const formatDocument = useCallback(() => {
-    if (editorRef.current) {
-      editorRef.current.getAction("editor.action.formatDocument")?.run();
-      toast.success("JSON formatado!");
-    }
-  }, []);
 
   const copyToClipboard = useCallback(async () => {
     try {
