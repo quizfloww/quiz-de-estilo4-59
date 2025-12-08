@@ -93,22 +93,15 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
       console.log(`Respondendo questão estratégica ${stratNum}...`);
 
       // Aguardar opções da questão estratégica
-      await page.waitForSelector(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-        {
-          timeout: 15000,
-          state: "visible",
-        }
-      );
+      await page.waitForSelector('[data-testid^="quiz-option-"]', {
+        timeout: 15000,
+        state: "visible",
+      });
 
       await page.waitForTimeout(500);
 
       // Selecionar a primeira opção (auto-advance)
-      const strategicOptions = page
-        .locator(
-          '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-        )
-        .filter({ hasText: /.+/ });
+      const strategicOptions = page.locator('[data-testid^="quiz-option-"]');
       await strategicOptions.first().click();
 
       // Aguardar avanço automático
@@ -151,7 +144,7 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
     await page.goto("/quiz");
 
     // Preencher nome
-    await page.locator('input[type="text"]').first().fill("João Silva");
+    await page.getByTestId("intro-name-input").fill("João Silva");
     await page.getByTestId("intro-continue").click();
     await page.waitForTimeout(1000);
 
@@ -252,7 +245,7 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
     await page.waitForTimeout(1000);
 
     // O input deve ainda estar visível (não avançou)
-    await expect(page.locator('input[type="text"]').first()).toBeVisible();
+    await expect(page.getByTestId("intro-name-input")).toBeVisible();
   });
 
   test("deve permitir voltar para questões anteriores", async ({ page }) => {
@@ -315,32 +308,23 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
   }) => {
     await page.goto("/quiz");
 
-    await page.locator('input[type="text"]').first().fill("Paula Oliveira");
-    await page.locator('button:has-text("Continuar")').first().click();
+    await page.getByTestId("intro-name-input").fill("Paula Oliveira");
+    await page.getByTestId("intro-continue").click();
     await page.waitForTimeout(1000);
 
     // Primeira questão - tentar avançar sem selecionar todas as 3
-    await page.waitForSelector(
-      '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-      {
-        timeout: 10000,
-      }
-    );
+    await page.waitForSelector('[data-testid^="quiz-option-"]', {
+      timeout: 10000,
+    });
 
-    const options = page
-      .locator(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-      )
-      .filter({ hasText: /.+/ });
+    const options = page.locator('[data-testid^="quiz-option-"]');
 
     // Selecionar apenas 1 opção
     await options.first().click();
     await page.waitForTimeout(500);
 
     // O botão deve estar desabilitado
-    const nextButton = page
-      .locator('button:has-text("Próxima"), button:has-text("Continuar")')
-      .first();
+    const nextButton = page.getByTestId("quiz-next");
     await expect(nextButton).toBeDisabled({ timeout: 2000 });
 
     // Selecionar segunda opção
@@ -361,8 +345,8 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
   test("deve exibir progresso correto durante o quiz", async ({ page }) => {
     await page.goto("/quiz");
 
-    await page.locator('input[type="text"]').first().fill("Roberto Lima");
-    await page.locator('button:has-text("Continuar")').first().click();
+    await page.getByTestId("intro-name-input").fill("Roberto Lima");
+    await page.getByTestId("intro-continue").click();
     await page.waitForTimeout(1000);
 
     // Verificar se há indicador de progresso
@@ -383,18 +367,11 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
     // Se houver indicador, verificar que ele muda ao avançar
     if (progressFound) {
       // Responder primeira questão
-      await page.waitForSelector(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-        {
-          timeout: 10000,
-        }
-      );
+      await page.waitForSelector('[data-testid^="quiz-option-"]', {
+        timeout: 10000,
+      });
 
-      const options = page
-        .locator(
-          '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-        )
-        .filter({ hasText: /.+/ });
+      const options = page.locator('[data-testid^="quiz-option-"]');
       for (let i = 0; i < 3; i++) {
         await options.nth(i).click();
         await page.waitForTimeout(200);
@@ -402,25 +379,14 @@ test.describe("Quiz de Estilo Pessoal - Fluxo Completo", () => {
 
       const initialProgress = await page.textContent("body");
 
-      await page
-        .locator('button:has-text("Próxima"), button:has-text("Continuar")')
-        .first()
-        .click();
+      await page.getByTestId("quiz-next").click();
       await page.waitForTimeout(1000);
 
-      // Responder segunda questão
-      await page.waitForSelector(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-        {
-          timeout: 10000,
-        }
-      );
+      await page.waitForSelector('[data-testid^="quiz-option-"]', {
+        timeout: 10000,
+      });
 
-      const options2 = page
-        .locator(
-          '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-        )
-        .filter({ hasText: /.+/ });
+      const options2 = page.locator('[data-testid^="quiz-option-"]');
       for (let i = 0; i < 3; i++) {
         await options2.nth(i).click();
         await page.waitForTimeout(200);
@@ -439,33 +405,23 @@ test.describe("Quiz de Estilo Pessoal - Validações de Dados", () => {
     await page.goto("/quiz");
 
     // Iniciar quiz
-    await page.locator('input[type="text"]').first().fill("Fernanda Alves");
-    await page.locator('button:has-text("Continuar")').first().click();
+    await page.getByTestId("intro-name-input").fill("Fernanda Alves");
+    await page.getByTestId("intro-continue").click();
     await page.waitForTimeout(1000);
 
     // Responder algumas questões
     for (let i = 0; i < 2; i++) {
-      await page.waitForSelector(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-        {
-          timeout: 10000,
-        }
-      );
+      await page.waitForSelector('[data-testid^="quiz-option-"]', {
+        timeout: 10000,
+      });
 
-      const options = page
-        .locator(
-          '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-        )
-        .filter({ hasText: /.+/ });
+      const options = page.locator('[data-testid^="quiz-option-"]');
       for (let j = 0; j < 3; j++) {
         await options.nth(j).click();
         await page.waitForTimeout(200);
       }
 
-      await page
-        .locator('button:has-text("Próxima"), button:has-text("Continuar")')
-        .first()
-        .click();
+      await page.getByTestId("quiz-next").click();
       await page.waitForTimeout(500);
     }
 
@@ -484,23 +440,16 @@ test.describe("Quiz de Estilo Pessoal - Validações de Dados", () => {
     await page.goto("/quiz");
 
     // Completar o quiz
-    await page.locator('input[type="text"]').first().fill("Reset Test");
-    await page.locator('button:has-text("Continuar")').first().click();
+    await page.getByTestId("intro-name-input").fill("Reset Test");
+    await page.getByTestId("intro-continue").click();
     await page.waitForTimeout(1000);
 
     // Responder uma questão
-    await page.waitForSelector(
-      '[data-testid*="option"], button[class*="option"], div[class*="option"]',
-      {
-        timeout: 10000,
-      }
-    );
+    await page.waitForSelector('[data-testid^="quiz-option-"]', {
+      timeout: 10000,
+    });
 
-    const options = page
-      .locator(
-        '[data-testid*="option"], button[class*="option"], div[class*="option"]'
-      )
-      .filter({ hasText: /.+/ });
+    const options = page.locator('[data-testid^="quiz-option-"]');
     for (let i = 0; i < 3; i++) {
       await options.nth(i).click();
       await page.waitForTimeout(200);
