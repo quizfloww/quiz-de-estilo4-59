@@ -46,6 +46,10 @@ import { FunnelSettingsPanel } from "@/components/funnel-editor/FunnelSettingsPa
 import { PublishDialog } from "@/components/funnel-editor/PublishDialog";
 import { StatusBadge } from "@/components/funnel-editor/StatusBadge";
 import { JsonEditorDialog } from "@/components/funnel-editor/JsonEditorDialog";
+import {
+  EditorStatus,
+  EditorStatusType,
+} from "@/components/funnel-editor/EditorStatus";
 import { usePublishFunnel, PublishValidation } from "@/hooks/usePublishFunnel";
 import { useStageBlocksHistory } from "@/hooks/useStageBlocksHistory";
 import {
@@ -231,6 +235,8 @@ export default function FunnelEditorPage() {
   // Canvas blocks state with undo/redo
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [editorStatus, setEditorStatus] = useState<EditorStatusType>("idle");
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
   const [initialStageBlocks, setInitialStageBlocks] = useState<
     Record<string, CanvasBlock[]>
   >({});
