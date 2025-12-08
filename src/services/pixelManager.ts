@@ -44,6 +44,7 @@ const DOMAIN_TO_FUNNEL: Record<string, string> = {
 
   // Fallback para domínio Vercel
   "quiz-de-estilo4-58.vercel.app": "default",
+  "quiz-de-estilo4-58-hnetsv6vs-quiz-flow.vercel.app": "default",
 };
 
 /**
