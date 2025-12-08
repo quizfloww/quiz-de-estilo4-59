@@ -100,8 +100,16 @@ const ResultPage: React.FC = () => {
       img.src = src;
     });
 
-    const { category } = primaryStyle;
-    const { guideImage } = styleConfig[category];
+    // Defensive check for category
+    const category = primaryStyle?.category;
+    const styleData = category ? styleConfig[category] : null;
+    if (!styleData) {
+      console.warn("No style config found for category:", category);
+      setImagesLoaded((prev) => ({ ...prev, guide: true })); // Mark as loaded anyway
+      return;
+    }
+
+    const { guideImage } = styleData;
     const guideImg = new Image();
     guideImg.src = `${guideImage}?q=auto:best&f=auto&w=540`;
     guideImg.onload = () =>
@@ -113,9 +121,19 @@ const ResultPage: React.FC = () => {
   }, [imagesLoaded, completeLoading]);
 
   if (!primaryStyle) return <ErrorState />;
+
+  // Defensive check: ensure primaryStyle has valid category
+  const category = primaryStyle?.category;
+  if (!category || !styleConfig[category]) {
+    console.error("Invalid primaryStyle format:", primaryStyle);
+    console.error(
+      "Expected format: { category: 'Natural' | 'Clássico' | ... , score: number, percentage: number }"
+    );
+    return <ErrorState />;
+  }
+
   if (isLoading) return <ResultSkeleton />;
 
-  const { category } = primaryStyle;
   const { guideImage, description } = styleConfig[category];
 
   const handleCTAClick = () => {

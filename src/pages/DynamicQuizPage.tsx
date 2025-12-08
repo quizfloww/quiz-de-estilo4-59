@@ -202,13 +202,15 @@ const DynamicQuizPage: React.FC = () => {
       });
 
       // Store in localStorage for result page
+      // Format expected by ResultPage: { primaryStyle: { category, score, percentage }, secondaryStyles: [{ category, score, percentage }], userName }
       localStorage.setItem(
         "quizResult",
         JSON.stringify({
-          primaryStyle: legacyResult.primaryStyle,
-          secondaryStyle: legacyResult.secondaryStyle,
+          primaryStyle: legacyResult.primaryStyle, // Now: { category, score, percentage }
+          secondaryStyles: legacyResult.secondaryStyles, // Now: Array of { category, score, percentage }
           scores: legacyResult.scores,
           userName,
+          totalSelections: result.totalPoints,
         })
       );
 
