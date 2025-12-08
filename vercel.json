@@ -1,4 +1,7 @@
 {
+  "vercelAuthentication": {
+    "protection": "none"
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     {

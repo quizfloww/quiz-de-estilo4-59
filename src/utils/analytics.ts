@@ -69,7 +69,7 @@ export const setUserProperties = (properties: object) => {
 // Function to track a page view
 export const trackPageView = (
   pagePath: string,
-  additionalData?: Record<string, any>
+  additionalData?: Record<string, unknown>
 ) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "page_view", {
@@ -105,7 +105,13 @@ export const trackQuizAnswer = (questionId: string, answer: string) => {
   console.log("[Analytics] Quiz Answer:", { questionId, answer });
 };
 
-export const trackQuizComplete = (result?: any) => {
+interface QuizResultData {
+  primaryStyle?: {
+    category?: string;
+  };
+}
+
+export const trackQuizComplete = (result?: QuizResultData) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "quiz_complete", {
       event_category: "conversion",
@@ -115,7 +121,10 @@ export const trackQuizComplete = (result?: any) => {
   console.log("[Analytics] Quiz Complete:", { result });
 };
 
-export const trackResultView = (resultType: string, data?: any) => {
+export const trackResultView = (
+  resultType: string,
+  data?: Record<string, unknown>
+) => {
   if (typeof window !== "undefined" && window.gtag) {
     window.gtag("event", "result_view", {
       event_category: "engagement",
@@ -126,9 +135,21 @@ export const trackResultView = (resultType: string, data?: any) => {
   console.log("[Analytics] Result View:", { resultType, data });
 };
 
+interface CreativePerformanceData {
+  creative_name: string;
+  page_views: number;
+  quiz_starts: number;
+  quiz_completions: number;
+  leads: number;
+  purchases: number;
+  revenue: number;
+  conversion_rate: string;
+  cost_per_lead: number;
+}
+
 // Fix getCreativePerformance to accept no arguments and return proper format
 export const getCreativePerformance = async (): Promise<
-  Record<string, any>
+  Record<string, CreativePerformanceData>
 > => {
   // Mock implementation for now
   return {
@@ -360,15 +381,24 @@ export const captureUTMParameters = () => {
   return utmParams;
 };
 
-export const initFacebookPixel = (pixelData?: any) => {
+interface FacebookPixelData {
+  pixelId?: string;
+}
+
+interface FacebookPixelQueue {
+  q?: unknown[];
+}
+
+export const initFacebookPixel = (pixelData?: FacebookPixelData) => {
   if (typeof window === "undefined") return;
 
   const pixelId = process.env.REACT_APP_FACEBOOK_PIXEL_ID || "1234567890123456";
 
   if (!window.fbq) {
-    window.fbq = function () {
-      (window.fbq as any).q = (window.fbq as any).q || [];
-      (window.fbq as any).q.push(arguments);
+    window.fbq = function (...args: unknown[]) {
+      const fbq = window.fbq as FacebookPixelQueue;
+      fbq.q = fbq.q || [];
+      fbq.q.push(args);
     };
     window._fbq = window.fbq;
 
