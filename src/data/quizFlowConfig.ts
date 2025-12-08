@@ -47,7 +47,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAL O SEU TIPO DE ROUPA FAVORITA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q1-natural",
@@ -131,7 +131,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "RESUMA A SUA PERSONALIDADE:",
         displayType: "text",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q2-natural",
@@ -199,7 +199,7 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
         question: "QUAL VISUAL VOCÊ MAIS SE IDENTIFICA?",
         displayType: "both",
         multiSelect: 3,
-        autoAdvance: false,
+        autoAdvance: true,
         options: [
           {
             id: "q3-natural",
