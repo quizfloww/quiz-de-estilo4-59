@@ -73,7 +73,7 @@ export const convertStageToBlocks = (
       logoUrl: getConfigString(
         config,
         "logoUrl",
-        "https://cakto-quiz-br01.b-cdn.net/uploads/47fd613e-91a9-48cf-bd52-a9d4e180d5ab.png"
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1744911572/LOGO_DA_MARCA_GISELE_r14oz2.png"
       ),
       showProgress: getConfigBoolean(config, "showProgress", true),
       showBackButton: getConfigBoolean(config, "allowBack", true),
