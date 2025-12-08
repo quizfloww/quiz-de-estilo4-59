@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { defineLovable } from "../../../lovable";
+import { defineLovable, LovableRenderProps, QuizQuestion, QuizOption } from "../../../lovable";
 
 export default defineLovable({
   name: "QuizLogic",
@@ -181,17 +181,18 @@ export default defineLovable({
     },
   },
 
-  render: ({
-    questions,
-    startingQuestion,
-    backgroundColor,
-    textColor,
-    accentColor,
-    useLocalStorage,
-  }) => {
+  render: (props: LovableRenderProps) => {
+    // Cast props to correct types
+    const questions = (props.questions as QuizQuestion[]) || [];
+    const startingQuestion = (props.startingQuestion as number) || 0;
+    const backgroundColor = (props.backgroundColor as string) || "#FAF9F7";
+    const textColor = (props.textColor as string) || "#432818";
+    const accentColor = (props.accentColor as string) || "#B89B7A";
+    const useLocalStorage = (props.useLocalStorage as boolean) ?? true;
+
     // Estado para controlar a pergunta atual
     const [currentQuestionIndex, setCurrentQuestionIndex] =
-      useState(startingQuestion);
+      useState<number>(startingQuestion);
 
     // Estado para armazenar as respostas
     const [answers, setAnswers] = useState<Record<string, string[]>>({});
@@ -200,7 +201,11 @@ export default defineLovable({
     const [quizCompleted, setQuizCompleted] = useState(false);
 
     // Estado para armazenar o resultado do quiz
-    const [quizResult, setQuizResult] = useState<any>(null);
+    const [quizResult, setQuizResult] = useState<{
+      primaryStyle: { category: string; score: number; percentage: number };
+      secondaryStyles: { category: string; score: number; percentage: number }[];
+      totalSelections: number;
+    } | null>(null);
 
     // Recuperar respostas e estado do quiz do localStorage, se disponível
     useEffect(() => {
@@ -233,10 +238,6 @@ export default defineLovable({
     const currentAnswers = currentQuestion
       ? answers[currentQuestion.id] || []
       : [];
-    const canProceed = currentQuestion
-      ? currentAnswers.length > 0 &&
-        currentAnswers.length <= currentQuestion.multiSelect
-      : false;
     const isLastQuestion = currentQuestionIndex === questions.length - 1;
     const totalQuestions = questions.length;
 
@@ -325,7 +326,7 @@ export default defineLovable({
         if (!question) return;
 
         optionIds.forEach((optionId) => {
-          const option = question.options.find((o) => o.id === optionId);
+          const option = question.options.find((o: QuizOption) => o.id === optionId);
           if (option && option.styleCategory) {
             styleCounter[option.styleCategory]++;
             totalSelections++;
@@ -395,7 +396,7 @@ export default defineLovable({
               <div className="space-y-4">
                 {quizResult.secondaryStyles
                   .slice(0, 2)
-                  .map((style: any, index: number) => (
+                  .map((style, index: number) => (
                     <div key={index}>
                       <div className="flex justify-between items-center mb-2">
                         <span>{style.category}</span>
@@ -468,7 +469,7 @@ export default defineLovable({
             </div>
 
             <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8`}>
-              {options.map((option) => (
+              {options.map((option: QuizOption) => (
                 <div
                   key={option.id}
                   onClick={() => {
@@ -498,70 +499,46 @@ export default defineLovable({
                     cursor-pointer rounded-lg overflow-hidden border-2 transition-all
                     ${
                       currentAnswers.includes(option.id)
-                        ? "shadow-lg"
-                        : "border-transparent hover:border-gray-300"
+                        ? "border-primary shadow-md"
+                        : "border-gray-200 hover:border-gray-300"
                     }
                   `}
-                  style={
-                    currentAnswers.includes(option.id)
-                      ? { borderColor: accentColor }
-                      : undefined
-                  }
+                  style={{
+                    borderColor: currentAnswers.includes(option.id)
+                      ? accentColor
+                      : undefined,
+                  }}
                 >
-                  {/* Suporta tanto imageUrl quanto image_url (snake_case do banco) */}
-                  {(type === "both" || type === "image") &&
-                    (option.imageUrl || option.image_url) && (
-                      <div className="w-full">
-                        <img
-                          src={option.imageUrl || option.image_url}
-                          alt={option.text}
-                          className="w-full object-cover h-48"
-                        />
-                      </div>
-                    )}
-
-                  {(type === "both" || type === "text") && (
+                  {(type === "image" || type === "both") && option.imageUrl && (
+                    <div className="aspect-video bg-gray-100">
+                      <img
+                        src={option.imageUrl}
+                        alt={option.text}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  {(type === "text" || type === "both") && (
                     <div className="p-4 text-center">
-                      <p className="font-medium">{option.text}</p>
-
-                      {currentAnswers.includes(option.id) && (
-                        <div
-                          className="mt-2 text-sm px-3 py-1 rounded-full inline-block"
-                          style={{
-                            backgroundColor: accentColor,
-                            color: "#fff",
-                          }}
-                        >
-                          Selecionado
-                        </div>
-                      )}
+                      <span className="font-medium">{option.text}</span>
                     </div>
                   )}
                 </div>
               ))}
             </div>
 
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between gap-4">
               <button
                 onClick={handlePrevious}
                 disabled={currentQuestionIndex === 0}
-                className={`px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-100 ${
-                  currentQuestionIndex === 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
+                className="px-6 py-3 rounded-md border border-gray-300 disabled:opacity-50"
               >
-                Anterior
+                Voltar
               </button>
-
               <button
                 onClick={handleNext}
-                disabled={!canProceed}
-                className={`px-6 py-2 rounded-md text-white ${
-                  !canProceed
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:opacity-90"
-                }`}
+                disabled={currentAnswers.length === 0}
+                className="px-6 py-3 rounded-md text-white disabled:opacity-50"
                 style={{ backgroundColor: accentColor }}
               >
                 {isLastQuestion ? "Ver Resultado" : "Próxima"}
@@ -572,24 +549,13 @@ export default defineLovable({
       );
     }
 
-    // Fallback
+    // Fallback se não houver perguntas
     return (
       <div
         className="min-h-screen flex items-center justify-center"
         style={{ backgroundColor, color: textColor }}
       >
-        <div className="text-center">
-          <h2 className="text-2xl font-medium mb-4">
-            Oops! Não foi possível carregar o quiz.
-          </h2>
-          <button
-            onClick={resetQuiz}
-            className="px-6 py-2 rounded-md text-white"
-            style={{ backgroundColor: accentColor }}
-          >
-            Tentar novamente
-          </button>
-        </div>
+        <p>Nenhuma pergunta configurada.</p>
       </div>
     );
   },

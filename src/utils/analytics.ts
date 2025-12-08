@@ -178,11 +178,18 @@ export const getCreativePerformance = async (): Promise<
   };
 };
 
-// Export getAnalyticsEvents properly - single declaration
+// Export getAnalyticsEvents properly - Extended AnalyticsEvent with all required properties
 export interface AnalyticsEvent {
   type: string;
-  timestamp: string;
+  eventName?: string;
+  timestamp: string | number;
   data?: Record<string, unknown>;
+  customData?: {
+    pixel_id?: string;
+    page?: string;
+    session_id?: string;
+    [key: string]: unknown;
+  };
 }
 
 export const getAnalyticsEvents = (): AnalyticsEvent[] => {

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { defineLovable } from "../../../lovable";
+import { defineLovable, LovableRenderProps, ImageProp, ButtonProp } from "../../../lovable";
 
 export default defineLovable({
   name: "QuizCover",
@@ -77,7 +77,15 @@ export default defineLovable({
     }
   },
   
-  render: ({ logo, headline, subtitle, button, backgroundImage, backgroundColor, textColor }) => {
+  render: (props: LovableRenderProps) => {
+    const logo = props.logo as ImageProp | undefined;
+    const backgroundImage = props.backgroundImage as ImageProp | undefined;
+    const headline = props.headline as string | undefined;
+    const subtitle = props.subtitle as string | undefined;
+    const button = props.button as ButtonProp | undefined;
+    const backgroundColor = (props.backgroundColor as string) || "#FAF9F7";
+    const textColor = (props.textColor as string) || "#432818";
+
     return (
       <div className="min-h-screen flex items-center justify-center w-full py-12" style={{ backgroundColor }}>
         <div className="w-full max-w-5xl px-4 mx-auto">
@@ -109,12 +117,14 @@ export default defineLovable({
                 {subtitle}
               </p>
               
-              <button 
-                className="px-8 py-3 text-lg font-medium text-white rounded-lg shadow-lg transform transition-transform hover:scale-105"
-                style={{ backgroundColor: button.color }}
-              >
-                {button.text}
-              </button>
+              {button && (
+                <button 
+                  className="px-8 py-3 text-lg font-medium text-white rounded-lg shadow-lg transform transition-transform hover:scale-105"
+                  style={{ backgroundColor: button.color }}
+                >
+                  {button.text}
+                </button>
+              )}
             </div>
             
             <div className="w-full md:w-1/2 mt-8 md:mt-0">

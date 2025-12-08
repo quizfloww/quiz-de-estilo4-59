@@ -89,10 +89,18 @@ export const EnhancedBlockRenderer: React.FC<EnhancedBlockRendererProps> = ({
       return childWithContent;
     }
 
-    // Com animação
+    // Com animação - map AnimationConfig types to AnimatedWrapper types
+    const animationType = block.animation.type === 'none' ? 'none' : 
+                          block.animation.type === 'fade-in' ? 'fade-in' :
+                          block.animation.type === 'scale-in' ? 'scale-in' :
+                          block.animation.type === 'slide-up' ? 'slide-up' :
+                          block.animation.type === 'slide-down' ? 'slide-down' :
+                          block.animation.type === 'bounce' ? 'bounce' :
+                          block.animation.type === 'pulse' ? 'pulse' : 'fade';
+
     return (
       <AnimatedWrapper
-        animation={block.animation.type}
+        animation={animationType}
         duration={block.animation.duration || 500}
         delay={block.animation.delay || 0}
         show={true}

@@ -659,7 +659,13 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                 </Label>
                 <Input
                   id="abtest-events"
-                  value={(abTest.trackingEvents || []).join(", ")}
+                  value={
+                    Array.isArray(abTest.trackingEvents) 
+                      ? abTest.trackingEvents.join(", ")
+                      : abTest.trackingEvents
+                        ? [abTest.trackingEvents.view, abTest.trackingEvents.click, abTest.trackingEvents.conversion].filter(Boolean).join(", ")
+                        : ""
+                  }
                   onChange={(e) =>
                     updateABTest({
                       trackingEvents: e.target.value
@@ -770,7 +776,7 @@ export const BlockPropertiesPanel: React.FC<BlockPropertiesPanelProps> = ({
                 <Label htmlFor="animation-easing">Easing</Label>
                 <Select
                   value={animation.easing || "ease-out"}
-                  onValueChange={(value) => updateAnimation({ easing: value })}
+                  onValueChange={(value) => updateAnimation({ easing: value as AnimationConfig['easing'] })}
                 >
                   <SelectTrigger id="animation-easing">
                     <SelectValue />
