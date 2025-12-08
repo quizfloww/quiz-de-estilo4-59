@@ -199,6 +199,9 @@ export default defineConfig(({ mode }) => ({
       "tailwind-merge",
       "@radix-ui/react-dialog",
       "@radix-ui/react-dropdown-menu",
+      "@dnd-kit/core",
+      "@dnd-kit/sortable",
+      "@dnd-kit/utilities",
       "idb", // IndexedDB otimizado
     ],
     exclude: ["@huggingface/transformers"],
