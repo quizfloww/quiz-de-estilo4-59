@@ -781,3 +781,83 @@ describe("Performance", () => {
     expect(avgTime).toBeLessThan(50);
   });
 });
+
+// ============================================================================
+// TESTES DE CONEXÃO EMOCIONAL E PERSONALIZAÇÃO
+// ============================================================================
+
+describe("Descrições de Estilo - Conexão Emocional", () => {
+  it("cada categoria deve ter descrição que começa com 'Você'", () => {
+    defaultQuizFlowConfig.styleCategories.forEach((cat) => {
+      expect(cat.description).toBeDefined();
+      expect(cat.description.startsWith("Você")).toBe(true);
+    });
+  });
+
+  it("cada categoria deve ter descrição com mais de 50 caracteres", () => {
+    defaultQuizFlowConfig.styleCategories.forEach((cat) => {
+      expect(cat.description.length).toBeGreaterThan(50);
+    });
+  });
+
+  it("cada categoria deve ter guideImage definido", () => {
+    defaultQuizFlowConfig.styleCategories.forEach((cat) => {
+      expect(cat.guideImage).toBeDefined();
+      expect(cat.guideImage).toContain("cloudinary");
+      expect(cat.guideImage).toContain("GUIA");
+    });
+  });
+});
+
+describe("Blocos de Resultado - Personalização", () => {
+  it("etapa de resultado deve ter blocos definidos", () => {
+    const resultStage = defaultQuizFlowConfig.stages.find(
+      (s) => s.type === "result"
+    );
+    expect(resultStage?.config.blocks).toBeDefined();
+    expect(Array.isArray(resultStage?.config.blocks)).toBe(true);
+    expect(resultStage?.config.blocks.length).toBeGreaterThan(0);
+  });
+
+  it("blocos devem incluir placeholder {{userName}}", () => {
+    const resultStage = defaultQuizFlowConfig.stages.find(
+      (s) => s.type === "result"
+    );
+    const blocks = resultStage?.config.blocks || [];
+
+    // Procurar bloco de heading com userName
+    const headingBlocks = blocks.filter(
+      (b: any) => b.type === "heading" || b.type === "personalizedHook"
+    );
+
+    const hasUserNamePlaceholder = blocks.some((b: any) => {
+      const text = b.content?.text || "";
+      const title = b.content?.title || "";
+      return text.includes("{{userName}}") || title.includes("{{userName}}");
+    });
+
+    expect(hasUserNamePlaceholder).toBe(true);
+  });
+
+  it("blocos devem incluir bloco styleResult", () => {
+    const resultStage = defaultQuizFlowConfig.stages.find(
+      (s) => s.type === "result"
+    );
+    const blocks = resultStage?.config.blocks || [];
+
+    const styleResultBlock = blocks.find((b: any) => b.type === "styleResult");
+    expect(styleResultBlock).toBeDefined();
+    expect(styleResultBlock.content.showDescription).toBe(true);
+    expect(styleResultBlock.content.showPercentage).toBe(true);
+  });
+
+  it("blocos devem incluir bloco styleGuide", () => {
+    const resultStage = defaultQuizFlowConfig.stages.find(
+      (s) => s.type === "result"
+    );
+    const blocks = resultStage?.config.blocks || [];
+
+    const styleGuideBlock = blocks.find((b: any) => b.type === "styleGuide");
+    expect(styleGuideBlock).toBeDefined();
+  });
+});

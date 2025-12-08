@@ -3,8 +3,25 @@ import { CanvasBlockContent } from "@/types/canvasBlocks";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
+interface StyleResult {
+  category: string;
+  score: number;
+  percentage: number;
+}
+
+interface StyleCategory {
+  id: string;
+  name: string;
+  description: string;
+  imageUrl: string;
+  guideImage?: string;
+}
+
 interface SecondaryStylesBlockProps {
-  content: CanvasBlockContent;
+  content: CanvasBlockContent & {
+    secondaryStyles?: StyleResult[];
+    styleCategories?: StyleCategory[];
+  };
   isPreview?: boolean;
 }
 
@@ -54,14 +71,37 @@ export const SecondaryStylesBlock: React.FC<SecondaryStylesBlockProps> = ({
   content,
   isPreview,
 }) => {
-  const maxStyles = content.maxSecondaryStyles || 3;
-  const showPercentage = content.showSecondaryPercentage !== false;
+  const maxStyles = content.maxSecondaryStyles || content.maxStyles || 3;
+  const showPercentage =
+    content.showSecondaryPercentage !== false &&
+    content.showPercentages !== false;
   const imageFrame = content.imageFrame || "circle";
   const imageBorderWidth = content.imageBorderWidth || 2;
   const imageBorderColor = content.imageBorderColor || "#B89B7A";
   const blockBackgroundColor = content.backgroundColor || "transparent";
+  const title = content.title || "Seus Estilos Secundários";
 
-  const stylesToShow = PREVIEW_STYLES.slice(0, maxStyles);
+  // Usar dados dinâmicos se disponíveis, senão fallback para preview
+  const dynamicStyles = content.secondaryStyles;
+  const styleCategories = content.styleCategories;
+
+  // Mapear os estilos secundários para o formato de exibição
+  const stylesToShow = React.useMemo(() => {
+    if (dynamicStyles && dynamicStyles.length > 0 && styleCategories) {
+      return dynamicStyles.slice(0, maxStyles).map((style) => {
+        const categoryInfo = styleCategories.find(
+          (c) => c.id === style.category || c.name === style.category
+        );
+        return {
+          name: style.category,
+          percentage: Math.round(style.percentage),
+          imageUrl: categoryInfo?.imageUrl || PREVIEW_STYLES[0].imageUrl,
+        };
+      });
+    }
+    // Fallback para preview
+    return PREVIEW_STYLES.slice(0, maxStyles);
+  }, [dynamicStyles, styleCategories, maxStyles]);
 
   const imageStyle: React.CSSProperties = {
     border: `${imageBorderWidth}px solid ${imageBorderColor}30`,
@@ -73,13 +113,13 @@ export const SecondaryStylesBlock: React.FC<SecondaryStylesBlockProps> = ({
       style={{ backgroundColor: blockBackgroundColor }}
     >
       <h3 className="text-xl font-semibold text-[#432818] text-center mb-4">
-        Seus Estilos Secundários
+        {title}
       </h3>
 
       <div className="grid gap-3">
         {stylesToShow.map((style, index) => (
           <div
-            key={style.name}
+            key={`${style.name}-${index}`}
             className="flex items-center gap-4 p-4 rounded-lg bg-white border border-[#B89B7A]/20 shadow-sm"
           >
             {/* Thumbnail */}

@@ -75,6 +75,7 @@ export interface QuizFlowConfig {
     name: string;
     description: string;
     imageUrl: string;
+    guideImage?: string;
   }[];
 }
 

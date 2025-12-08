@@ -1170,58 +1170,82 @@ export const defaultQuizFlowConfig: QuizFlowConfig = {
     {
       id: "Natural",
       name: "Natural",
-      description: "Informal, espontânea, alegre, essencialista",
+      description:
+        "Você valoriza o conforto e a praticidade, com um visual descontraído e autêntico. Sua essência é leve, espontânea e conectada com a natureza.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp",
     },
     {
       id: "Clássico",
       name: "Clássico",
-      description: "Conservadora, séria, organizada",
+      description:
+        "Você aprecia a elegância atemporal, com peças de qualidade e caimento perfeito. Sua imagem transmite sofisticação, organização e confiança.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/12_edlmwf.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CL%C3%81SSICO_ux1yhf.webp",
     },
     {
       id: "Contemporâneo",
       name: "Contemporâneo",
-      description: "Informada, ativa, prática",
+      description:
+        "Você busca um equilíbrio entre o clássico e o moderno, com peças práticas e atuais. Sua imagem reflete dinamismo, informação e praticidade.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/4_snhaym.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_CONTEMPOR%C3%82NEO_vcklxe.webp",
     },
     {
       id: "Elegante",
       name: "Elegante",
-      description: "Exigente, sofisticada, seletiva",
+      description:
+        "Você tem um olhar refinado para detalhes sofisticados e peças de alta qualidade. Sua presença transmite requinte, exigência e bom gosto.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735330/14_l2nprc.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_ELEGANTE_asez1q.webp",
     },
     {
       id: "Romântico",
       name: "Romântico",
-      description: "Feminina, meiga, delicada, sensível",
+      description:
+        "Você valoriza a delicadeza e os detalhes femininos, com muita suavidade. Sua essência é sensível, meiga e cheia de encanto.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/15_xezvcy.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071343/GUIA_ROM%C3%82NTICO_ci4hgk.webp",
     },
     {
       id: "Sexy",
       name: "Sexy",
-      description: "Glamorosa, vaidosa, sensual",
+      description:
+        "Você gosta de valorizar suas curvas e exibir sua sensualidade com confiança. Sua imagem transmite glamour, vaidade e autoestima elevada.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735316/16_mpqpew.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071349/GUIA_SEXY_t5x2ov.webp",
     },
     {
       id: "Dramático",
       name: "Dramático",
-      description: "Cosmopolita, moderna e audaciosa",
+      description:
+        "Você tem personalidade forte e gosta de causar impacto com seu visual. Sua presença é marcante, cosmopolita e audaciosa.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735319/17_m5ogub.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745073346/GUIA_DRAM%C3%81TICO_mpn60d.webp",
     },
     {
       id: "Criativo",
       name: "Criativo",
-      description: "Exótica, aventureira, livre",
+      description:
+        "Você aprecia a originalidade e não tem medo de ousar em combinações únicas. Sua essência é livre, aventureira e cheia de expressão.",
       imageUrl:
         "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735317/18_j8ipfb.webp",
+      guideImage:
+        "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071342/GUIA_CRIATIVO_ntbzph.webp",
     },
   ],
 };

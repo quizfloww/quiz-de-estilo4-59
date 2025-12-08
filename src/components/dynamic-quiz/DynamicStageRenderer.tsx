@@ -23,6 +23,7 @@ interface DynamicStageRendererProps {
     name: string;
     description: string;
     imageUrl: string;
+    guideImage?: string;
   }> | null;
   // Quiz context
   userName?: string;
@@ -110,6 +111,17 @@ export const DynamicStageRenderer: React.FC<DynamicStageRendererProps> = ({
       // Inject quiz result into result blocks
       if (quizResult && quizResult.primaryStyle) {
         if (block.type === "styleResult") {
+          // Encontrar a categoria correspondente
+          const categoryInfo = styleCategories?.find(
+            (c) =>
+              c.id === quizResult.primaryStyle?.category ||
+              c.name === quizResult.primaryStyle?.category
+          );
+          // Injetar dados específicos que o StyleResultBlock espera
+          enriched.content.styleCategory = quizResult.primaryStyle.category;
+          enriched.content.stylePercentage = quizResult.primaryStyle.percentage;
+          enriched.content.styleDescription = categoryInfo?.description;
+          enriched.content.styleImageUrl = categoryInfo?.imageUrl;
           enriched.content.primaryStyle = quizResult.primaryStyle;
           enriched.content.styleCategories = styleCategories;
         }
@@ -133,7 +145,8 @@ export const DynamicStageRenderer: React.FC<DynamicStageRendererProps> = ({
               c.name === quizResult.primaryStyle?.category
           );
           enriched.content.styleCategory = quizResult.primaryStyle.category;
-          enriched.content.guideImageUrl = categoryInfo?.imageUrl;
+          enriched.content.styleImageUrl = categoryInfo?.imageUrl;
+          enriched.content.guideImageUrl = categoryInfo?.guideImage;
         }
       }
 
