@@ -291,6 +291,28 @@ export default function FunnelEditorPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStageId, localStages]);
 
+  // Generate ALL stage blocks when test mode is activated
+  useEffect(() => {
+    if (isTestMode && localStages.length > 0) {
+      const missingBlocks: Record<string, CanvasBlock[]> = {};
+
+      localStages.forEach((stage, index) => {
+        if (!stageBlocks[stage.id]) {
+          const blocks = convertStageToBlocks(stage, localStages.length, index);
+          missingBlocks[stage.id] = blocks;
+        }
+      });
+
+      if (Object.keys(missingBlocks).length > 0) {
+        setStageBlocks((prev) => ({
+          ...prev,
+          ...missingBlocks,
+        }));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isTestMode, localStages]);
+
   // Detect unsaved changes
   useEffect(() => {
     const hasChanges = Object.keys(stageBlocks).some((stageId) => {

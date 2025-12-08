@@ -80,8 +80,12 @@ export const useBulkInsertFunnelData = () => {
       };
     },
     onSuccess: (data) => {
+      // Invalidar ambas as queries para garantir que o editor carregue as opções
       queryClient.invalidateQueries({
         queryKey: ["funnel-stages", data.funnelId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["funnel-stages-with-options", data.funnelId],
       });
       toast.success(
         `Funil criado com ${data.stagesCount} etapas e ${data.optionsCount} opções!`
