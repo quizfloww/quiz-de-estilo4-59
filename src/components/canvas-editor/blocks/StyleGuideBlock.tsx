@@ -15,6 +15,7 @@ export const StyleGuideBlock: React.FC<StyleGuideBlockProps> = ({
   const showBadge = content.showExclusiveBadge !== false;
   const showSecondary = content.showSecondaryGuides !== false;
   const blockBackgroundColor = content.backgroundColor || "transparent";
+  const styleCategory = content.styleCategory || "Natural";
 
   const sizeClasses: Record<string, string> = {
     sm: "max-w-[200px]",
@@ -23,10 +24,16 @@ export const StyleGuideBlock: React.FC<StyleGuideBlockProps> = ({
     xl: "max-w-[500px]",
   };
 
-  // Placeholder images para preview
+  // Usa guideImageUrl injetado pelo DynamicStageRenderer, ou imageUrl, ou fallback
   const mainGuideUrl =
+    content.guideImageUrl ||
     content.imageUrl ||
-    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744920983/guia-natural.webp";
+    "https://res.cloudinary.com/dqljyf76t/image/upload/v1745071344/GUIA_NATURAL_fzp6fc.webp";
+
+  // Imagem do estilo (não do guia)
+  const styleImageUrl =
+    content.styleImageUrl ||
+    "https://res.cloudinary.com/dqljyf76t/image/upload/v1744735329/11_hqmr8l.webp";
 
   return (
     <div

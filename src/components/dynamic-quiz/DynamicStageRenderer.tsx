@@ -136,7 +136,8 @@ export const DynamicStageRenderer: React.FC<DynamicStageRendererProps> = ({
           ];
         }
         if (block.type === "personalizedHook") {
-          enriched.content.primaryStyle = quizResult.primaryStyle.category;
+          enriched.content.styleCategory = quizResult.primaryStyle.category;
+          enriched.content.userName = userName || "Querida";
         }
         if (block.type === "styleGuide") {
           const categoryInfo = styleCategories?.find(

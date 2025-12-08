@@ -2,10 +2,30 @@ import React from "react";
 import { CanvasBlockContent } from "@/types/canvasBlocks";
 import { Progress } from "@/components/ui/progress";
 
+interface StyleResult {
+  category: string;
+  score: number;
+  percentage: number;
+}
+
 interface StyleProgressBlockProps {
-  content: CanvasBlockContent;
+  content: CanvasBlockContent & {
+    allStyles?: StyleResult[];
+  };
   isPreview?: boolean;
 }
+
+// Cores por estilo
+const STYLE_COLORS: Record<string, string> = {
+  Natural: "#8B9D83",
+  Clássico: "#6B7B8C",
+  Contemporâneo: "#7AB8B8",
+  Elegante: "#B89B7A",
+  Romântico: "#D4A5A5",
+  Sexy: "#C45C5C",
+  Dramático: "#5C5C5C",
+  Criativo: "#9B7AB8",
+};
 
 // Dados de exemplo para preview
 const PREVIEW_ALL_STYLES = [
@@ -27,7 +47,19 @@ export const StyleProgressBlock: React.FC<StyleProgressBlockProps> = ({
   const maxStyles = content.maxStylesShown || 8;
   const blockBackgroundColor = content.backgroundColor || "#ffffff";
 
-  const stylesToShow = PREVIEW_ALL_STYLES.slice(0, maxStyles);
+  // Usar dados dinâmicos se disponíveis
+  const dynamicStyles = content.allStyles;
+
+  const stylesToShow = React.useMemo(() => {
+    if (dynamicStyles && dynamicStyles.length > 0) {
+      return dynamicStyles.slice(0, maxStyles).map((style) => ({
+        name: style.category,
+        percentage: Math.round(style.percentage),
+        color: STYLE_COLORS[style.category] || "#B89B7A",
+      }));
+    }
+    return PREVIEW_ALL_STYLES.slice(0, maxStyles);
+  }, [dynamicStyles, maxStyles]);
 
   return (
     <div
