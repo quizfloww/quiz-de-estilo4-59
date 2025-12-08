@@ -64,7 +64,11 @@ import {
   blocksToStageConfig,
 } from "@/utils/stageToBlocks";
 import { saveStageBocks } from "@/utils/syncBlocksToDatabase";
-import { sanitizeStageConfig } from "@/utils/stageConfigSchema";
+import {
+  sanitizeStageConfig,
+  validateFunnelImport,
+  formatZodErrors,
+} from "@/utils/stageConfigSchema";
 import {
   saveStageDraft,
   getStageDraft,
@@ -609,20 +613,69 @@ export default function FunnelEditorPage() {
     reader.onload = async (e) => {
       try {
         const content = e.target?.result as string;
-        const importedData = JSON.parse(content);
 
-        // Validate basic structure
-        if (!importedData.stages || !Array.isArray(importedData.stages)) {
-          throw new Error("Formato de arquivo inválido");
+        // Parse JSON with better error handling
+        let importedData: unknown;
+        try {
+          importedData = JSON.parse(content);
+        } catch (parseError) {
+          const jsonError = parseError as SyntaxError;
+          // Extract line/position info from JSON parse error
+          const posMatch = jsonError.message.match(/position (\d+)/);
+          if (posMatch) {
+            const position = parseInt(posMatch[1], 10);
+            const lines = content.substring(0, position).split("\n");
+            const lineNumber = lines.length;
+            const column = lines[lines.length - 1].length + 1;
+            toast.error(
+              `Erro de sintaxe JSON na linha ${lineNumber}, coluna ${column}: ${jsonError.message}`
+            );
+          } else {
+            toast.error(`Erro de sintaxe JSON: ${jsonError.message}`);
+          }
+          return;
         }
 
+        // Validate with Zod schema
+        const validationResult = validateFunnelImport(importedData);
+
+        if (!validationResult.success) {
+          // Show detailed validation errors
+          const errorMessages = formatZodErrors(validationResult.error!);
+          console.error("Validation errors:", errorMessages);
+
+          // Show first 3 errors in toast (to avoid overwhelming)
+          const displayErrors = errorMessages.slice(0, 3);
+          const moreCount = errorMessages.length - 3;
+
+          toast.error(
+            <div className="space-y-1">
+              <div className="font-semibold">Erro na validação do arquivo:</div>
+              {displayErrors.map((err, i) => (
+                <div key={i} className="text-sm">
+                  • {err}
+                </div>
+              ))}
+              {moreCount > 0 && (
+                <div className="text-sm text-muted-foreground">
+                  ...e mais {moreCount} erro(s). Verifique o console.
+                </div>
+              )}
+            </div>,
+            { duration: 8000 }
+          );
+          return;
+        }
+
+        const validData = validationResult.data!;
+
         // Update funnel metadata if present
-        if (importedData.name || importedData.globalConfig) {
+        if (validData.name || validData.globalConfig) {
           await updateFunnel.mutateAsync({
             id: funnel.id,
-            ...(importedData.name && { name: importedData.name }),
-            ...(importedData.globalConfig && {
-              global_config: importedData.globalConfig,
+            ...(validData.name && { name: validData.name }),
+            ...(validData.globalConfig && {
+              global_config: validData.globalConfig,
             }),
           });
         }
@@ -633,10 +686,10 @@ export default function FunnelEditorPage() {
         const processedOrderIndexes = new Set<number>();
 
         // Process imported stages
-        for (const importedStage of importedData.stages) {
+        for (const importedStage of validData.stages) {
           const orderIndex =
             importedStage.order_index ??
-            importedData.stages.indexOf(importedStage);
+            validData.stages.indexOf(importedStage);
           processedOrderIndexes.add(orderIndex);
 
           // Find matching stage by order_index
@@ -713,7 +766,7 @@ export default function FunnelEditorPage() {
             } else if (importedStage.config) {
               const convertedBlocks = convertStageToBlocks(
                 newStage,
-                importedData.stages.length,
+                validData.stages.length,
                 orderIndex
               );
               newStageBlocks[newStage.id] = convertedBlocks;
@@ -750,7 +803,7 @@ export default function FunnelEditorPage() {
         setHasUnsavedChanges(false);
 
         toast.success(
-          `Funil importado com sucesso! ${importedData.stages.length} etapas processadas.`
+          `Funil importado com sucesso! ${validData.stages.length} etapas processadas.`
         );
       } catch (error) {
         console.error("Error importing funnel:", error);
