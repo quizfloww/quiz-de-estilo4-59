@@ -12,10 +12,23 @@ declare global {
   }
 }
 
-// Criar cliente Supabase para ambiente Node.js
-const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || "";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Criar cliente Supabase para ambiente Node.js ou Vite
+const viteEnv =
+  typeof import.meta !== "undefined" && "env" in import.meta
+    ? (import.meta as ImportMeta).env
+    : undefined;
+
+const supabaseUrl =
+  viteEnv?.VITE_SUPABASE_URL || process.env.VITE_SUPABASE_URL || "";
+
+const supabaseAnonKey =
+  viteEnv?.VITE_SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
+
+// Evita erro de runtime quando variáveis não estão definidas (por exemplo em preview Vercel)
+const supabase =
+  supabaseUrl && supabaseAnonKey
+    ? createClient(supabaseUrl, supabaseAnonKey)
+    : null;
 
 // Interfaces para dados do webhook Hotmart
 export interface HotmartBuyer {
