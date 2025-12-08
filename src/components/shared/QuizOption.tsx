@@ -103,6 +103,7 @@ export const QuizOption: React.FC<QuizOptionProps> = ({
         style={isSelected ? selectedStyles : undefined}
         aria-pressed={isSelected}
         aria-label={option.text}
+        data-testid={`quiz-option-${option.id}`}
       >
         {/* Check Icon */}
         {isSelected && showCheckIcon && (
@@ -162,6 +163,7 @@ export const QuizOption: React.FC<QuizOptionProps> = ({
       style={isSelected ? selectedStyles : undefined}
       aria-pressed={isSelected}
       aria-label={option.text}
+      data-testid={`quiz-option-${option.id}`}
     >
       {/* Check Icon */}
       {isSelected && showCheckIcon && (
