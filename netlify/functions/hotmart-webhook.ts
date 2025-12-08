@@ -1,12 +1,16 @@
 // Netlify Function para Webhook Hotmart
 // Arquivo: netlify/functions/hotmart-webhook.ts
 
+import type { Handler, HandlerEvent, HandlerContext } from "@netlify/functions";
 import {
   hotmartWebhookManager,
   HotmartWebhookData,
 } from "../../src/utils/hotmartWebhook";
 
-export async function handler(event: any, context: any) {
+export const handler: Handler = async (
+  event: HandlerEvent,
+  _context: HandlerContext
+) => {
   try {
     // Verificar método HTTP
     if (event.httpMethod !== "POST") {
@@ -87,4 +91,4 @@ export async function handler(event: any, context: any) {
       },
     };
   }
-}
+};

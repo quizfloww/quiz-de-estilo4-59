@@ -70,8 +70,23 @@ export async function handleHotmartWebhook(
   }
 }
 
+// Tipos para Express.js (compatibilidade básica)
+interface ExpressRequest {
+  method: string;
+  body: HotmartWebhookData;
+}
+
+interface ExpressResponse {
+  status: (code: number) => ExpressResponse;
+  send: (body: string) => void;
+  json: (body: unknown) => void;
+}
+
 // Exemplo de implementação para Express.js
-export const expressWebhookHandler = (req: any, res: any) => {
+export const expressWebhookHandler = (
+  req: ExpressRequest,
+  res: ExpressResponse
+) => {
   try {
     // Verificar método
     if (req.method !== "POST") {

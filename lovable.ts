@@ -1,15 +1,14 @@
-
 // This file provides the lovable component definition interface
 export interface LovableProps {
   name: string;
   displayName: string;
   description: string;
   category: string;
-  defaultProps: Record<string, any>;
-  propsSchema: Record<string, any>;
-  render: (props: any) => React.ReactNode;
+  defaultProps: Record<string, unknown>;
+  propsSchema: Record<string, unknown>;
+  render: (props: Record<string, unknown>) => React.ReactNode;
 }
 
-export function defineLovable(config: LovableProps): any {
+export function defineLovable(config: LovableProps): LovableProps {
   return config;
 }

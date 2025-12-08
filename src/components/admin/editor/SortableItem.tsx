@@ -1,13 +1,18 @@
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Button } from "../../ui/button";
+import { GripVertical, Copy, Trash2 } from "lucide-react";
 
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Button } from '../../ui/button';
-import { GripVertical, Copy, Trash2 } from 'lucide-react';
+interface EditorComponent {
+  id: string;
+  type: string;
+  props: Record<string, unknown>;
+}
 
 interface SortableItemProps {
   id: string;
-  component: any;
+  component: EditorComponent;
   isSelected: boolean;
   onClick: () => void;
   onDelete: () => void;
@@ -22,7 +27,7 @@ export function SortableItem({
   onClick,
   onDelete,
   onDuplicate,
-  children
+  children,
 }: SortableItemProps) {
   const {
     attributes,
@@ -44,9 +49,9 @@ export function SortableItem({
       ref={setNodeRef}
       style={style}
       className={`group relative rounded-lg border-2 transition-all ${
-        isSelected 
-          ? 'border-blue-500 bg-blue-50 shadow-md' 
-          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+        isSelected
+          ? "border-blue-500 bg-blue-50 shadow-md"
+          : "border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm"
       }`}
       onClick={onClick}
     >
@@ -59,7 +64,7 @@ export function SortableItem({
         >
           <GripVertical className="h-4 w-4" />
         </button>
-        
+
         <span className="text-xs text-gray-500 capitalize px-2">
           {component.type}
         </span>
@@ -90,9 +95,7 @@ export function SortableItem({
       </div>
 
       {/* Conteúdo do componente */}
-      <div className="p-4">
-        {children}
-      </div>
+      <div className="p-4">{children}</div>
 
       {/* Indicador de seleção */}
       {isSelected && (

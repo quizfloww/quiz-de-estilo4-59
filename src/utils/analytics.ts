@@ -158,7 +158,13 @@ export const getCreativePerformance = async (): Promise<
 };
 
 // Export getAnalyticsEvents properly - single declaration
-export const getAnalyticsEvents = (): any[] => {
+export interface AnalyticsEvent {
+  type: string;
+  timestamp: string;
+  data?: Record<string, unknown>;
+}
+
+export const getAnalyticsEvents = (): AnalyticsEvent[] => {
   return [];
 };
 

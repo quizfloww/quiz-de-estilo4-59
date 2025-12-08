@@ -53,7 +53,7 @@ import { LANDING_PAGE_AB_TEST } from "@/utils/abtest";
 import { FUNNEL_CONFIGS } from "@/services/pixelManager";
 import { toast } from "@/components/ui/use-toast";
 // Importar getAnalyticsEvents do módulo analytics
-import { getAnalyticsEvents } from "@/utils/analytics";
+import { getAnalyticsEvents, AnalyticsEvent } from "@/utils/analytics";
 import ABTestAlerts from "./ABTestAlerts";
 
 interface ABTestMetrics {
@@ -93,6 +93,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
 
   useEffect(() => {
     loadABTestData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeRange]);
 
   const loadABTestData = async () => {
@@ -147,7 +148,7 @@ const ABTestComparison: React.FC<ABTestComparisonProps> = ({
 
   const calculateVariantMetrics = (
     variant: "A" | "B",
-    events: any[]
+    events: AnalyticsEvent[]
   ): ABTestMetrics => {
     const route =
       variant === "A"

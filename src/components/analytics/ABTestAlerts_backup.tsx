@@ -112,7 +112,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
     const savedAlerts = localStorage.getItem("abtest_alerts");
     if (savedAlerts) {
       setAlerts(
-        JSON.parse(savedAlerts).map((alert: any) => ({
+        JSON.parse(savedAlerts).map((alert: { timestamp: string }) => ({
           ...alert,
           timestamp: new Date(alert.timestamp),
         }))
@@ -125,6 +125,7 @@ const ABTestAlerts: React.FC<ABTestAlertsProps> = ({
     if (config.enabled && metrics) {
       checkForAlerts();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [metrics, significance, confidenceLevel, winner, config.enabled]);
 
   useEffect(() => {
