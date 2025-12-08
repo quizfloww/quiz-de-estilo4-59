@@ -22,11 +22,20 @@ const REPLAYS_ON_ERROR_SAMPLE_RATE = parseFloat(
 const IS_PRODUCTION = import.meta.env.VITE_APP_ENV === "production";
 const ENABLE_DEBUG = !IS_PRODUCTION;
 
+// Types para compatibilidade
+export type SeverityLevel =
+  | "fatal"
+  | "error"
+  | "warning"
+  | "log"
+  | "info"
+  | "debug";
+
 /**
  * Inicializa o Sentry
  */
 export const initSentry = (): void => {
-  // Desabilitado temporariamente - configure VITE_SENTRY_DSN no .env para habilitar
+  // Não inicializar se DSN não estiver configurado
   if (!SENTRY_DSN) {
     if (ENABLE_DEBUG) {
       console.log(
@@ -132,7 +141,7 @@ export const initSentry = (): void => {
  */
 export const captureException = (
   error: Error,
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): void => {
   if (ENABLE_DEBUG) {
     console.error("[Sentry] Exception captured:", error, context);
@@ -149,7 +158,7 @@ export const captureException = (
 export const captureMessage = (
   message: string,
   level: Sentry.SeverityLevel = "info",
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): void => {
   if (ENABLE_DEBUG) {
     console.log(`[Sentry] Message (${level}):`, message, context);
@@ -168,7 +177,7 @@ export const setSentryUser = (user: {
   id?: string;
   email?: string;
   username?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }): void => {
   Sentry.setUser(user);
 
@@ -195,7 +204,7 @@ export const addBreadcrumb = (
   message: string,
   category?: string,
   level?: Sentry.SeverityLevel,
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 ): void => {
   Sentry.addBreadcrumb({
     message,
@@ -210,7 +219,7 @@ export const addBreadcrumb = (
  */
 export const setSentryContext = (
   name: string,
-  context: Record<string, any>
+  context: Record<string, unknown>
 ): void => {
   Sentry.setContext(name, context);
 };
@@ -226,7 +235,7 @@ export const setSentryTag = (key: string, value: string): void => {
  * Start transaction (performance monitoring)
  * Simplificado para evitar conflitos
  */
-export const startTransaction = (name: string, op: string): any => {
+export const startTransaction = (name: string, op: string): undefined => {
   // Retorna undefined - performance será monitorado pelo performanceMonitoring.ts
   if (ENABLE_DEBUG) {
     console.log(`[Sentry] Transaction: ${name} (${op})`);
@@ -237,11 +246,11 @@ export const startTransaction = (name: string, op: string): any => {
 /**
  * Wrapper de função com error tracking
  */
-export const withErrorBoundary = <T extends (...args: any[]) => any>(
+export const withErrorBoundary = <T extends (...args: unknown[]) => unknown>(
   fn: T,
-  fallback?: any
+  fallback?: unknown
 ): T => {
-  return ((...args: any[]) => {
+  return ((...args: unknown[]) => {
     try {
       return fn(...args);
     } catch (error) {
@@ -258,12 +267,12 @@ export const withErrorBoundary = <T extends (...args: any[]) => any>(
  * Async wrapper com error tracking
  */
 export const withAsyncErrorBoundary = <
-  T extends (...args: any[]) => Promise<any>
+  T extends (...args: unknown[]) => Promise<unknown>
 >(
   fn: T,
-  fallback?: any
+  fallback?: unknown
 ): T => {
-  return (async (...args: any[]) => {
+  return (async (...args: unknown[]) => {
     try {
       return await fn(...args);
     } catch (error) {
@@ -282,7 +291,7 @@ export const withAsyncErrorBoundary = <
 export class PerformanceTimer {
   private name: string;
   private startTime: number;
-  private transaction?: any;
+  private transaction?: undefined;
 
   constructor(name: string, op: string = "custom") {
     this.name = name;

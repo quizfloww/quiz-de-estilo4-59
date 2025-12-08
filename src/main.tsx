@@ -3,8 +3,7 @@ import App from "./App";
 import "./index.css";
 
 // Inicializar sistemas de monitoramento
-// Sentry desabilitado até configurar VITE_SENTRY_DSN
-// import "./utils/sentry";
+import "./utils/sentry";
 import "./utils/googleAnalytics";
 import "./utils/performanceMonitoring";
 
