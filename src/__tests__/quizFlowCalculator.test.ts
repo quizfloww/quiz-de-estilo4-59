@@ -851,6 +851,20 @@ describe("Blocos de Resultado - Personalização", () => {
     expect(styleResultBlock.content.showPercentage).toBe(true);
   });
 
+  it("blocos devem incluir bloco secondaryStyles", () => {
+    const resultStage = defaultQuizFlowConfig.stages.find(
+      (s) => s.type === "result"
+    );
+    const blocks = resultStage?.config.blocks || [];
+
+    const secondaryStylesBlock = blocks.find(
+      (b: any) => b.type === "secondaryStyles"
+    );
+    expect(secondaryStylesBlock).toBeDefined();
+    expect(secondaryStylesBlock.content.showPercentages).toBe(true);
+    expect(secondaryStylesBlock.content.maxStyles).toBe(3);
+  });
+
   it("blocos devem incluir bloco styleGuide", () => {
     const resultStage = defaultQuizFlowConfig.stages.find(
       (s) => s.type === "result"
@@ -859,5 +873,74 @@ describe("Blocos de Resultado - Personalização", () => {
 
     const styleGuideBlock = blocks.find((b: any) => b.type === "styleGuide");
     expect(styleGuideBlock).toBeDefined();
+  });
+});
+
+describe("Cálculo de Estilos Secundários", () => {
+  it("deve retornar estilos secundários ordenados por porcentagem", () => {
+    // Simular respostas com distribuição variada
+    const answers: Record<string, string[]> = {
+      "1": ["1a", "1b", "1c"], // Natural, Clássico, Contemporâneo
+      "3": ["3a", "3d", "3e"], // Natural, Elegante, Romântico
+      "2": ["2a", "2b", "2d"], // Natural, Clássico, Elegante
+    };
+
+    const result = calculateDynamicResults(
+      answers,
+      ALL_OPTIONS,
+      STYLE_CATEGORIES
+    );
+
+    // Verificar que temos estilos secundários
+    expect(result.secondaryStyles.length).toBeGreaterThan(0);
+
+    // Verificar que estão ordenados (maior porcentagem primeiro)
+    for (let i = 0; i < result.secondaryStyles.length - 1; i++) {
+      expect(result.secondaryStyles[i].percentage).toBeGreaterThanOrEqual(
+        result.secondaryStyles[i + 1].percentage
+      );
+    }
+  });
+
+  it("estilos secundários devem ter nome e porcentagem", () => {
+    const answers: Record<string, string[]> = {
+      "1": ["1a", "1b", "1c"],
+      "3": ["3a", "3d", "3e"],
+    };
+
+    const result = calculateDynamicResults(
+      answers,
+      ALL_OPTIONS,
+      STYLE_CATEGORIES
+    );
+
+    result.secondaryStyles.forEach((style) => {
+      expect(style.category).toBeDefined();
+      expect(typeof style.category).toBe("string");
+      expect(style.category.length).toBeGreaterThan(0);
+
+      expect(style.percentage).toBeDefined();
+      expect(typeof style.percentage).toBe("number");
+      expect(style.percentage).toBeGreaterThanOrEqual(0);
+      expect(style.percentage).toBeLessThanOrEqual(100);
+    });
+  });
+
+  it("estilo primário não deve aparecer nos estilos secundários", () => {
+    const answers: Record<string, string[]> = {
+      "1": ["1a", "1a", "1a"], // Muitos votos para Natural
+      "3": ["3a", "3b", "3c"],
+    };
+
+    const result = calculateDynamicResults(
+      answers,
+      ALL_OPTIONS,
+      STYLE_CATEGORIES
+    );
+
+    const primaryCategory = result.primaryStyle?.category;
+    const secondaryCategories = result.secondaryStyles.map((s) => s.category);
+
+    expect(secondaryCategories).not.toContain(primaryCategory);
   });
 });
