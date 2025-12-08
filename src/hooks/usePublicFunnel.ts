@@ -1,5 +1,5 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface StageOption {
   id: string;
@@ -14,7 +14,16 @@ export interface StageOption {
 export interface FunnelStage {
   id: string;
   funnel_id: string;
-  type: 'intro' | 'question' | 'strategic' | 'transition' | 'result';
+  type:
+    | "intro"
+    | "question"
+    | "strategic"
+    | "transition"
+    | "result"
+    | "offer"
+    | "upsell"
+    | "thankyou"
+    | "page";
   title: string;
   order_index: number;
   is_enabled: boolean | null;
@@ -39,16 +48,16 @@ export interface PublicFunnel {
 
 export const usePublicFunnel = (slug: string | undefined) => {
   return useQuery({
-    queryKey: ['public-funnel', slug],
+    queryKey: ["public-funnel", slug],
     queryFn: async (): Promise<PublicFunnel | null> => {
       if (!slug) return null;
 
       // Fetch the funnel by slug (must be published)
       const { data: funnel, error: funnelError } = await supabase
-        .from('funnels')
-        .select('*')
-        .eq('slug', slug)
-        .eq('status', 'published')
+        .from("funnels")
+        .select("*")
+        .eq("slug", slug)
+        .eq("status", "published")
         .maybeSingle();
 
       if (funnelError) throw funnelError;
@@ -56,35 +65,35 @@ export const usePublicFunnel = (slug: string | undefined) => {
 
       // Fetch all stages for this funnel
       const { data: stages, error: stagesError } = await supabase
-        .from('funnel_stages')
-        .select('*')
-        .eq('funnel_id', funnel.id)
-        .eq('is_enabled', true)
-        .order('order_index', { ascending: true });
+        .from("funnel_stages")
+        .select("*")
+        .eq("funnel_id", funnel.id)
+        .eq("is_enabled", true)
+        .order("order_index", { ascending: true });
 
       if (stagesError) throw stagesError;
 
       // Fetch all options for all stages
-      const stageIds = stages?.map(s => s.id) || [];
+      const stageIds = stages?.map((s) => s.id) || [];
       let options: StageOption[] = [];
-      
+
       if (stageIds.length > 0) {
         const { data: optionsData, error: optionsError } = await supabase
-          .from('stage_options')
-          .select('*')
-          .in('stage_id', stageIds)
-          .order('order_index', { ascending: true });
+          .from("stage_options")
+          .select("*")
+          .in("stage_id", stageIds)
+          .order("order_index", { ascending: true });
 
         if (optionsError) throw optionsError;
         options = optionsData || [];
       }
 
       // Map options to their stages
-      const stagesWithOptions: FunnelStage[] = (stages || []).map(stage => ({
+      const stagesWithOptions: FunnelStage[] = (stages || []).map((stage) => ({
         ...stage,
-        type: stage.type as FunnelStage['type'],
+        type: stage.type as FunnelStage["type"],
         config: stage.config as Record<string, any> | null,
-        options: options.filter(opt => opt.stage_id === stage.id),
+        options: options.filter((opt) => opt.stage_id === stage.id),
       }));
 
       return {
@@ -93,7 +102,8 @@ export const usePublicFunnel = (slug: string | undefined) => {
         slug: funnel.slug,
         description: funnel.description,
         global_config: funnel.global_config as Record<string, any> | null,
-        style_categories: funnel.style_categories as PublicFunnel['style_categories'],
+        style_categories:
+          funnel.style_categories as PublicFunnel["style_categories"],
         stages: stagesWithOptions,
       };
     },
@@ -111,7 +121,7 @@ export const useSaveFunnelResponse = () => {
       results: Record<string, any>;
     }) => {
       const { data: response, error } = await supabase
-        .from('funnel_responses')
+        .from("funnel_responses")
         .insert({
           funnel_id: data.funnel_id,
           participant_name: data.participant_name,

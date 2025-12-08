@@ -333,7 +333,7 @@ const DynamicQuizPage: React.FC = () => {
       // Quiz completed - calculate results
       handleQuizComplete();
     }
-  }, [currentStageIndex, stages.length, handleQuizComplete]);
+  }, [currentStageIndex, stages.length, handleQuizComplete, funnel?.id, slug]);
 
   const renderStage = (stage: FunnelStage) => {
     const stageConfig = stage.config || {};
