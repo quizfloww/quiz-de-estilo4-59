@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
-import { FunnelStage } from '@/hooks/useFunnelStages';
-import { CanvasBlock } from '@/types/canvasBlocks';
-import { FunnelConfig } from '@/types/funnelConfig';
-import { useTestMode } from '@/hooks/useTestMode';
-import { InteractiveBlock } from './InteractiveBlock';
-import { TestResultView } from './TestResultView';
-import { Button } from '@/components/ui/button';
-import { X, ArrowLeft } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import React, { useEffect } from "react";
+import { FunnelStage } from "@/hooks/useFunnelStages";
+import { CanvasBlock } from "@/types/canvasBlocks";
+import { FunnelConfig } from "@/types/funnelConfig";
+import { useTestMode } from "@/hooks/useTestMode";
+import { InteractiveBlock } from "./InteractiveBlock";
+import { TestResultView } from "./TestResultView";
+import { Button } from "@/components/ui/button";
+import { X, ArrowLeft } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TestModeOverlayProps {
   stages: FunnelStage[];
@@ -55,17 +55,23 @@ export const TestModeOverlay: React.FC<TestModeOverlayProps> = ({
   // Background from global config
   const bgStyle = globalConfig?.branding?.backgroundColor
     ? { backgroundColor: globalConfig.branding.backgroundColor }
-    : { backgroundColor: '#FAF9F7' };
+    : { backgroundColor: "#FAF9F7" };
 
   return (
     <div
       className="fixed inset-0 z-50 flex flex-col"
       style={bgStyle}
+      data-testid="test-mode-overlay"
     >
       {/* Header */}
       <div className="h-14 border-b bg-background/80 backdrop-blur flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={onExit}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onExit}
+            data-testid="test-mode-close"
+          >
             <X className="h-5 w-5" />
           </Button>
           <span className="font-medium">Modo de Teste</span>
@@ -101,6 +107,7 @@ export const TestModeOverlay: React.FC<TestModeOverlayProps> = ({
                     size="sm"
                     onClick={goToPreviousStage}
                     className="gap-2"
+                    data-testid="test-mode-back"
                   >
                     <ArrowLeft className="h-4 w-4" />
                     Voltar
@@ -121,7 +128,9 @@ export const TestModeOverlay: React.FC<TestModeOverlayProps> = ({
                         selectedOptions={currentAnswers}
                         userName={userName}
                         progress={progress}
-                        onAnswer={(options) => handleAnswer(currentStage.id, options)}
+                        onAnswer={(options) =>
+                          handleAnswer(currentStage.id, options)
+                        }
                         onInputChange={setUserName}
                         onButtonClick={goToNextStage}
                         canProceed={canProceed}

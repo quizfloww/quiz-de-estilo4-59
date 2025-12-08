@@ -125,6 +125,7 @@ export const InteractiveBlock: React.FC<InteractiveBlockProps> = ({
           value={userName}
           onChange={(e) => onInputChange(e.target.value)}
           className="h-10 w-full rounded-md border border-input bg-background p-4 text-base"
+          data-testid="test-mode-input"
         />
       </div>
     );
@@ -235,6 +236,7 @@ export const InteractiveBlock: React.FC<InteractiveBlockProps> = ({
         onClick={onButtonClick}
         disabled={!canProceed}
         className="w-full h-14 text-base"
+        data-testid="test-mode-continue"
       >
         {content.text || "Continuar"}
       </Button>

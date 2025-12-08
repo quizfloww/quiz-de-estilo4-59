@@ -992,6 +992,7 @@ export default function FunnelEditorPage() {
             size="sm"
             onClick={() => setIsTestMode(true)}
             className="bg-green-600 hover:bg-green-700"
+            data-testid="editor-test-button"
           >
             <Play className="h-4 w-4 mr-2" />
             Testar
