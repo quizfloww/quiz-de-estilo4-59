@@ -22,12 +22,17 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
     content.totalOriginal ||
     items.reduce((sum, item) => sum + (item.originalPrice || 0), 0);
   const finalPrice = content.finalPrice || 39;
-  const installments = content.installments || { count: 5, value: 8.83 };
+  
+  // Handle installments which can be number or object
+  const installmentsData = typeof content.installments === 'number' 
+    ? { count: content.installments, value: content.installmentValue || (finalPrice / content.installments) }
+    : content.installments || { count: 5, value: 8.83 };
 
   // Safe values for toFixed
   const safeTotalOriginal = totalOriginal || 0;
   const safeFinalPrice = finalPrice || 0;
-  const safeInstallmentValue = installments?.value || 0;
+  const safeInstallmentValue = installmentsData.value || 0;
+  const safeInstallmentCount = installmentsData.count || 5;
 
   const discountBadge =
     content.discountBadge ||
@@ -81,7 +86,7 @@ export const PriceAnchorBlock: React.FC<PriceAnchorBlockProps> = ({
           {currency} {safeFinalPrice.toFixed(2)}
         </p>
         <p className="text-sm text-[#8F7A6A] mt-2">
-          ou {installments.count}x de {currency}{" "}
+          ou {safeInstallmentCount}x de {currency}{" "}
           {safeInstallmentValue.toFixed(2)}
         </p>
       </div>

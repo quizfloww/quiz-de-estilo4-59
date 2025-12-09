@@ -109,6 +109,9 @@ export interface CanvasBlockContent {
 
   // Heading/Text
   text?: string;
+  title?: string;
+  description?: string;
+  level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | string;
   fontSize?: "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
   fontWeight?: "normal" | "medium" | "semibold" | "bold";
   textAlign?: "left" | "center" | "right";
@@ -118,9 +121,10 @@ export interface CanvasBlockContent {
   imageAlt?: string;
   maxWidth?: string;
   borderRadius?: string;
-  imagePosition?: "top" | "center" | "bottom";
+  imagePosition?: "top" | "center" | "bottom" | "left" | "right";
   imageAlignment?: "left" | "center" | "right";
   imageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+  showImage?: boolean;
 
   // Image Advanced Controls
   imageScale?: number;
@@ -152,6 +156,8 @@ export interface CanvasBlockContent {
   optionTextSize?: "xs" | "sm" | "base" | "lg" | "xl";
   optionImageSize?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
   showCheckIcon?: boolean;
+  onSelect?: (optionId: string) => void;
+  selectedOptions?: string[];
 
   // Option Image Advanced Controls
   optionImageScale?: number;
@@ -168,6 +174,8 @@ export interface CanvasBlockContent {
   buttonVariant?: "primary" | "secondary" | "outline" | "cta";
   fullWidth?: boolean;
   buttonUrl?: string;
+  action?: "continue" | "next" | "previous" | "back" | "submit" | "link";
+  onClick?: () => void;
 
   // Spacer
   height?: string;
@@ -177,6 +185,7 @@ export interface CanvasBlockContent {
   dividerColor?: string;
   dividerThickness?: number;
   dividerWidth?: number;
+  style?: "solid" | "dashed" | "dotted" | "gradient" | "elegant";
 
   // Global - Escala
   scale?: number;
@@ -186,22 +195,43 @@ export interface CanvasBlockContent {
   showDescription?: boolean;
   layout?: "side-by-side" | "stacked";
   styleImageSize?: "sm" | "md" | "lg" | "xl";
+  primaryStyle?: { category: string; score: number; percentage: number };
+  styleCategories?: Array<{
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    guideImage?: string;
+  }>;
 
   // Secondary Styles
   maxSecondaryStyles?: number;
   showSecondaryPercentage?: boolean;
+  showPercentages?: boolean;
+  maxStyles?: number;
+  secondaryStyles?: Array<{ category: string; score: number; percentage: number }>;
 
   // Style Progress
   showLabels?: boolean;
   maxStylesShown?: number;
+  allStyles?: Array<{ category: string; score: number; percentage: number }>;
+
+  // Guide Image
+  guideImageUrl?: string;
 
   // Price Anchor
   priceItems?: PriceAnchorItem[];
   totalOriginal?: number;
   finalPrice?: number;
-  installments?: { count: number; value: number };
+  installments?: { count: number; value: number } | number;
+  installmentValue?: number;
   discountBadge?: string;
   currency?: string;
+  items?: Array<{ id: string; label: string; originalPrice: number }>;
+  totalLabel?: string;
+  currentPriceLabel?: string;
+  currentPrice?: number;
+  price?: string;
 
   // Countdown
   hours?: number;
@@ -209,6 +239,8 @@ export interface CanvasBlockContent {
   seconds?: number;
   countdownVariant?: "dramatic" | "simple" | "minimal";
   expiryMessage?: string;
+  endDate?: string;
+  showDays?: boolean;
 
   // Testimonial
   testimonial?: TestimonialItem;
@@ -219,6 +251,7 @@ export interface CanvasBlockContent {
   benefitsLayout?: "list" | "grid";
   benefitsColumns?: 1 | 2 | 3;
   showBenefitIcons?: boolean;
+  checkColor?: string;
 
   // Guarantee
   guaranteeDays?: number;
@@ -226,6 +259,8 @@ export interface CanvasBlockContent {
   guaranteeDescription?: string;
   guaranteeImageUrl?: string;
   guaranteeSubtitle?: string;
+  days?: number;
+  badgeColor?: string;
 
   // Personalized Greeting
   showGreeting?: boolean;
@@ -238,6 +273,7 @@ export interface CanvasBlockContent {
   ctaVariant?: "green" | "brand" | "gradient";
   urgencyText?: string;
   showCtaIcon?: boolean;
+  showArrow?: boolean;
 
   // FAQ
   faqItems?: FaqItem[];
@@ -257,7 +293,6 @@ export interface CanvasBlockContent {
   userName?: string;
   showStyleImage?: boolean;
   powerMessage?: string;
-  // ctaText já declarado acima em CTA Offer
 
   // Style Guide
   showSecondaryGuides?: boolean;
@@ -299,22 +334,20 @@ export interface CanvasBlockContent {
   mentorDescription?: string;
   mentorImageUrl?: string;
   mentorCredentials?: string[];
+  name?: string;
+  bio?: string;
+  credentials?: string[];
+  rating?: number;
 
   // Secure Purchase
   securityBadges?: string[];
   paymentMethods?: string[];
   secureText?: string;
+  badges?: string[];
 
-  // Mobile Layout Options - Para blocos com elementos lado a lado
-  // "stacked" = empilha no mobile (padrão)
-  // "side-by-side" = mantém lado a lado mesmo no mobile
-  // "auto" = comportamento responsivo padrão do bloco
+  // Mobile Layout Options
   mobileLayout?: "stacked" | "side-by-side" | "auto";
-
-  // Mentor Block mobile options
-  mentorImagePosition?: "top" | "bottom"; // Posição da imagem no modo empilhado mobile
-
-  // Grid columns for mobile
+  mentorImagePosition?: "top" | "bottom";
   mobileColumns?: 1 | 2;
 }
 

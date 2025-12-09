@@ -104,8 +104,8 @@ export const resultStageBlocks: CanvasBlock[] = [
     type: "beforeAfter",
     order: 6,
     content: {
-      title: "Veja a transformação",
-      items: [
+      beforeAfterTitle: "Veja a transformação",
+      beforeAfterItems: [
         {
           id: "ba-1",
           beforeImage:
@@ -233,7 +233,7 @@ export const offerStageBlocks: CanvasBlock[] = [
     order: 6,
     content: {
       title: "O que você vai receber:",
-      items: [
+      benefits: [
         {
           id: "b-1",
           title: "Guia completo do seu estilo",
@@ -265,8 +265,8 @@ export const offerStageBlocks: CanvasBlock[] = [
     type: "bonus",
     order: 7,
     content: {
-      title: "🎁 Bônus Exclusivos",
-      items: [
+      bonusTitle: "🎁 Bônus Exclusivos",
+      bonusItems: [
         {
           id: "bonus-1",
           title: "Acesso ao grupo VIP",
@@ -293,7 +293,7 @@ export const offerStageBlocks: CanvasBlock[] = [
       buttonText: "QUERO MEU GUIA AGORA",
       buttonUrl: "https://pay.hotmart.com/W98977034C?checkoutMode=10",
       price: "R$ 97,00",
-      installments: "ou 12x de R$ 9,70",
+      currency: "R$",
       backgroundColor: "#22C55E",
       textColor: "#FFFFFF",
       showArrow: true,
@@ -320,8 +320,8 @@ export const offerStageBlocks: CanvasBlock[] = [
     type: "testimonials",
     order: 10,
     content: {
-      title: "O que dizem nossas alunas:",
-      items: [
+      testimonialsTitle: "O que dizem nossas alunas:",
+      testimonials: [
         {
           id: "t-1",
           name: "Ana Paula",
@@ -344,7 +344,7 @@ export const offerStageBlocks: CanvasBlock[] = [
           rating: 5,
         },
       ],
-      layout: "carousel",
+      testimonialsLayout: "carousel",
     },
   },
 
@@ -374,7 +374,7 @@ export const offerStageBlocks: CanvasBlock[] = [
     order: 12,
     content: {
       title: "Perguntas Frequentes",
-      items: [
+      faqItems: [
         {
           id: "faq-1",
           question: "O guia serve para qualquer idade?",
