@@ -34,6 +34,7 @@ export interface FunnelStage {
 export interface PublicFunnel {
   id: string;
   name: string;
+  title?: string;
   slug: string;
   description: string | null;
   global_config: Record<string, any> | null;

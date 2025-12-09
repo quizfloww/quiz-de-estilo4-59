@@ -30,17 +30,17 @@ export async function updateStageWithBlocks({
 }: UpdateStageWithBlocksParams): Promise<{ success: boolean; error?: string }> {
   try {
     const config = {
-      blocks,
+      blocks: blocks as unknown,
       canvasBackgroundColor: backgroundColor,
       redirectToResult: false, // Usar fluxo unificado
-    };
+    } as Record<string, unknown>;
 
     const { error } = await supabase
       .from("funnel_stages")
       .update({
         config,
         updated_at: new Date().toISOString(),
-      })
+      } as unknown as Record<string, unknown>)
       .eq("id", stageId);
 
     if (error) {
@@ -110,7 +110,7 @@ export async function updateFunnelResultStage(
       .from("funnel_stages")
       .select("id, type, order_index")
       .eq("funnel_id", funnelId)
-      .in("type", ["result", "offer"])
+      .in("type", ["result"])
       .order("order_index", { ascending: false })
       .limit(1);
 

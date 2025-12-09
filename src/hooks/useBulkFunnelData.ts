@@ -12,7 +12,7 @@ interface StageToInsert {
   title: string;
   order_index: number;
   is_enabled: boolean;
-  config: Record<string, unknown>;
+  config: Database["public"]["Tables"]["funnel_stages"]["Insert"]["config"];
 }
 
 interface OptionToInsert {

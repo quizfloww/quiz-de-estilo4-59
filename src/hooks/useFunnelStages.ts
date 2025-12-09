@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import type { Database } from "@/integrations/supabase/types";
+import type { Database, Json } from "@/integrations/supabase/types";
 
 // Stage types agora são strings livres para máxima flexibilidade
 type StageType = string;
@@ -149,11 +149,11 @@ export const useCreateStage = () => {
         .from("funnel_stages")
         .insert({
           funnel_id: stage.funnel_id,
-          type: stage.type,
+          type: stage.type as Database["public"]["Enums"]["stage_type"],
           title: stage.title,
           order_index: stage.order_index,
           is_enabled: stage.is_enabled ?? true,
-          config: stage.config || {},
+          config: stage.config as Database["public"]["Tables"]["funnel_stages"]["Insert"]["config"],
         })
         .select()
         .single();
@@ -180,9 +180,14 @@ export const useUpdateStage = () => {
       id,
       ...updates
     }: Partial<FunnelStage> & { id: string }) => {
+      const dbUpdates = {
+        ...updates,
+        type: updates.type as Database["public"]["Enums"]["stage_type"] | undefined,
+        config: updates.config as Json | undefined,
+      };
       const { data, error } = await supabase
         .from("funnel_stages")
-        .update(updates)
+        .update(dbUpdates)
         .eq("id", id)
         .select()
         .single();

@@ -60,9 +60,7 @@ export const initSentry = (): void => {
       integrations: [
         ...(typeof Sentry.browserTracingIntegration === "function"
           ? [
-              Sentry.browserTracingIntegration({
-                tracePropagationTargets: ["localhost", /^https:\/\/.+/],
-              }),
+              Sentry.browserTracingIntegration(),
             ]
           : []),
         ...(typeof Sentry.replayIntegration === "function"
@@ -291,7 +289,7 @@ export const withAsyncErrorBoundary = <
 export class PerformanceTimer {
   private name: string;
   private startTime: number;
-  private transaction?: undefined;
+  private transaction: ReturnType<typeof startTransaction> | undefined;
 
   constructor(name: string, op: string = "custom") {
     this.name = name;
@@ -302,10 +300,8 @@ export class PerformanceTimer {
   finish(): number {
     const duration = performance.now() - this.startTime;
 
-    if (this.transaction && typeof this.transaction.finish === "function") {
-      this.transaction.finish();
-    }
-
+    // startTransaction returns undefined - no finish method needed
+    
     addBreadcrumb(`${this.name} completed`, "performance", "info", {
       duration,
     });
