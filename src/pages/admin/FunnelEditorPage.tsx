@@ -751,11 +751,12 @@ export default function FunnelEditorPage() {
 
             // Import blocks for this stage
             if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
-              // Usar blocos do JSON
-              newStageBlocks[existingStage.id] = importedStage.blocks;
+              // Usar blocos do JSON - cast para CanvasBlock[]
+              const blocks = importedStage.blocks as CanvasBlock[];
+              newStageBlocks[existingStage.id] = blocks;
               await saveStageBocks(
                 existingStage.id,
-                importedStage.blocks,
+                blocks,
                 updatedStageData.type
               );
             } else if (importedStage.config) {
@@ -777,7 +778,7 @@ export default function FunnelEditorPage() {
             }
           } else {
             // CREATE new stage (JSON tem mais stages que o funil atual)
-            const newStage = await createStage.mutateAsync({
+            const newStageResponse = await createStage.mutateAsync({
               funnel_id: id!,
               type: importedStage.type || "page",
               title: importedStage.title || `Etapa ${orderIndex + 1}`,
@@ -786,14 +787,20 @@ export default function FunnelEditorPage() {
               config: importedStage.config || {},
             });
 
+            // Cast para FunnelStage local
+            const newStage: FunnelStage = {
+              ...newStageResponse,
+              config: (newStageResponse.config || {}) as Record<string, any>,
+            };
             updatedStages.push(newStage);
 
             // Import blocks for new stage
             if (importedStage.blocks && Array.isArray(importedStage.blocks)) {
-              newStageBlocks[newStage.id] = importedStage.blocks;
+              const blocks = importedStage.blocks as CanvasBlock[];
+              newStageBlocks[newStage.id] = blocks;
               await saveStageBocks(
                 newStage.id,
-                importedStage.blocks,
+                blocks,
                 newStage.type
               );
             } else if (importedStage.config) {

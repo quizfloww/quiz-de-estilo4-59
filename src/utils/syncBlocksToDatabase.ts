@@ -2,6 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CanvasBlock } from "@/types/canvasBlocks";
 import { blocksToStageConfig } from "./stageToBlocks";
 import { sanitizeStageConfig } from "./stageConfigSchema";
+import type { Json } from "@/integrations/supabase/types";
 
 interface StageOption {
   id?: string;
@@ -71,7 +72,7 @@ export async function syncBlocksToDatabase(
     // Update stage config
     const { error: stageError } = await supabase
       .from("funnel_stages")
-      .update({ config: validatedConfig })
+      .update({ config: validatedConfig as unknown as Json })
       .eq("id", stage.id);
 
     if (stageError) {
@@ -130,7 +131,7 @@ export async function saveStageBocks(
   // Update stage config
   const { error: stageError } = await supabase
     .from("funnel_stages")
-    .update({ config: validatedConfig })
+    .update({ config: validatedConfig as unknown as Json })
     .eq("id", stageId);
 
   if (stageError) {

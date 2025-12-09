@@ -209,7 +209,7 @@ export function getTemplatePreview(
   const exampleContext: TemplateContext = {
     userName: "Maria",
     primaryStyle: {
-      category: exampleCategory,
+      category: exampleCategory as StyleResult["category"],
       percentage: 65,
       score: 15,
     },
