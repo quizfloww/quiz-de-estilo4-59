@@ -1,3 +1,5 @@
+import { CanvasBlock } from "@/types/canvasBlocks";
+
 export type QuizStageType =
   | "intro"
   | "question"
@@ -11,6 +13,15 @@ export interface QuizFlowOption {
   imageUrl?: string;
   styleCategory?: string;
   points?: number;
+}
+
+export interface QuizFlowTestimonial {
+  id: string;
+  name: string;
+  role?: string;
+  text: string;
+  imageUrl?: string;
+  rating?: number;
 }
 
 export interface QuizFlowStage {
@@ -52,9 +63,32 @@ export interface QuizFlowStage {
     showPercentages?: boolean;
     ctaText?: string;
     ctaUrl?: string;
-    descriptionText?: string; // Texto descritivo adicional
-    resultUrl?: string; // URL para resultados personalizados
-    finalPrice?: number; // Preço final para CTAs de venda
+    descriptionText?: string;
+    resultUrl?: string;
+    finalPrice?: number;
+    originalPrice?: number;
+    guaranteeDays?: number;
+    guaranteeTitle?: string;
+    guaranteeDescription?: string;
+    mentorName?: string;
+    mentorTitle?: string;
+    mentorImageUrl?: string;
+    mentorDescription?: string;
+    benefits?: string[];
+    testimonials?: QuizFlowTestimonial[];
+    ctaVariant?: string;
+    showCtaIcon?: boolean;
+    urgencyText?: string;
+    securityBadges?: string[];
+    paymentMethods?: string[];
+    secureText?: string;
+    showPercentage?: boolean;
+    showDescription?: boolean;
+    styleLayout?: string;
+    styleImageSize?: string;
+    maxSecondaryStyles?: number;
+    showSecondaryPercentage?: boolean;
+    blocks?: CanvasBlock[];
   };
 }
 

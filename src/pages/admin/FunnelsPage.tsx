@@ -31,7 +31,7 @@ import {
 } from "@/types/funnelConfig";
 import { defaultQuizFlowConfig } from "@/data/quizFlowConfig";
 import type { Database } from "@/integrations/supabase/types";
-import { isSupabaseAvailable } from "@/integrations/supabase/client";
+import { isSupabaseAvailable } from "@/utils/supabaseHelpers";
 
 type StageType = Database["public"]["Enums"]["stage_type"];
 
