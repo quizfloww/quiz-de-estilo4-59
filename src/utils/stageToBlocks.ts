@@ -568,8 +568,8 @@ export const convertStageToBlocks = (
       type: "text",
       order: order++,
       content: {
-        text: config.footerText,
-        fontSize: "xs",
+        text: footerText,
+        fontSize: "sm" as const,
         textAlign: "center",
         textColor: "#9CA3AF", // text-gray-400
       },

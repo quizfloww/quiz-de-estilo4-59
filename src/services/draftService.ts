@@ -4,60 +4,43 @@
  * Limite: ~50MB (muito superior aos 5MB do localStorage)
  */
 
-import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { openDB, IDBPDatabase } from "idb";
 
 // ============================================
-// Schema do Banco IndexedDB
+// Types do Banco IndexedDB
 // ============================================
 
-interface DraftDB extends DBSchema {
-  funnelDrafts: {
-    key: string; // funnel_id
-    value: {
-      id: string;
-      name: string;
-      data: unknown; // Dados do funil completo
-      lastModified: number; // timestamp
-      synced: boolean; // Se foi sincronizado com Supabase
-      version: number; // Versão do draft para controle
-    };
-    indexes: { "by-modified": number; "by-synced": boolean };
-  };
-  stageDrafts: {
-    key: string; // stage_id
-    value: {
-      id: string;
-      funnelId: string;
-      title: string;
-      data: unknown; // Dados da etapa completa
-      blocks: unknown[]; // Blocos da etapa
-      lastModified: number;
-      synced: boolean;
-      version: number;
-    };
-    indexes: {
-      "by-funnel": string;
-      "by-modified": number;
-      "by-synced": boolean;
-    };
-  };
-  blockDrafts: {
-    key: string; // block_id
-    value: {
-      id: string;
-      stageId: string;
-      funnelId: string;
-      data: unknown; // Dados do bloco
-      lastModified: number;
-      synced: boolean;
-    };
-    indexes: {
-      "by-stage": string;
-      "by-funnel": string;
-      "by-modified": number;
-    };
-  };
+interface FunnelDraft {
+  id: string;
+  name: string;
+  data: unknown;
+  lastModified: number;
+  synced: boolean;
+  version: number;
 }
+
+interface StageDraft {
+  id: string;
+  funnelId: string;
+  title: string;
+  data: unknown;
+  blocks: unknown[];
+  lastModified: number;
+  synced: boolean;
+  version: number;
+}
+
+interface BlockDraft {
+  id: string;
+  stageId: string;
+  funnelId: string;
+  data: unknown;
+  lastModified: number;
+  synced: boolean;
+}
+
+// Use simpler type without DBSchema to avoid index type conflicts
+type DraftDB = IDBPDatabase<unknown>;
 
 // ============================================
 // Configuração e Inicialização
@@ -66,16 +49,16 @@ interface DraftDB extends DBSchema {
 const DB_NAME = "quiz-estilo-drafts";
 const DB_VERSION = 1;
 
-let dbInstance: IDBPDatabase<DraftDB> | null = null;
+let dbInstance: DraftDB | null = null;
 
 /**
  * Inicializa o banco de dados IndexedDB
  * Cria stores e índices se não existirem
  */
-async function initDB(): Promise<IDBPDatabase<DraftDB>> {
+async function initDB(): Promise<DraftDB> {
   if (dbInstance) return dbInstance;
 
-  dbInstance = await openDB<DraftDB>(DB_NAME, DB_VERSION, {
+  dbInstance = await openDB(DB_NAME, DB_VERSION, {
     upgrade(db) {
       // Store de funis
       if (!db.objectStoreNames.contains("funnelDrafts")) {

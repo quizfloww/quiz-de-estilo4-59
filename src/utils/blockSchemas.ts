@@ -265,7 +265,7 @@ export const CanvasBlockContentSchema = z
     hookSubtitle: z.string().optional(),
     hookStyle: z.enum(["elegant", "bold", "minimal"]).optional(),
     showCta: z.boolean().optional(),
-    styleCategory: z.string().optional(), // Categoria de estilo personalizado
+    // styleCategory já definido acima em Style Result
     userName: z.string().optional(), // Nome do usuário para personalização
     showStyleImage: z.boolean().optional(), // Exibir imagem do estilo
     powerMessage: z.string().optional(), // Mensagem motivacional de poder
