@@ -310,7 +310,7 @@ export function JsonEditor({
           quickSuggestions: true,
           // Error decoration
           glyphMargin: true,
-          lightbulb: { enabled: "on" },
+          // lightbulb disabled due to type issues
         }}
         theme="vs-light"
       />

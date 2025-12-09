@@ -6,13 +6,9 @@ import {
   trackFunnelEvent,
 } from "../services/pixelManager";
 
-// Use the same type definition as in global.d.ts
-declare global {
-  interface Window {
-    fbq?: (event: string, eventName: string, params?: any) => void;
-    _fbq?: any;
-  }
-}
+// Extend Window type for Facebook Pixel
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FBQ = (...args: any[]) => void;
 
 /**
  * Initialize Facebook Pixel with the provided ID
@@ -27,17 +23,19 @@ export const initFacebookPixel = (pixelId: string): boolean => {
     }
 
     // Initialize Facebook Pixel
-    if (!window.fbq) {
-      window.fbq = function (event: string, eventName: string, params?: any) {
-        (window.fbq as any).q = (window.fbq as any).q || [];
-        (window.fbq as any).q.push([event, eventName, params]);
+    const win = window as unknown as { fbq?: FBQ; _fbq?: FBQ };
+    if (!win.fbq) {
+      const fbq: FBQ = function (...args: unknown[]) {
+        (fbq as any).q = (fbq as any).q || [];
+        (fbq as any).q.push(args);
       };
-      window._fbq = window.fbq;
-      (window.fbq as any).loaded = true;
-      (window.fbq as any).version = "2.0";
+      win.fbq = fbq;
+      win._fbq = fbq;
+      (fbq as any).loaded = true;
+      (fbq as any).version = "2.0";
     }
 
-    window.fbq("track", "init", { pixelId });
+    (window as unknown as { fbq: FBQ }).fbq("track", "init", { pixelId });
     // Facebook Pixel - PageView será disparado manualmente quando necessário
 
     console.log(`Facebook Pixel initialized with ID: ${pixelId}`);
@@ -58,12 +56,13 @@ export const trackPixelEvent = (
   params?: Record<string, unknown>
 ): void => {
   try {
-    if (typeof window === "undefined" || !window.fbq) {
+    const win = window as unknown as { fbq?: FBQ };
+    if (typeof window === "undefined" || !win.fbq) {
       console.warn("Facebook Pixel not initialized");
       return;
     }
 
-    window.fbq("track", eventName, params);
+    win.fbq("track", eventName, params);
 
     console.log(`Tracked Facebook Pixel event: ${eventName}`, params || "");
   } catch (error) {
@@ -77,12 +76,12 @@ export const trackPixelEvent = (
  */
 export const trackPageView = (url?: string): void => {
   try {
-    if (typeof window === "undefined" || !window.fbq) {
+    const win = window as unknown as { fbq?: FBQ };
+    if (typeof window === "undefined" || !win.fbq) {
       return;
     }
 
     // Facebook Pixel - REMOVIDO: PageView não é evento principal
-    // window.fbq('track', 'PageView');
 
     if (url) {
       console.log(`Facebook Pixel PageView removido para otimização: ${url}`);

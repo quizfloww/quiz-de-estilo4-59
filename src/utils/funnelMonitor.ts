@@ -187,10 +187,11 @@ function setupNavigationMonitoring() {
   try {
     // Monitorar cliques em links para páginas do funil
     document.addEventListener('click', (event) => {
-      const target = event.target;
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
       
       // Verificar se o clique foi em um link ou em um elemento dentro de um link
-      const linkElement = target.tagName === 'A' ? target : target.closest('a');
+      const linkElement = target.tagName === 'A' ? target as HTMLAnchorElement : target.closest('a');
       
       if (linkElement && linkElement.href) {
         const href = linkElement.getAttribute('href');

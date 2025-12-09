@@ -21,7 +21,7 @@ interface DraftDB extends DBSchema {
       synced: boolean; // Se foi sincronizado com Supabase
       version: number; // Versão do draft para controle
     };
-    indexes: { "by-modified": number };
+    indexes: { "by-modified": number; "by-synced": boolean };
   };
   stageDrafts: {
     key: string; // stage_id
@@ -38,6 +38,7 @@ interface DraftDB extends DBSchema {
     indexes: {
       "by-funnel": string;
       "by-modified": number;
+      "by-synced": boolean;
     };
   };
   blockDrafts: {

@@ -89,6 +89,38 @@ export interface QuizFlowStage {
     maxSecondaryStyles?: number;
     showSecondaryPercentage?: boolean;
     blocks?: CanvasBlock[];
+    currency?: string;
+    priceItems?: Array<{ title: string; description: string }>;
+    heroImage?: string;
+    heroImage2?: string;
+    countdownHours?: number;
+    countdownMinutes?: number;
+    countdownSeconds?: number;
+    countdownVariant?: string;
+    expiryMessage?: string;
+    greetingTitle?: string;
+    greetingSubtitle?: string;
+    hookTitle?: string;
+    hookSubtitle?: string;
+    hookStyle?: string;
+    showHookCta?: boolean;
+    guideImageUrl?: string;
+    benefitsLayout?: string;
+    benefitsColumns?: number;
+    showBenefitIcons?: boolean;
+    beforeAfterItems?: unknown[];
+    beforeAfterLayout?: string;
+    beforeAfterTitle?: string;
+    motivationTitle?: string;
+    motivationSubtitle?: string;
+    motivationPoints?: unknown[];
+    motivationImageUrl?: string;
+    products?: Array<{ url: string; alt: string }>;
+    bonusItems?: unknown[];
+    testimonials_extended?: unknown[];
+    faqItems?: unknown[];
+    // Allow any additional config properties
+    [key: string]: unknown;
   };
 }
 
